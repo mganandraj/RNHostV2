@@ -16,6 +16,9 @@ public class ReactOptions {
         mHybridData = hybridData;
     }
 
+    public native String getIdentity();
+    public native void setIdentity(String identity);
+
     ReactOptions() {
         mHybridData = initHybrid();
     }

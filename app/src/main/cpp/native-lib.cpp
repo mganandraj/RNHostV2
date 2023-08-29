@@ -4,6 +4,7 @@
 #include <fbjni/fbjni.h>
 
 #include "JReactOptions.h"
+#include "React.h"
 
 extern "C" jint JNI_OnLoad(JavaVM* vm, void*) {
     return facebook::jni::initialize(vm, [] {
@@ -11,14 +12,18 @@ extern "C" jint JNI_OnLoad(JavaVM* vm, void*) {
     });
 }
 
-extern "C" JNIEXPORT jstring JNICALL
+extern "C" JNIEXPORT jobject JNICALL
 Java_com_example_rnhostv2_12_MainActivity_stringFromJNI(
         JNIEnv* env,
         jobject /* this */) {
 
-    static auto reactOptions = JReactOptions::create();
+    Mso::React::ReactOptions options;
+    options.Identity = "V2App";
+    // static auto reactOptions = JReactOptions::create(std::move(options));
     // reactOptions->callJava();
 
-    std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
+    // std::string hello = "Hello from C++";
+    // return env->NewStringUTF(hello.c_str());
+
+    return JReactOptions::create(std::move(options)).release();
 }

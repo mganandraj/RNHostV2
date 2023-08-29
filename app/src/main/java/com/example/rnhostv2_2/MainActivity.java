@@ -27,14 +27,15 @@ public class MainActivity extends AppCompatActivity {
             NativeLoader.init(new SystemDelegate());
         }
 
-        com.facebook.jni.HybridData hybridData = new com.facebook.jni.HybridData();
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Example of a call to a native method
         TextView tv = binding.sampleText;
-        tv.setText(stringFromJNI());
+        tv.setText("Hello");
+
+        ReactOptions options = stringFromJNI();
+        String identity = options.getIdentity();
 
     }
 
@@ -42,5 +43,5 @@ public class MainActivity extends AppCompatActivity {
      * A native method that is implemented by the 'rnhostv2_2' native library,
      * which is packaged with this application.
      */
-    public native String stringFromJNI();
+    public native ReactOptions stringFromJNI();
 }
