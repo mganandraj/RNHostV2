@@ -1,0 +1,7 @@
+1. Copied libs, external, tools folders from microsoft/microsoft
+2. oacr.h depende on SAL. Copied sal.h with noop defs from otools/inc/platoformsdk/android. Commented out specstrings.h
+3. Issues with warning disable
+4. Mso::ASync, TCntPtr translations..
+
+
+It works !

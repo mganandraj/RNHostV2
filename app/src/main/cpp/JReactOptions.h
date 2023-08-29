@@ -8,6 +8,8 @@
 #include <fbjni/fbjni.h>
 using namespace facebook::jni;
 
+#include "React.h"
+
 struct JReactOptions : HybridClass<JReactOptions> {
     static constexpr auto kJavaDescriptor = "Lcom/example/rnhostv2_2/ReactOptions;";
     static local_ref<jhybriddata> initHybrid(alias_ref<jhybridobject> jThis);
@@ -19,6 +21,8 @@ struct JReactOptions : HybridClass<JReactOptions> {
     //        jThis_(make_global(jThis)){}
 
     //global_ref<JReactOptions::javaobject> jThis_;
+
+    Mso::React::ReactOptions options_;
 };
 
 #endif //RNHOSTV2_2_JREACTOPTIONS_H
