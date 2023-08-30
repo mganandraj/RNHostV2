@@ -22,14 +22,26 @@ add_library(fbjni
 
 add_library(rnhostv2_2
         SHARED
+        AssetJSBundle_Android.cpp
+        BundleServerJSBundle.cpp
+        InstanceFactory_Android.cpp
+        JSBundle.cpp
+        JSBundle_Android.cpp
+        MsoUtils.cpp
         native-lib.cpp
         JReactOptions.cpp
+        ReactHost.cpp
 )
 
 include_directories(${FBJNI_ROOT}/cxx/)
 include_directories(D:/github/RNHostv2/app/src/main/cpp) # for sal.h
 
 find_library(log-lib log)
+
+
+# Office stuff
+add_compile_definitions(MS_TARGET_ANDROID)
+# target_compile_definitions(rnhostv2_2 PRIVATE MS_TARGET_ANDROID)
 
 # MSO - Start
 
@@ -58,5 +70,6 @@ target_link_libraries(rnhostv2_2 dispatchQueue)
 target_link_libraries(rnhostv2_2 errorCode)
 target_link_libraries(rnhostv2_2 future)
 target_link_libraries(rnhostv2_2 smartPtr)
+target_link_libraries(rnhostv2_2 activeObject)
 
 target_link_libraries(rnhostv2_2 ${log-lib})

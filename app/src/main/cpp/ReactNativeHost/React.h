@@ -379,7 +379,8 @@ struct DECLSPEC_NOVTABLE IReactHost : IUnknown
 
 	//! A native sequential queue associated with IReactHost.
 	//! All internal operations are done using this queue to synchronize internal state.
-	virtual Mso::IDispatchQueue& NativeQueue() const noexcept = 0;
+	// virtual Mso::IDispatchQueue& NativeQueue() const noexcept = 0;
+	virtual Mso::DispatchQueue NativeQueue() const noexcept = 0;
 
 	//! Reloads the ReactNative instance and associated ReactViews.
 	virtual Mso::Future<void> ReloadInstance() noexcept = 0;

@@ -2,7 +2,7 @@
 #define RNHOSTV2_2_JREACTOPTIONS_H
 
 #include <fbjni/fbjni.h>
-#include "React.h"
+#include "ReactNativeHost/React.h"
 
 struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
     static constexpr auto kJavaDescriptor = "Lcom/example/rnhostv2_2/ReactOptions;";

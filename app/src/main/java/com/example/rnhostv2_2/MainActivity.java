@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         SoLoader.init(this.getApplicationContext(), false);
         setContentView(R.layout.activity_main);
 
-        ReactOptions options = stringFromJNI();
+        ReactOptions options = startNative();
         String identity = options.getIdentity();
 
         // Delayed because the Popup Windows shown by RN DevSupport can't be done too early.
@@ -65,5 +65,5 @@ public class MainActivity extends AppCompatActivity {
      * A native method that is implemented by the 'rnhostv2_2' native library,
      * which is packaged with this application.
      */
-    public native ReactOptions stringFromJNI();
+    public native ReactOptions startNative();
 }
