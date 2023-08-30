@@ -1,15 +1,16 @@
 plugins {
     id 'com.android.application'
+    id 'kotlin-android'
 }
 
 android {
     namespace 'com.example.rnhostv2_2'
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.rnhostv2_2"
         minSdk 21
-        targetSdk 34
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -43,6 +44,8 @@ android {
     }
 }
 
+def RN_VERSION = '0.71.27-office'
+
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -54,4 +57,10 @@ dependencies {
 
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'com.facebook.soloader:nativeloader:0.10.5'
+
+    implementation "com.facebook.react:react-android:${RN_VERSION}"
+    implementation "com.facebook.react:hermes-android:${RN_VERSION}"
+
+    implementation(project(":rnx-host"))
+
 }

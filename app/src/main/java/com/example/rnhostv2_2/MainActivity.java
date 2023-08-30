@@ -2,40 +2,62 @@ package com.example.rnhostv2_2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.example.rnhostv2_2.databinding.ActivityMainBinding;
+import com.facebook.soloader.SoLoader;
 import com.facebook.soloader.nativeloader.NativeLoader;
 import com.facebook.soloader.nativeloader.SystemDelegate;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Used to load the 'rnhostv2_2' library on application startup.
     static {
         System.loadLibrary("fbjni");
         System.loadLibrary("rnhostv2_2");
     }
 
-    private ActivityMainBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent serviceIntent = new Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                startActivity(serviceIntent);
+                return;
+            }
+        }
 
         if (!NativeLoader.isInitialized()) {
             NativeLoader.init(new SystemDelegate());
         }
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        // Example of a call to a native method
-        TextView tv = binding.sampleText;
-        tv.setText("Hello");
+        SoLoader.init(this.getApplicationContext(), false);
+        setContentView(R.layout.activity_main);
 
         ReactOptions options = stringFromJNI();
         String identity = options.getIdentity();
+
+        // Delayed because the Popup Windows shown by RN DevSupport can't be done too early.
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                // show the popup window
+                // which view you pass in doesn't matter, it is only used for the window tolken
+                MainActivity.this.setContentView(ReactIntegration.RootView(MainActivity.this));
+            }
+        }, 100);
 
     }
 

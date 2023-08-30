@@ -5,12 +5,19 @@ pluginManagement {
         mavenCentral()
     }
 }
+
+def RN_VERSION = '0.71.27-office'
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+        maven {
+            url "D:/nugetcache/microsoft.office.reactnative.android.${RN_VERSION}-ndk25/maven"
+        }
     }
 }
 rootProject.name = "RNHostv2_2"
 include ':app'
+include ':rnx-host'
