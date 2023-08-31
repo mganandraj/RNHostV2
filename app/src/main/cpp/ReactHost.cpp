@@ -222,6 +222,7 @@ bool ReactHost::IsInstanceLoaded() const noexcept
 
 /*static*/ Mso::DispatchQueue ReactHost::GetNativeQueue(const ReactOptions& options) noexcept
 {
+    static auto nativeDispatchQueue = Mso::DispatchQueue::MakeSerialQueue();
 //	auto nativeDispatchQueue = options.Properties.Get(NativeDispatchQueueProperty);
 //	if (nativeDispatchQueue)
 //	{
@@ -230,12 +231,12 @@ bool ReactHost::IsInstanceLoaded() const noexcept
 //	else
 //	{
 		// Try to use current queue
-		auto nativeDispatchQueue = Mso::DispatchQueue::CurrentQueue();
+//		auto nativeDispatchQueue = Mso::DispatchQueue::CurrentQueue();
 		// if (!Mso::IsSequentialQueue(*nativeDispatchQueue))
-		if (!nativeDispatchQueue.IsSerial())
-		{
-			nativeDispatchQueue = Mso::DispatchQueue::MakeSerialQueue() /*CreateBackgroundSequentialDispatchQueue()*/;
-		}
+//		if (!nativeDispatchQueue.IsSerial())
+//		{
+//			nativeDispatchQueue = Mso::DispatchQueue::MakeSerialQueue() /*CreateBackgroundSequentialDispatchQueue()*/;
+//		}
 //	}
 
 //	if (JSHost::ChangeGate::ShouldFlushUIQueueOnShutdown())

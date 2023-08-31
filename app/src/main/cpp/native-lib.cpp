@@ -6,6 +6,10 @@
 #include "JReactOptions.h"
 #include <ReactNativeHost/React.h>
 
+#include "ReactHost.h"
+
+using namespace Mso::React;
+
 extern "C" jint JNI_OnLoad(JavaVM* vm, void*) {
     return facebook::jni::initialize(vm, [] {
         JReactOptions::registerNatives();
@@ -17,8 +21,13 @@ Java_com_example_rnhostv2_12_MainActivity_startNative(
         JNIEnv* env,
         jobject /* this */) {
 
-    Mso::React::ReactOptions options;
+    ReactOptions options;
     options.Identity = "V2App";
+
+
+    ReactHostRegistry::OnLibletInit();
+
+    static Mso::CntPtr<IReactHost> reactHost = MakeReactHost(std::move(options));
 
     // static auto reactOptions = JReactOptions::create(std::move(options));
     // reactOptions->callJava();
@@ -26,5 +35,6 @@ Java_com_example_rnhostv2_12_MainActivity_startNative(
     // std::string hello = "Hello from C++";
     // return env->NewStringUTF(hello.c_str());
 
-    return JReactOptions::create(std::move(options)).release();
+    ReactOptions options2;
+    return JReactOptions::create(std::move(options2)).release();
 }

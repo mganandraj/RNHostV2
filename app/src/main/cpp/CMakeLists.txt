@@ -25,11 +25,12 @@ add_library(rnhostv2_2
         AssetJSBundle_Android.cpp
         BundleServerJSBundle.cpp
         InstanceFactory_Android.cpp
+        JReactInstance.cpp
+        JReactOptions.cpp
         JSBundle.cpp
         JSBundle_Android.cpp
         MsoUtils.cpp
         native-lib.cpp
-        JReactOptions.cpp
         ReactHost.cpp
 )
 
