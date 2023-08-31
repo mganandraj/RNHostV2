@@ -15,6 +15,8 @@ struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
     static facebook::jni::local_ref<jhybridobject> create(Mso::React::ReactOptions&&);
     Mso::React::ReactOptions options_;
 
+    const Mso::React::ReactOptions& Options() const noexcept;
+
     std::string getIdentity();
     void setIdentity(std::string identity);
 };

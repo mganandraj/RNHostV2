@@ -3,7 +3,7 @@
 #include "InstanceFactory.h"
 #include <future/future.h>
 
-#include "JReactInstance.h"
+#include "ReactInstanceAndroid.h"
 
 #include "ReactHost.h"
 
@@ -27,7 +27,7 @@ Mso::CntPtr<IReactInstanceInternal> MakeReactInstance(
 	/*Mso::JSHost::IRekaContextProxy& rekaContextProxy*/
 	Mso::Promise<void>&& /*whenLoaded*/) noexcept
 {
-	return Mso::Make<JReactInstance, IReactInstanceInternal>(reactHost, std::move(options));
+	return Mso::Make<ReactInstanceAndroid, IReactInstanceInternal>(reactHost, std::move(options));
 }
 
 }} // namespace Mso::React

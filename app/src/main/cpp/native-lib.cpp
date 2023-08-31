@@ -4,6 +4,8 @@
 #include <fbjni/fbjni.h>
 
 #include "JReactOptions.h"
+#include "ReactInstanceAndroid.h"
+
 #include <ReactNativeHost/React.h>
 
 #include "ReactHost.h"
@@ -13,6 +15,7 @@ using namespace Mso::React;
 extern "C" jint JNI_OnLoad(JavaVM* vm, void*) {
     return facebook::jni::initialize(vm, [] {
         JReactOptions::registerNatives();
+        JReactInstance::registerNatives();
     });
 }
 
@@ -28,6 +31,10 @@ Java_com_example_rnhostv2_12_MainActivity_startNative(
     ReactHostRegistry::OnLibletInit();
 
     static Mso::CntPtr<IReactHost> reactHost = MakeReactHost(std::move(options));
+
+    // auto jOptions = make_global(JReactOptions::create(std::move(options)));
+    // auto instance = make_global(JReactInstance::create(jOptions));
+
 
     // static auto reactOptions = JReactOptions::create(std::move(options));
     // reactOptions->callJava();

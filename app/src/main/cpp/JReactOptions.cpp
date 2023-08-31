@@ -1,5 +1,6 @@
 #include "JReactOptions.h"
 using namespace facebook::jni;
+using namespace Mso::React;
 
 local_ref<JReactOptions::jhybridobject> JReactOptions::create(Mso::React::ReactOptions&& options) {
     return newObjectCxxArgs(std::move(options));
@@ -16,6 +17,11 @@ std::string JReactOptions::getIdentity() {
 
 void JReactOptions::setIdentity(std::string identity) {
     options_.Identity = identity;
+}
+
+const ReactOptions& JReactOptions::Options() const noexcept
+{
+    return options_;
 }
 
 /*static*/ void JReactOptions::registerNatives() {

@@ -25,7 +25,7 @@ add_library(rnhostv2_2
         AssetJSBundle_Android.cpp
         BundleServerJSBundle.cpp
         InstanceFactory_Android.cpp
-        JReactInstance.cpp
+        ReactInstanceAndroid.cpp
         JReactOptions.cpp
         JSBundle.cpp
         JSBundle_Android.cpp
