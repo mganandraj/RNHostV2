@@ -39,7 +39,6 @@ include_directories(D:/github/RNHostv2/app/src/main/cpp) # for sal.h
 
 find_library(log-lib log)
 
-
 # Office stuff
 add_compile_definitions(MS_TARGET_ANDROID)
 # target_compile_definitions(rnhostv2_2 PRIVATE MS_TARGET_ANDROID)

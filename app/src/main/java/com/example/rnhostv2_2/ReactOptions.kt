@@ -14,7 +14,6 @@ class ReactOptions {
         mHybridData = initHybrid()
     }
 
-
     var identity: String?
         external get
         external set

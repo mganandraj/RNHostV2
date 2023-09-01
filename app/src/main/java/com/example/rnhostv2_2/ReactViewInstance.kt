@@ -11,6 +11,14 @@ class ReactViewInstance : ReactRootView {
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {}
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {}
 
-    fun  /*Future?*/Reload(reactInstance: ReactInstance?, viewOptions: ReactViewOptions?) {}
-    fun  /*Future?*/Unload() {}
+    // TODO:: Return Future ?
+    fun  Reload(reactInstance: ReactInstance?, viewOptions: ReactViewOptions?) {
+        reactInstance?.getReactInstanceManager()?.attachRootView(this)
+        this.startReactApplication(reactInstance?.getReactInstanceManager(), viewOptions?.ComponentName);
+    }
+
+    // TODO:: Return Future ?
+    fun  /*Future?*/Unload() {
+
+    }
 }

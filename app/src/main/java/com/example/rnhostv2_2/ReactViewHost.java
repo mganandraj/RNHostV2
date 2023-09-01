@@ -1,2 +1,5 @@
-package com.example.rnhostv2_2;public class ReactViewHost {
+package com.example.rnhostv2_2;
+
+public class ReactViewHost {
+
 }

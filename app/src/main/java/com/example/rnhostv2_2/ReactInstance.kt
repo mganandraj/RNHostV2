@@ -4,6 +4,7 @@ import com.example.rnhostv2_2.ReactHostStatics.initialActivity
 import com.example.rnhostv2_2.ReactOptions
 import com.example.rnhostv2_2.ReactHostStatics
 import com.facebook.jni.HybridData
+import com.facebook.react.ReactInstanceManager
 import com.microsoft.office.reactnative.host.ReactNativeHost
 
 class ReactInstance internal constructor(reactOptions: ReactOptions) {
@@ -21,5 +22,9 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                 .isDev(true)
                 .jsMainModulePath("index")
                 .build()
+    }
+
+    fun getReactInstanceManager() : ReactInstanceManager {
+       return mReactNativeHost?.reactInstanceManager!!
     }
 }

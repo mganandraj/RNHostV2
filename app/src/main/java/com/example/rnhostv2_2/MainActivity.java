@@ -34,6 +34,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        String json1 = "{\n" +
+                "  \"Id\": 78912,\n" +
+                "  \"Customer\": \"Jason Sweet\",\n" +
+                "  \"Quantity\": 1,\n" +
+                "  \"Price\": 18.00\n" +
+                "}";
+        Bundle bundle1 = UtilsKt.fromJson(json1);
+        System.out.printf(bundle1.toString());
+
         ReactHostStatics.INSTANCE.setInitialActivity(new WeakReference< Activity >(MainActivity.this));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
