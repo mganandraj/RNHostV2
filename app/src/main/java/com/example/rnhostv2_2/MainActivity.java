@@ -61,8 +61,11 @@ public class MainActivity extends AppCompatActivity {
         SoLoader.init(this.getApplicationContext(), false);
         setContentView(R.layout.activity_main);
 
-        ReactOptions options = startNative();
+        ReactViewInstance reactViewInstance = new ReactViewInstance(this);
+
+        ReactOptions options = startNative(reactViewInstance);
         String identity = options.getIdentity();
+
 
         // Delayed because the Popup Windows shown by RN DevSupport can't be done too early.
         new Handler().postDelayed(new Runnable() {
@@ -79,5 +82,5 @@ public class MainActivity extends AppCompatActivity {
      * A native method that is implemented by the 'rnhostv2_2' native library,
      * which is packaged with this application.
      */
-    public native ReactOptions startNative();
+    public native ReactOptions startNative(ReactViewInstance reactViewInstance);
 }

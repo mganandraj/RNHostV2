@@ -27,11 +27,13 @@ add_library(rnhostv2_2
         InstanceFactory_Android.cpp
         ReactInstanceAndroid.cpp
         JReactOptions.cpp
+        JReactViewInstance.cpp
         JSBundle.cpp
         JSBundle_Android.cpp
         MsoUtils.cpp
         native-lib.cpp
         ReactHost.cpp
+        MainActivity.cpp
 )
 
 include_directories(${FBJNI_ROOT}/cxx/)
