@@ -8,7 +8,7 @@
 struct MainActivity : facebook::jni::JavaClass<MainActivity> {
     static constexpr auto kJavaDescriptor = "Lcom/example/rnhostv2_2/MainActivity;";
     static void registerNatives();
-    static void runReactOnView(facebook::jni::alias_ref<MainActivity>, facebook::jni::alias_ref<JReactViewInstance::jhybridobject>);
+    static void runReactOnView(facebook::jni::alias_ref<MainActivity>, facebook::jni::alias_ref<JOfficeReactRootView::jhybridobject>);
 
 //
 //    void nativeVoidMethod(

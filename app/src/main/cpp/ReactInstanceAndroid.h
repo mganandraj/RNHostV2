@@ -39,7 +39,8 @@ private:
     void Initialize() noexcept override;
     ~ReactInstanceAndroid() noexcept;
 
-private:
+public:
+//private:
     const Mso::WeakPtr<IReactHost> m_weakReactHost;
 
     ReactOptions m_options;

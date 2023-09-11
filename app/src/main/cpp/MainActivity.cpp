@@ -7,7 +7,7 @@ using namespace facebook::jni;
 using namespace Mso::React;
 
 /*static */void MainActivity::runReactOnView(facebook::jni::alias_ref<MainActivity> thiz,
-                                             facebook::jni::alias_ref<JReactViewInstance::jhybridobject> viewInstance) {
+                                             facebook::jni::alias_ref<JOfficeReactRootView::jhybridobject> viewInstance) {
 
     /*static const auto method = javaClassStatic()->getMethod<void()>("voidMethod");
     // self() returns the raw JNI reference to this object.
@@ -23,11 +23,11 @@ using namespace Mso::React;
     viewOptions.ComponentName = "AwesomeProject";
     static auto viewHost = reactHost->MakeViewHost(std::move(viewOptions));
 
-    JReactViewInstance* viewInstanceNative =  viewInstance->cthis();
-    viewHost->AttachViewInstance(static_cast<Mso::React::IReactViewInstance*>(viewInstanceNative));
+    JOfficeReactRootView* viewInstanceNative =  viewInstance->cthis();
+    viewHost->AttachViewInstance(*viewInstanceNative->m_ReactViewInstance);
 
-    auto unloadMethod = viewInstance->javaClassStatic()->getMethod<void()>("Unload");
-    unloadMethod(viewInstance);
+    // auto unloadMethod = viewInstance->javaClassStatic()->getMethod<void()>("Unload");
+    // unloadMethod(viewInstance);
 }
 
 void MainActivity::registerNatives() {

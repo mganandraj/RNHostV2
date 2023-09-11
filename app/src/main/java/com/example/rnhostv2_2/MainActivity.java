@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("rnhostv2_2");
     }
 
+    OfficeReactRootView mreactViewInstance = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,20 +64,14 @@ public class MainActivity extends AppCompatActivity {
         SoLoader.init(this.getApplicationContext(), false);
         setContentView(R.layout.activity_main);
 
-        final ReactViewInstance reactViewInstance = new ReactViewInstance(this);
-        runReactOnView(reactViewInstance);
-        // runReactOnView();
-        // ReactOptions options =
-        // String identity = options.getIdentity();
+        mreactViewInstance = new OfficeReactRootView(this);
+        runReactOnView(mreactViewInstance);
 
 
         // Delayed because the Popup Windows shown by RN DevSupport can't be done too early.
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                MainActivity.this.setContentView(reactViewInstance);
-                // show the popup window
-                // which view you pass in doesn't matter, it is only used for the window tolken
-                // MainActivity.this.setContentView(ReactIntegration.RootView(MainActivity.this));
+                MainActivity.this.setContentView(mreactViewInstance);
             }
         }, 100);
 
@@ -85,5 +81,5 @@ public class MainActivity extends AppCompatActivity {
      * A native method that is implemented by the 'rnhostv2_2' native library,
      * which is packaged with this application.
      */
-    public static native void runReactOnView(ReactViewInstance reactViewInstance);
+    public static native void runReactOnView(OfficeReactRootView reactViewInstance);
 }

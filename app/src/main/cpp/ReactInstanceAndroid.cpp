@@ -33,11 +33,10 @@ ReactInstanceAndroid::~ReactInstanceAndroid() noexcept
 void ReactInstanceAndroid::Initialize() noexcept
 {
     ThreadScope ts;
-    m_jOptions = make_global(JReactOptions::create(std::move(m_options)));
-
     // Note: This is required as the AcitiveObject thread is a raw pthread thread which don't have a Java stack in it yet.
     // https://developer.android.com/training/articles/perf-jni#faq_FindClass
     ThreadScope::WithClassLoader([this](){
+        m_jOptions = make_global(JReactOptions::create(std::move(m_options)));
         m_jReactInstance = make_global(JReactInstance::create(m_jOptions));
     });
 }

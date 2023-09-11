@@ -4,6 +4,7 @@
 #include <fbjni/fbjni.h>
 
 #include "JReactOptions.h"
+#include "JReactViewOptions.h"
 #include "ReactInstanceAndroid.h"
 #include "MainActivity.h"
 #include "JReactViewInstance.h"
@@ -17,9 +18,10 @@ using namespace Mso::React;
 extern "C" jint JNI_OnLoad(JavaVM* vm, void*) {
     return facebook::jni::initialize(vm, [] {
         JReactOptions::registerNatives();
+        JReactViewOptions::registerNatives();
         JReactInstance::registerNatives();
         MainActivity::registerNatives();
-        JReactViewInstance::registerNatives();
+        JOfficeReactRootView::registerNatives();
     });
 }
 

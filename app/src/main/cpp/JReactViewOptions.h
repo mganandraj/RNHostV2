@@ -16,8 +16,11 @@ struct JReactViewOptions : facebook::jni::HybridClass<JReactViewOptions> {
     JReactViewOptions(Mso::React::ReactViewOptions &&options) :
             options_(std::move(options)) {}
 
-    static facebook::jni::local_ref<jhybridobject> create(Mso::React::ReactViewOptions&&);
+    static facebook::jni::local_ref<jhybridobject> create(const Mso::React::ReactViewOptions&&);
     Mso::React::ReactViewOptions options_;
+
+    std::string getComponentName();
+    void setComponentName(std::string componentName);
 
     const Mso::React::ReactViewOptions& Options() const noexcept;
 

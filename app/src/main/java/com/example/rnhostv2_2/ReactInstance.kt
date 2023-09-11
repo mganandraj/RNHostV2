@@ -10,18 +10,21 @@ import com.microsoft.office.reactnative.host.ReactNativeHost
 class ReactInstance internal constructor(reactOptions: ReactOptions) {
     private external fun initHybrid(): HybridData
     private val mHybridData: HybridData
-    private val mReactNativeHost: ReactNativeHost?
+    private var mReactNativeHost: ReactNativeHost? = null
     private val mReactOptions: ReactOptions
 
     init {
         mHybridData = initHybrid()
         mReactOptions = reactOptions
-        mReactNativeHost = ReactNativeHost.Builder()
+
+        ReactHostStatics.initialActivity?.get()?.runOnUiThread(Runnable {
+            this.mReactNativeHost = ReactNativeHost.Builder()
                 .activity(initialActivity!!.get()!!)
                 .application(initialActivity!!.get()!!.application)
                 .isDev(true)
                 .jsMainModulePath("index")
-                .build()
+                .build() })
+
     }
 
     fun getReactInstanceManager() : ReactInstanceManager {

@@ -9,7 +9,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 project("rnhostv2_2")
 
-set(FBJNI_ROOT /Users/anandrag/code/fbjni)
+# set(FBJNI_ROOT /Users/anandrag/code/fbjni)
+set(FBJNI_ROOT D:/github/fbjni)
 file(GLOB fbjni_SOURCES
         ${FBJNI_ROOT}/cxx/fbjni/*.cpp
         ${FBJNI_ROOT}/cxx/fbjni/detail/*.cpp
@@ -37,7 +38,8 @@ add_library(rnhostv2_2
         MainActivity.cpp
 )
 
-target_include_directories(rnhostv2_2 PRIVATE /Users/anandrag/code/RNHostV2/app/src/main/cpp)
+# target_include_directories(rnhostv2_2 PRIVATE /Users/anandrag/code/RNHostV2/app/src/main/cpp)
+target_include_directories(rnhostv2_2 PRIVATE D:/github/RNHostv2/app/app/src/main/cpp)
 
 include_directories(${FBJNI_ROOT}/cxx/)
 include_directories(D:/github/RNHostv2/app/src/main/cpp) # for sal.h
@@ -56,6 +58,7 @@ add_compile_options ( -Wno-inconsistent-missing-override )
 add_compile_options ( -Wno-self-assign-overloaded )
 add_compile_options ( -Wno-unused-function )
 add_compile_options ( -Wno-error )
+add_compile_options ( -Wnonportable-include-path )
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake")
 include(liblet)

@@ -19,7 +19,8 @@ android {
 
     sourceSets.main {
         java {
-            srcDirs = ["src/main/java", "/Users/anandrag/code/fbjni/java"]
+            // srcDirs = ["src/main/java", "/Users/anandrag/code/fbjni/java"]
+            srcDirs = ["src/main/java", "D:/github/fbjni/java"]
         }
     }
 
