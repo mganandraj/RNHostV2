@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 project("rnhostv2_2")
 
-set(FBJNI_ROOT D:/github/fbjni)
+set(FBJNI_ROOT /Users/anandrag/code/fbjni)
 file(GLOB fbjni_SOURCES
         ${FBJNI_ROOT}/cxx/fbjni/*.cpp
         ${FBJNI_ROOT}/cxx/fbjni/detail/*.cpp
@@ -27,6 +27,7 @@ add_library(rnhostv2_2
         InstanceFactory_Android.cpp
         ReactInstanceAndroid.cpp
         JReactOptions.cpp
+        JReactViewOptions.cpp
         JReactViewInstance.cpp
         JSBundle.cpp
         JSBundle_Android.cpp
@@ -35,6 +36,8 @@ add_library(rnhostv2_2
         ReactHost.cpp
         MainActivity.cpp
 )
+
+target_include_directories(rnhostv2_2 PRIVATE /Users/anandrag/code/RNHostV2/app/src/main/cpp)
 
 include_directories(${FBJNI_ROOT}/cxx/)
 include_directories(D:/github/RNHostv2/app/src/main/cpp) # for sal.h

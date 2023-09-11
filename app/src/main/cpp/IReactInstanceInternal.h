@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Object/QueryCast.h>
-#include <ReactNativeHost/React.h>
+#include "ReactNativeHost/React.h"
 #include <compilerAdapters/declspecDefinitions.h>
 
 namespace Mso { namespace React {

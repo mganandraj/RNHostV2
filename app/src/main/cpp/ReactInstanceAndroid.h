@@ -1,7 +1,7 @@
 #ifndef RNHOSTV2_2_REACTINSTANCEANDROID_H
 #define RNHOSTV2_2_REACTINSTANCEANDROID_H
 
-#include <ReactNativeHost/React.h>
+#include "ReactNativeHost/React.h"
 #include "IReactInstanceInternal.h"
 #include "activeObject/activeObject.h"
 #include <fbjni/fbjni.h>

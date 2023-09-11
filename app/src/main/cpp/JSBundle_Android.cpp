@@ -1,4 +1,4 @@
-#include <ReactNativeHost/JSBundle.h>
+#include "ReactNativeHost/JSBundle.h"
 #include "AssetJSBundle_Android.h"
 
 namespace Mso { namespace React {

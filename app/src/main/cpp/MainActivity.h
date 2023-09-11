@@ -3,13 +3,30 @@
 
 #include <fbjni/fbjni.h>
 
-#include
+#include "JReactViewInstance.h"
 
-class MainActivity : facebook::jni::JavaClass<MainActivity> {
+struct MainActivity : facebook::jni::JavaClass<MainActivity> {
     static constexpr auto kJavaDescriptor = "Lcom/example/rnhostv2_2/MainActivity;";
     static void registerNatives();
+    static void runReactOnView(facebook::jni::alias_ref<MainActivity>, facebook::jni::alias_ref<JReactViewInstance::jhybridobject>);
 
-    static void runReactOnView()
+//
+//    void nativeVoidMethod(
+//            // All non-static methods receive "this" as a first argument.
+//            // facebook::jni::alias_ref<MainActivity> thiz
+//            ) {
+//        // Make sure we got the right object.
+//        assert(thiz->toString() == "instance of DocTests");
+//        // thiz->callVoidMethod();
+//    }
+
+//    static void nativeVoidMethod(
+//            // All non-static methods receive "this" as a first argument.
+//            facebook::jni::alias_ref<MainActivity> thiz) {
+//        // Make sure we got the right object.
+//        assert(thiz->toString() == "instance of DocTests");
+//        thiz->callVoidMethod();
+//    }
 };
 
 

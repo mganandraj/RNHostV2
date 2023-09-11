@@ -10,7 +10,7 @@
 #include <future/future.h>
 #include <object/RefCounted.h>
 // #include <ReactNativeHost/IMemoryTracker.h>
-#include <ReactNativeHost/JSBundle.h>
+#include "ReactNativeHost/JSBundle.h"
 //#include <ReactNativeHost/JSExceptionInfo.h>
 //#include <ReactNativeHost/ModuleProvider.h>
 //#include <Reka/RekaApi.h>

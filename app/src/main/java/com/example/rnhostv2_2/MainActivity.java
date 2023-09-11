@@ -17,6 +17,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.example.rnhostv2_2.databinding.ActivityMainBinding;
+import com.facebook.jni.HybridData;
 import com.facebook.soloader.SoLoader;
 import com.facebook.soloader.nativeloader.NativeLoader;
 import com.facebook.soloader.nativeloader.SystemDelegate;
@@ -34,14 +35,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String json1 = "{\n" +
+        /*String json1 = "{\n" +
                 "  \"Id\": 78912,\n" +
                 "  \"Customer\": \"Jason Sweet\",\n" +
                 "  \"Quantity\": 1,\n" +
                 "  \"Price\": 18.00\n" +
                 "}";
         Bundle bundle1 = UtilsKt.fromJson(json1);
-        System.out.printf(bundle1.toString());
+        System.out.printf(bundle1.toString());*/
 
         ReactHostStatics.INSTANCE.setInitialActivity(new WeakReference< Activity >(MainActivity.this));
 
@@ -61,18 +62,20 @@ public class MainActivity extends AppCompatActivity {
         SoLoader.init(this.getApplicationContext(), false);
         setContentView(R.layout.activity_main);
 
-        ReactViewInstance reactViewInstance = new ReactViewInstance(this);
-
-        ReactOptions options = startNative(reactViewInstance);
-        String identity = options.getIdentity();
+        final ReactViewInstance reactViewInstance = new ReactViewInstance(this);
+        runReactOnView(reactViewInstance);
+        // runReactOnView();
+        // ReactOptions options =
+        // String identity = options.getIdentity();
 
 
         // Delayed because the Popup Windows shown by RN DevSupport can't be done too early.
         new Handler().postDelayed(new Runnable() {
             public void run() {
+                MainActivity.this.setContentView(reactViewInstance);
                 // show the popup window
                 // which view you pass in doesn't matter, it is only used for the window tolken
-                MainActivity.this.setContentView(ReactIntegration.RootView(MainActivity.this));
+                // MainActivity.this.setContentView(ReactIntegration.RootView(MainActivity.this));
             }
         }, 100);
 
@@ -82,5 +85,5 @@ public class MainActivity extends AppCompatActivity {
      * A native method that is implemented by the 'rnhostv2_2' native library,
      * which is packaged with this application.
      */
-    public native ReactOptions startNative(ReactViewInstance reactViewInstance);
+    public static native void runReactOnView(ReactViewInstance reactViewInstance);
 }

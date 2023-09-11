@@ -18,12 +18,12 @@ class ReactViewInstance : ReactRootView {
 
     // TODO:: Return Future ?
     fun  Reload(reactInstance: ReactInstance?, viewOptions: ReactViewOptions?) {
-        this.startReactApplication(reactInstance?.getReactInstanceManager(), viewOptions?.ComponentName)
+        // this.startReactApplication(reactInstance?.getReactInstanceManager(), viewOptions?.ComponentName)
     }
 
     // TODO:: Return Future ?
     fun  Unload() {
-        this.unmountReactApplication()
+        // this.unmountReactApplication()
     }
 
     private external fun initHybrid(): HybridData

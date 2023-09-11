@@ -5,6 +5,8 @@
 
 #include "JReactOptions.h"
 #include "ReactInstanceAndroid.h"
+#include "MainActivity.h"
+#include "JReactViewInstance.h"
 
 #include <ReactNativeHost/React.h>
 
@@ -16,6 +18,8 @@ extern "C" jint JNI_OnLoad(JavaVM* vm, void*) {
     return facebook::jni::initialize(vm, [] {
         JReactOptions::registerNatives();
         JReactInstance::registerNatives();
+        MainActivity::registerNatives();
+        JReactViewInstance::registerNatives();
     });
 }
 
