@@ -1,26 +1,31 @@
 plugins {
     id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    namespace 'com.microsoft.office.reactnative.host'
+    namespace 'com.facebook.fbjni'
     compileSdk 33
 
     defaultConfig {
         minSdk 21
         targetSdk 33
+        versionCode 1
+        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         externalNativeBuild {
             cmake {
-                arguments
-                "-DANDROID_STL=c++_shared"
-
-                targets
-                "fbjni"
+                arguments "-DANDROID_STL=c++_shared"
+                targets "fbjni"
             }
+        }
+    }
+
+    sourceSets.main {
+        java {
+            // srcDirs = ["src/main/java", "/Users/anandrag/code/fbjni/java"]
+            srcDirs = ["src/main/java", "${FBJNI_ROOT}/java"]
         }
     }
 
@@ -30,30 +35,42 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+
+    buildFeatures {
+        prefab true
+        prefabPublishing true
     }
+
+    prefab {
+        fbjni {
+            headers "${FBJNI_ROOT}/cxx/"
+        }
+    }
+
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
             version '3.18.1'
         }
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'com.facebook.soloader:nativeloader:0.10.5'
+
     implementation "com.facebook.react:react-android:${RN_VERSION}"
     implementation "com.facebook.react:hermes-android:${RN_VERSION}"
+
 }

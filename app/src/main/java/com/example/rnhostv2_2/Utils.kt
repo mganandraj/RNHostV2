@@ -4,7 +4,6 @@ import android.os.Bundle
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import org.json.JSONTokener
 
 // Note: This can throw JSONException on malformed inputs.
 // Note: These are the valid JSON datatypes
@@ -15,7 +14,9 @@ import org.json.JSONTokener
 // a boolean
 // null
 // We are assuming "Double" type for all numbers
-fun fromJson(jsonStr: String): Bundle {
+fun fromJson(jsonStr: String?): Bundle {
+    if(jsonStr.isNullOrEmpty())
+        return Bundle()
     val json: Any = try { JSONObject(jsonStr) } catch (e : JSONException) {JSONArray(jsonStr)}
     return if (json is JSONObject) {
         fromJson(json)

@@ -19,7 +19,7 @@ class OfficeReactRootView : ReactRootView {
     // TODO:: Return Future ?
     fun  Reload(reactInstance: ReactInstance?, viewOptions: ReactViewOptions?) {
         ReactHostStatics.initialActivity?.get()?.runOnUiThread(Runnable {
-            this.startReactApplication(reactInstance?.getReactInstanceManager(), viewOptions?.ComponentName)
+            this.startReactApplication(reactInstance?.getReactInstanceManager(), viewOptions?.ComponentName, fromJson(viewOptions?.InitialProps));
         })
     }
 

@@ -4,3 +4,14 @@ plugins {
     id 'com.android.library' version '7.3.0' apply false
     id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
 }
+
+ext {
+    // Note we need to do some work to use the library from the nugetcache
+    // 1. Set the maven repo path in settings.gradle
+    // 2. Some how copy the SO files
+    // RN_VERSION = '0.71.27-office'
+    RN_VERSION = '0.71.13'
+    FBJNI_ROOT = "D:/github/fbjni/"
+    MSO_ROOT = "v3.4.0"
+}
+

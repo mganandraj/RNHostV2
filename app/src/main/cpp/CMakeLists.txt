@@ -9,18 +9,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 project("rnhostv2_2")
 
-# set(FBJNI_ROOT /Users/anandrag/code/fbjni)
-set(FBJNI_ROOT D:/github/fbjni)
-file(GLOB fbjni_SOURCES
-        ${FBJNI_ROOT}/cxx/fbjni/*.cpp
-        ${FBJNI_ROOT}/cxx/fbjni/detail/*.cpp
-        ${FBJNI_ROOT}/cxx/lyra/*.cpp
-        )
-
-add_library(fbjni
-        SHARED
-        ${fbjni_SOURCES})
-
 add_library(rnhostv2_2
         SHARED
         AssetJSBundle_Android.cpp
@@ -41,10 +29,16 @@ add_library(rnhostv2_2
 # target_include_directories(rnhostv2_2 PRIVATE /Users/anandrag/code/RNHostV2/app/src/main/cpp)
 target_include_directories(rnhostv2_2 PRIVATE D:/github/RNHostv2/app/app/src/main/cpp)
 
-include_directories(${FBJNI_ROOT}/cxx/)
+#set(FBJNI_ROOT D:/github/fbjni)
+#target_include_directories(rnhostv2_2 PRIVATE ${FBJNI_ROOT}/cxx)
+
 include_directories(D:/github/RNHostv2/app/src/main/cpp) # for sal.h
 
+find_package(fbjni REQUIRED CONFIG)
+target_link_libraries(rnhostv2_2 fbjni::fbjni)
+
 find_library(log-lib log)
+target_link_libraries(rnhostv2_2 ${log-lib})
 
 # Office stuff
 add_compile_definitions(MS_TARGET_ANDROID)
@@ -71,8 +65,8 @@ add_subdirectory(libs)
 target_compile_definitions(rnhostv2_2 PRIVATE MS_TARGET_ANDROID)
 target_compile_definitions(rnhostv2_2 PRIVATE MS_TARGET_POSIX)
 
-target_link_libraries(fbjni ${log-lib})
-target_link_libraries(rnhostv2_2 fbjni)
+# target_link_libraries(fbjni ${log-lib})
+# target_link_libraries(rnhostv2_2 fbjni)
 
 target_link_libraries(rnhostv2_2 dispatchQueue)
 target_link_libraries(rnhostv2_2 errorCode)
@@ -80,4 +74,3 @@ target_link_libraries(rnhostv2_2 future)
 target_link_libraries(rnhostv2_2 smartPtr)
 target_link_libraries(rnhostv2_2 activeObject)
 
-target_link_libraries(rnhostv2_2 ${log-lib})

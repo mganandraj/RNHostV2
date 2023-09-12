@@ -15,12 +15,12 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
 
-    sourceSets.main {
-        java {
-            // srcDirs = ["src/main/java", "/Users/anandrag/code/fbjni/java"]
-            srcDirs = ["src/main/java", "D:/github/fbjni/java"]
+        externalNativeBuild {
+            cmake {
+                arguments "-DANDROID_STL=c++_shared"
+                targets "rnhostv2_2"
+            }
         }
     }
 
@@ -41,11 +41,10 @@ android {
         }
     }
     buildFeatures {
+        prefab true
         viewBinding true
     }
 }
-
-def RN_VERSION = '0.71.27-office'
 
 dependencies {
 
@@ -59,9 +58,14 @@ dependencies {
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'com.facebook.soloader:nativeloader:0.10.5'
 
-    implementation "com.facebook.react:react-android:${RN_VERSION}"
-    implementation "com.facebook.react:hermes-android:${RN_VERSION}"
+    implementation ("com.facebook.react:react-android:${RN_VERSION}") {
+        exclude group:'com.facebook.fbjni', module:'fbjni'
+    }
+
+    implementation ("com.facebook.react:hermes-android:${RN_VERSION}") {
+        exclude group:'com.facebook.fbjni', module:'fbjni'
+    }
 
     implementation(project(":rnx-host"))
-
+    implementation(project(":fbjni"))
 }

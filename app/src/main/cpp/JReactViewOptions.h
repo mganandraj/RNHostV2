@@ -22,6 +22,9 @@ struct JReactViewOptions : facebook::jni::HybridClass<JReactViewOptions> {
     std::string getComponentName();
     void setComponentName(std::string componentName);
 
+    std::string getInitialProps();
+    void setInitialProps(std::string initialProps);
+
     const Mso::React::ReactViewOptions& Options() const noexcept;
 
 };

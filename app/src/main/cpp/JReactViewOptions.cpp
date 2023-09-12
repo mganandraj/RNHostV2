@@ -20,10 +20,20 @@ void JReactViewOptions::setComponentName(std::string componentName){
     options_.ComponentName = componentName;
 }
 
+std::string JReactViewOptions::getInitialProps() {
+    return options_.InitialProps;
+}
+
+void JReactViewOptions::setInitialProps(std::string initialProps) {
+    options_.InitialProps = initialProps;
+}
+
 /*static*/ void JReactViewOptions::registerNatives() {
     registerHybrid({
-                           makeNativeMethod("initHybrid", JReactViewOptions::initHybrid),
-                           makeNativeMethod("getComponentName", JReactViewOptions::getComponentName),
-                           makeNativeMethod("setComponentName", JReactViewOptions::setComponentName)
-                   });
+           makeNativeMethod("initHybrid", JReactViewOptions::initHybrid),
+           makeNativeMethod("getComponentName", JReactViewOptions::getComponentName),
+           makeNativeMethod("setComponentName", JReactViewOptions::setComponentName),
+           makeNativeMethod("getInitialProps", JReactViewOptions::getInitialProps),
+           makeNativeMethod("setInitialProps", JReactViewOptions::setInitialProps)
+    });
 }
