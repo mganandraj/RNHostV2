@@ -21,3 +21,4 @@ rootProject.name = "RNHostv2_2"
 include ':app'
 include ':rnx-host'
 include ':fbjni'
+include ':mso'

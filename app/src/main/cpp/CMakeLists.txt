@@ -26,51 +26,38 @@ add_library(rnhostv2_2
         MainActivity.cpp
 )
 
-# target_include_directories(rnhostv2_2 PRIVATE /Users/anandrag/code/RNHostV2/app/src/main/cpp)
-target_include_directories(rnhostv2_2 PRIVATE D:/github/RNHostv2/app/app/src/main/cpp)
+# TODO:: Why is this necessary ?
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-#set(FBJNI_ROOT D:/github/fbjni)
-#target_include_directories(rnhostv2_2 PRIVATE ${FBJNI_ROOT}/cxx)
-
-include_directories(D:/github/RNHostv2/app/src/main/cpp) # for sal.h
+find_package(mso REQUIRED CONFIG)
+target_compile_definitions(rnhostv2_2 PRIVATE MS_TARGET_ANDROID)
+target_compile_definitions(rnhostv2_2 PRIVATE MS_TARGET_POSIX)
+target_link_libraries(rnhostv2_2 mso::activeObject)
+target_link_libraries(rnhostv2_2 mso::compilerAdapters)
+target_link_libraries(rnhostv2_2 mso::comUtil)
+target_link_libraries(rnhostv2_2 mso::cppExtensions)
+target_link_libraries(rnhostv2_2 mso::crash)
+target_link_libraries(rnhostv2_2 mso::debugAssertApi)
+target_link_libraries(rnhostv2_2 mso::dispatchQueue)
+target_link_libraries(rnhostv2_2 mso::errorCode)
+target_link_libraries(rnhostv2_2 mso::eventWaitHandle)
+target_link_libraries(rnhostv2_2 mso::functional)
+target_link_libraries(rnhostv2_2 mso::future)
+target_link_libraries(rnhostv2_2 mso::guid)
+target_link_libraries(rnhostv2_2 mso::memoryApi)
+target_link_libraries(rnhostv2_2 mso::motifCpp)
+target_link_libraries(rnhostv2_2 mso::oacr)
+target_link_libraries(rnhostv2_2 mso::oacr_posix)
+target_link_libraries(rnhostv2_2 mso::object)
+target_link_libraries(rnhostv2_2 mso::platformAdapters)
+target_link_libraries(rnhostv2_2 mso::platform_posix)
+target_link_libraries(rnhostv2_2 mso::smartPtr)
+target_link_libraries(rnhostv2_2 mso::span)
+target_link_libraries(rnhostv2_2 mso::tagUtils)
+target_link_libraries(rnhostv2_2 mso::typeTraits)
 
 find_package(fbjni REQUIRED CONFIG)
 target_link_libraries(rnhostv2_2 fbjni::fbjni)
 
 find_library(log-lib log)
 target_link_libraries(rnhostv2_2 ${log-lib})
-
-# Office stuff
-add_compile_definitions(MS_TARGET_ANDROID)
-# target_compile_definitions(rnhostv2_2 PRIVATE MS_TARGET_ANDROID)
-
-# MSO - Start
-
-set(MSO_LIBLET_PLATFORM ANDROID)
-add_compile_options ( -Wno-deprecated-declarations )
-add_compile_options ( -Wno-inconsistent-missing-override )
-add_compile_options ( -Wno-self-assign-overloaded )
-add_compile_options ( -Wno-unused-function )
-add_compile_options ( -Wno-error )
-add_compile_options ( -Wnonportable-include-path )
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake")
-include(liblet)
-
-add_subdirectory(external)
-add_subdirectory(libs)
-
-# MSO - End
-
-target_compile_definitions(rnhostv2_2 PRIVATE MS_TARGET_ANDROID)
-target_compile_definitions(rnhostv2_2 PRIVATE MS_TARGET_POSIX)
-
-# target_link_libraries(fbjni ${log-lib})
-# target_link_libraries(rnhostv2_2 fbjni)
-
-target_link_libraries(rnhostv2_2 dispatchQueue)
-target_link_libraries(rnhostv2_2 errorCode)
-target_link_libraries(rnhostv2_2 future)
-target_link_libraries(rnhostv2_2 smartPtr)
-target_link_libraries(rnhostv2_2 activeObject)
-

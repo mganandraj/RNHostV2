@@ -12,8 +12,6 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_STL=c++_shared"
@@ -24,8 +22,7 @@ android {
 
     sourceSets.main {
         java {
-            // srcDirs = ["src/main/java", "/Users/anandrag/code/fbjni/java"]
-            srcDirs = ["src/main/java", "${FBJNI_ROOT}/java"]
+            srcDirs = ["${FBJNI_ROOT}/java"]
         }
     }
 
