@@ -11,7 +11,7 @@
 namespace Mso::React {
 
 struct JReactInstance  : facebook::jni::HybridClass<JReactInstance> {
-    static constexpr auto kJavaDescriptor = "Lcom/example/ornhost/ReactInstance;";
+    static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/ReactInstance;";
     static facebook::jni::local_ref<jhybriddata> initHybrid(facebook::jni::alias_ref<jhybridobject> jThis);
     static void registerNatives();
 
