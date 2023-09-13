@@ -1,4 +1,4 @@
-package com.example.rnhostv2_2
+package com.microsoft.office.reacthost
 
 import android.os.Bundle
 import org.json.JSONArray

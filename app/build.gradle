@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.rnhostv2_2'
+    namespace 'com.microsoft.office.reacthost'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.rnhostv2_2"
+        applicationId "com.microsoft.office.reacthost"
         minSdk 21
         targetSdk 33
         versionCode 1
@@ -19,7 +19,7 @@ android {
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_STL=c++_shared"
-                targets "rnhostv2_2"
+                targets "reacthost"
             }
         }
     }

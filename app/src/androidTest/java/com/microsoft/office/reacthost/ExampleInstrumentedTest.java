@@ -1,4 +1,4 @@
-package com.example.rnhostv2_2;
+package com.microsoft.office.reacthost;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -23,7 +23,7 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.rnhostv2_2", appContext.getPackageName());
+        assertEquals("com.microsoft.office.reacthost", appContext.getPackageName());
     }
 
     // This doesn't work as unit test ! May be because JSONObject is a platform API

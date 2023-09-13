@@ -2,14 +2,14 @@
 // Created by Anandraj Govindan on 9/4/23.
 //
 
-#ifndef RNHOSTV2_2_JREACTVIEWOPTIONS_H
-#define RNHOSTV2_2_JREACTVIEWOPTIONS_H
+#ifndef ornhost_JREACTVIEWOPTIONS_H
+#define ornhost_JREACTVIEWOPTIONS_H
 
 #include "fbjni/fbjni.h"
 #include <ReactNativeHost/React.h>
 
 struct JReactViewOptions : facebook::jni::HybridClass<JReactViewOptions> {
-    static constexpr auto kJavaDescriptor = "Lcom/example/rnhostv2_2/ReactViewOptions;";
+    static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/ReactViewOptions;";
     static facebook::jni::local_ref<jhybriddata> initHybrid(facebook::jni::alias_ref<jhybridobject> jThis);
     static void registerNatives();
 
@@ -30,4 +30,4 @@ struct JReactViewOptions : facebook::jni::HybridClass<JReactViewOptions> {
 };
 
 
-#endif //RNHOSTV2_2_JREACTVIEWOPTIONS_H
+#endif //ornhost_JREACTVIEWOPTIONS_H

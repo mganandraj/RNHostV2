@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keepclassmembers class com.example.rnhostv2_2.ReactOptions {
+-keepclassmembers class com.microsoft.office.reacthost.ReactOptions {
 }
 
 -keepclassmembers class com.facebook.jni.* {

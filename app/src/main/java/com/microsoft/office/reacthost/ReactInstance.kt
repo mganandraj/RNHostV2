@@ -1,8 +1,6 @@
-package com.example.rnhostv2_2
+package com.microsoft.office.reacthost
 
-import com.example.rnhostv2_2.ReactHostStatics.initialActivity
-import com.example.rnhostv2_2.ReactOptions
-import com.example.rnhostv2_2.ReactHostStatics
+import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
 import com.facebook.jni.HybridData
 import com.facebook.react.ReactInstanceManager
 import com.microsoft.office.reactnative.host.ReactNativeHost

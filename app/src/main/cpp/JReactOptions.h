@@ -1,11 +1,11 @@
-#ifndef RNHOSTV2_2_JREACTOPTIONS_H
-#define RNHOSTV2_2_JREACTOPTIONS_H
+#ifndef ornhost_JREACTOPTIONS_H
+#define ornhost_JREACTOPTIONS_H
 
 #include <fbjni/fbjni.h>
 #include "ReactNativeHost/React.h"
 
 struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
-    static constexpr auto kJavaDescriptor = "Lcom/example/rnhostv2_2/ReactOptions;";
+    static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/ReactOptions;";
     static facebook::jni::local_ref<jhybriddata> initHybrid(facebook::jni::alias_ref<jhybridobject> jThis);
     static void registerNatives();
 
@@ -21,4 +21,4 @@ struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
     void setIdentity(std::string identity);
 };
 
-#endif //RNHOSTV2_2_JREACTOPTIONS_H
+#endif //ornhost_JREACTOPTIONS_H

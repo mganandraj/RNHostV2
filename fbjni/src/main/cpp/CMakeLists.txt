@@ -9,8 +9,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 project("fbjni")
 
-# set(FBJNI_ROOT /Users/anandrag/code/fbjni)
-set(FBJNI_ROOT D:/github/fbjni)
 file(GLOB fbjni_SOURCES
         ${FBJNI_ROOT}/cxx/fbjni/*.cpp
         ${FBJNI_ROOT}/cxx/fbjni/detail/*.cpp

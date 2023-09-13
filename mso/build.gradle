@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.mso'
+    namespace 'com.microsoft.mso'
     compileSdk 32
 
     defaultConfig {

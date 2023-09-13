@@ -17,7 +17,7 @@ dependencyResolutionManagement {
 //        }
     }
 }
-rootProject.name = "RNHostv2_2"
+rootProject.name = "ornhost"
 include ':app'
 include ':rnx-host'
 include ':fbjni'

@@ -1,4 +1,4 @@
-package com.example.rnhostv2_2
+package com.microsoft.office.reacthost
 
 import android.app.Activity
 import java.lang.ref.WeakReference

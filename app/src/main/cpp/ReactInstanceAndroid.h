@@ -1,5 +1,5 @@
-#ifndef RNHOSTV2_2_REACTINSTANCEANDROID_H
-#define RNHOSTV2_2_REACTINSTANCEANDROID_H
+#ifndef ornhost_REACTINSTANCEANDROID_H
+#define ornhost_REACTINSTANCEANDROID_H
 
 #include "ReactNativeHost/React.h"
 #include "IReactInstanceInternal.h"
@@ -11,7 +11,7 @@
 namespace Mso::React {
 
 struct JReactInstance  : facebook::jni::HybridClass<JReactInstance> {
-    static constexpr auto kJavaDescriptor = "Lcom/example/rnhostv2_2/ReactInstance;";
+    static constexpr auto kJavaDescriptor = "Lcom/example/ornhost/ReactInstance;";
     static facebook::jni::local_ref<jhybriddata> initHybrid(facebook::jni::alias_ref<jhybridobject> jThis);
     static void registerNatives();
 
@@ -50,4 +50,4 @@ public:
 
 }
 
-#endif //RNHOSTV2_2_REACTINSTANCEANDROID_H
+#endif //ornhost_REACTINSTANCEANDROID_H

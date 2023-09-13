@@ -2,8 +2,8 @@
 // Created by anandrag on 9/2/2023.
 //
 
-#ifndef RNHOSTV2_2_JREACTVIEWINSTANCE_H
-#define RNHOSTV2_2_JREACTVIEWINSTANCE_H
+#ifndef ornhost_JREACTVIEWINSTANCE_H
+#define ornhost_JREACTVIEWINSTANCE_H
 
 #include <fbjni/fbjni.h>
 #include "ReactNativeHost/React.h"
@@ -11,7 +11,7 @@
 
 struct OfficeReactViewInstance;
 struct JOfficeReactRootView : facebook::jni::HybridClass<JOfficeReactRootView> {
-    static constexpr auto kJavaDescriptor = "Lcom/example/rnhostv2_2/OfficeReactRootView;";
+    static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/OfficeReactRootView;";
     static facebook::jni::local_ref<jhybriddata> initHybrid(facebook::jni::alias_ref<jhybridobject> jThis);
     static void registerNatives();
 
@@ -35,4 +35,4 @@ struct OfficeReactViewInstance : public Mso::UnknownObject<Mso::React::IReactVie
 };
 
 
-#endif //RNHOSTV2_2_JREACTVIEWINSTANCE_H
+#endif //ornhost_JREACTVIEWINSTANCE_H

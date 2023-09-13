@@ -1,8 +1,8 @@
-package com.example.rnhostv2_2
+package com.microsoft.office.reacthost
 
 import com.facebook.jni.HybridData
 
-class ReactOptions {
+class ReactViewOptions {
     private external fun initHybrid(): HybridData
     private val mHybridData: HybridData
 
@@ -14,14 +14,11 @@ class ReactOptions {
         mHybridData = initHybrid()
     }
 
-    var identity: String?
+    var ComponentName: String?
         external get
         external set
 
-    companion object {
-        init {
-            System.loadLibrary("fbjni")
-            System.loadLibrary("rnhostv2_2")
-        }
-    }
+    var InitialProps: String?
+        external get
+        external set
 }

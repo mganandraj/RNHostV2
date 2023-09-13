@@ -1,23 +1,14 @@
-package com.example.rnhostv2_2;
+package com.microsoft.office.reacthost;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
-import com.example.rnhostv2_2.databinding.ActivityMainBinding;
-import com.facebook.jni.HybridData;
 import com.facebook.soloader.SoLoader;
 import com.facebook.soloader.nativeloader.NativeLoader;
 import com.facebook.soloader.nativeloader.SystemDelegate;
@@ -28,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     static {
         System.loadLibrary("fbjni");
-        System.loadLibrary("rnhostv2_2");
+        System.loadLibrary("reacthost");
     }
 
     OfficeReactRootView mreactViewInstance = null;
@@ -36,15 +27,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        /*String json1 = "{\n" +
-                "  \"Id\": 78912,\n" +
-                "  \"Customer\": \"Jason Sweet\",\n" +
-                "  \"Quantity\": 1,\n" +
-                "  \"Price\": 18.00\n" +
-                "}";
-        Bundle bundle1 = UtilsKt.fromJson(json1);
-        System.out.printf(bundle1.toString());*/
 
         ReactHostStatics.INSTANCE.setInitialActivity(new WeakReference< Activity >(MainActivity.this));
 
@@ -77,9 +59,5 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * A native method that is implemented by the 'rnhostv2_2' native library,
-     * which is packaged with this application.
-     */
     public static native void runReactOnView(OfficeReactRootView reactViewInstance);
 }

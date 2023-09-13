@@ -14,7 +14,8 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments "-DANDROID_STL=c++_shared"
+                arguments "-DANDROID_STL=c++_shared",
+                    "-DFBJNI_ROOT=${FBJNI_ROOT}"
                 targets "fbjni"
             }
         }
