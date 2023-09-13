@@ -5,7 +5,7 @@
 
 #include <android/asset_manager_jni.h>
 #include <cxxreact/JSBigString.h>
-#include <jni/JSLoader.h>
+#include <react/jni/JSLoader.h>
 
 namespace facebook {
 namespace react {

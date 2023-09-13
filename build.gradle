@@ -10,7 +10,8 @@ ext {
     // 1. Set the maven repo path in settings.gradle
     // 2. Some how copy the SO files
     // RN_VERSION = '0.71.27-office'
-    RN_VERSION = '0.71.13'
+    // RN_VERSION = '0.71.13'
+    RN_VERSION = '0.71.27-office'
     FBJNI_ROOT = "D:/github/fbjni/"
     MSO_ROOT = "v3.4.0"
 }

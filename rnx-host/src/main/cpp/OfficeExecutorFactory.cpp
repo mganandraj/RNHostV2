@@ -1,6 +1,6 @@
 #include "ReactNativeHeaders.h"
 #include <jsi/jsi.h>
-#include <jsireact/JSIExecutor.h>
+// #include <jsireact/JSIExecutor.h>
 
 #include "OfficeExecutorFactory.h"
 #include "OfficeExecutor.h"

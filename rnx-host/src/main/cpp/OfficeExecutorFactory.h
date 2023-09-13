@@ -3,7 +3,7 @@
 #include <cxxreact/JSExecutor.h>
 #include <vector>
 #include <fbjni/fbjni.h>
-#include <jni/JSLoader.h>
+#include <react/jni/JSLoader.h>
 
 #include "JOfficeExecutorObserver.h"
 

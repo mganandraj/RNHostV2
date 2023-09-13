@@ -6,7 +6,7 @@ namespace facebook {
 namespace react {
 
 struct JOfficeExecutorObserver : facebook::jni::JavaClass<JOfficeExecutorObserver> {
-  static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reactnative/jsexecutor/OfficeExecutorObserver;";
+  static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reactnative/host/OfficeExecutorObserver;";
 
   void OnInitialized();
   void OnLoaded(const std::string& bundleUrl);

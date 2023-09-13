@@ -18,6 +18,7 @@ import com.facebook.react.shell.MainReactPackage
 import com.facebook.soloader.SoLoader
 
 class ReactNativeHost private constructor (
+
     private val bundleName: String?,
     private val bundleFilePath: String?,
     private val jsMainModulePath: String?,
@@ -36,6 +37,10 @@ class ReactNativeHost private constructor (
     hostApplication: Application,
     private val hostInitialActivity: Activity) : com.facebook.react.ReactNativeHost(hostApplication)
 {
+    companion object {
+        val LOG_TAG = "ReactNativeHost"
+    }
+
     interface JSBundleLoaderProvider {
         fun getBundleLoader(bundleName: String, application: Application) : JSBundleLoader
     }
@@ -181,7 +186,17 @@ class ReactNativeHost private constructor (
             builder.setJavaScriptExecutorFactory(javaScriptExecutorFactoryOverride)
         else {
             SoLoader.init(application, false)
-            builder.setJavaScriptExecutorFactory(HermesExecutorFactory())
+            val baseExecutorFactory = HermesExecutorFactory()
+            val wrappedExecutorFactory = OfficeExecutorFactory(application.applicationContext, baseExecutorFactory, platformBundleNames?.toTypedArray()?: arrayOf<String>(), object: OfficeExecutorObserver{
+                override fun OnBundleLoaded(bundleUrl: String?) {
+                    Log.w(LOG_TAG, "Not yet implemented")
+                }
+
+                override fun OnInitialized() {
+                    Log.w(LOG_TAG, "Not yet implemented")
+                }
+            })
+            builder.setJavaScriptExecutorFactory(wrappedExecutorFactory)
         }
 
         when {

@@ -1,9 +1,9 @@
 #include "ReactNativeHeaders.h"
 
 #include <fbjni/fbjni.h>
-#include <jni/JavaScriptExecutorHolder.h>
-#include <jni/ReadableNativeMap.h>
-#include <jni/JSLoader.h> 
+#include <react/jni/JavaScriptExecutorHolder.h>
+#include <react/jni/ReadableNativeMap.h>
+#include <react/jni/JSLoader.h>
 
 #include "JOfficeExecutorObserver.h"
 #include "OfficeExecutorFactory.h"
@@ -16,7 +16,7 @@ namespace react {
 class OfficeExecutorHolder
     : public jni::HybridClass<OfficeExecutorHolder, JavaScriptExecutorHolder> {
  public:
-  static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reactnative/jsexecutor/OfficeExecutor;";
+  static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reactnative/host/OfficeExecutor;";
 
   static jni::local_ref<jhybriddata> initHybrid(
       jni::alias_ref<jclass>
