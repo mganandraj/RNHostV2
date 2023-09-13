@@ -21,7 +21,7 @@ class ReactOptions {
     companion object {
         init {
             System.loadLibrary("fbjni")
-            System.loadLibrary("ornhost")
+            System.loadLibrary("reacthost")
         }
     }
 }

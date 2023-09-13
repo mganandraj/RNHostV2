@@ -1,4 +1,4 @@
-package com.microsoft.office.reacthost;
+package com.microsoft.office.reacthostapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,14 +12,16 @@ import android.provider.Settings;
 import com.facebook.soloader.SoLoader;
 import com.facebook.soloader.nativeloader.NativeLoader;
 import com.facebook.soloader.nativeloader.SystemDelegate;
+import com.microsoft.office.reacthost.OfficeReactRootView;
+import com.microsoft.office.reacthost.ReactHostStatics;
 
 import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 
     static {
-        System.loadLibrary("fbjni");
         System.loadLibrary("reacthost");
+        System.loadLibrary("reacthostapp");
     }
 
     OfficeReactRootView mreactViewInstance = null;

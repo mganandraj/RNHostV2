@@ -30,73 +30,73 @@ android {
     }
 
     prefab {
-        activeObject{
+        activeObject {
             headers "src/main/cpp/libs/activeObject/include"
         }
-        compilerAdapters{
+        compilerAdapters {
             headers "src/main/cpp/libs/compilerAdapters/include"
         }
-        comUtil{
+        comUtil {
             headers "src/main/cpp/libs/comUtil/include"
         }
-        cppExtensions{
+        cppExtensions {
             headers "src/main/cpp/libs/cppExtensions/include"
         }
-        crash{
+        crash {
             headers "src/main/cpp/libs/crash/include"
         }
-        debugAssertApi{
+        debugAssertApi {
             headers "src/main/cpp/libs/debugAssertApi/include"
         }
-        dispatchQueue{
+        dispatchQueue {
             headers "src/main/cpp/libs/dispatchQueue/include"
         }
-        errorCode{
+        errorCode {
             headers "src/main/cpp/libs/errorCode/include"
         }
-        eventWaitHandle{
+        eventWaitHandle {
             headers "src/main/cpp/libs/eventWaitHandle/include"
         }
-        functional{
+        functional {
             headers "src/main/cpp/libs/functional/include"
         }
-        future{
+        future {
             headers "src/main/cpp/libs/future/include"
         }
         guid{
             headers "src/main/cpp/libs/guid/include"
         }
-        memoryApi{
+        memoryApi {
             headers "src/main/cpp/libs/memoryApi/include"
         }
-        motifCpp{
+        motifCpp {
             headers "src/main/cpp/libs/motifCpp/include"
         }
-        oacr{
+        oacr {
             headers "src/main/cpp/libs/oacr/include"
         }
-        oacr_posix{
+        oacr_posix {
             headers "src/main/cpp/libs/oacr_posix/include"
         }
-        object{
+        object {
             headers "src/main/cpp/libs/object/include"
         }
-        platformAdapters{
+        platformAdapters {
             headers "src/main/cpp/libs/platformAdapters/include"
         }
-        platform_posix{
+        platform_posix {
             headers "src/main/cpp/libs/platform_posix/include"
         }
-        smartPtr{
+        smartPtr {
             headers "src/main/cpp/libs/smartPtr/include"
         }
-        span{
+        span {
             headers "src/main/cpp/libs/span/include"
         }
-        tagUtils{
+        tagUtils {
             headers "src/main/cpp/libs/tagUtils/include"
         }
-        typeTraits{
+        typeTraits {
             headers "src/main/cpp/libs/typeTraits/include"
         }
     }

@@ -1,4 +1,4 @@
-package com.microsoft.office.reacthost;
+package com.microsoft.office.reacthostapp;
 
 import android.content.Context;
 import android.os.Bundle;

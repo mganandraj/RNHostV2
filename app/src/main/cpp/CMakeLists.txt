@@ -7,57 +7,50 @@ cmake_minimum_required(VERSION 3.18.1)
 
 set(CMAKE_CXX_STANDARD 20)
 
-project("reacthost")
+project("reacthostapp")
 
-add_library(reacthost
+add_library(reacthostapp
         SHARED
-        AssetJSBundle_Android.cpp
-        BundleServerJSBundle.cpp
-        InstanceFactory_Android.cpp
-        ReactInstanceAndroid.cpp
-        JReactOptions.cpp
-        JReactViewOptions.cpp
-        JReactViewInstance.cpp
-        JSBundle.cpp
-        JSBundle_Android.cpp
-        MsoUtils.cpp
-        native-lib.cpp
-        ReactHost.cpp
         MainActivity.cpp
+        OnLoad.cpp
 )
 
 # TODO:: Why is this necessary ?
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(mso REQUIRED CONFIG)
-target_compile_definitions(reacthost PRIVATE MS_TARGET_ANDROID)
-target_compile_definitions(reacthost PRIVATE MS_TARGET_POSIX)
-target_link_libraries(reacthost mso::activeObject)
-target_link_libraries(reacthost mso::compilerAdapters)
-target_link_libraries(reacthost mso::comUtil)
-target_link_libraries(reacthost mso::cppExtensions)
-target_link_libraries(reacthost mso::crash)
-target_link_libraries(reacthost mso::debugAssertApi)
-target_link_libraries(reacthost mso::dispatchQueue)
-target_link_libraries(reacthost mso::errorCode)
-target_link_libraries(reacthost mso::eventWaitHandle)
-target_link_libraries(reacthost mso::functional)
-target_link_libraries(reacthost mso::future)
-target_link_libraries(reacthost mso::guid)
-target_link_libraries(reacthost mso::memoryApi)
-target_link_libraries(reacthost mso::motifCpp)
-target_link_libraries(reacthost mso::oacr)
-target_link_libraries(reacthost mso::oacr_posix)
-target_link_libraries(reacthost mso::object)
-target_link_libraries(reacthost mso::platformAdapters)
-target_link_libraries(reacthost mso::platform_posix)
-target_link_libraries(reacthost mso::smartPtr)
-target_link_libraries(reacthost mso::span)
-target_link_libraries(reacthost mso::tagUtils)
-target_link_libraries(reacthost mso::typeTraits)
+target_compile_definitions(reacthostapp PRIVATE MS_TARGET_ANDROID)
+target_compile_definitions(reacthostapp PRIVATE MS_TARGET_POSIX)
+target_link_libraries(reacthostapp mso::activeObject)
+target_link_libraries(reacthostapp mso::compilerAdapters)
+target_link_libraries(reacthostapp mso::comUtil)
+target_link_libraries(reacthostapp mso::cppExtensions)
+target_link_libraries(reacthostapp mso::crash)
+target_link_libraries(reacthostapp mso::debugAssertApi)
+target_link_libraries(reacthostapp mso::dispatchQueue)
+target_link_libraries(reacthostapp mso::errorCode)
+target_link_libraries(reacthostapp mso::eventWaitHandle)
+target_link_libraries(reacthostapp mso::functional)
+target_link_libraries(reacthostapp mso::future)
+target_link_libraries(reacthostapp mso::guid)
+target_link_libraries(reacthostapp mso::memoryApi)
+target_link_libraries(reacthostapp mso::motifCpp)
+target_link_libraries(reacthostapp mso::oacr)
+target_link_libraries(reacthostapp mso::oacr_posix)
+target_link_libraries(reacthostapp mso::object)
+target_link_libraries(reacthostapp mso::platformAdapters)
+target_link_libraries(reacthostapp mso::platform_posix)
+target_link_libraries(reacthostapp mso::smartPtr)
+target_link_libraries(reacthostapp mso::span)
+target_link_libraries(reacthostapp mso::tagUtils)
+target_link_libraries(reacthostapp mso::typeTraits)
 
 find_package(fbjni REQUIRED CONFIG)
-target_link_libraries(reacthost fbjni::fbjni)
+target_link_libraries(reacthostapp fbjni::fbjni)
+
+find_package(reacthost REQUIRED CONFIG)
+target_link_libraries(reacthostapp reacthost::reacthost)
+
 
 find_library(log-lib log)
-target_link_libraries(reacthost ${log-lib})
+target_link_libraries(reacthostapp ${log-lib})
