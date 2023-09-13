@@ -27,6 +27,8 @@ class ReactNativeHost private constructor (
     private val jsBundleNameProvider: JSBundleNameProvider?,
     private val beforeReactNativeInit: (() -> Unit)?,
     private val afterReactNativeInit: (() -> Unit)?,
+    private val onJSRuntimeInitialized: (() -> Unit)?,
+    private val onJSBundleLoaded: ((bundleName: String) -> Unit)?,
     private val nativeModulePackages: MutableList<ReactPackage>,
     private val javaScriptExecutorFactoryOverride: JavaScriptExecutorFactory?,
     private val customDevOptions: MutableList<Pair<String, DevOptionHandler>>? = null,
@@ -57,6 +59,8 @@ class ReactNativeHost private constructor (
         private var jsBundleNameProvider: JSBundleNameProvider? = null,
         private var beforeReactNativeInit: (() -> Unit)? = null,
         private var afterReactNativeInit: (() -> Unit)? = null,
+        private var onJSRuntimeInitialized: (() -> Unit)? = null,
+        private var onJSBundleLoaded: ((bundleName: String) -> Unit)? = null,
         private var nativeModulePackages: MutableList<ReactPackage> = mutableListOf(),
         private var javaScriptExecutorFactory: JavaScriptExecutorFactory? = null,
         private var customDevOptions: MutableList<Pair<String, DevOptionHandler>>? = null,
@@ -75,6 +79,8 @@ class ReactNativeHost private constructor (
         fun jsBundleNameProvider(jsBundleNameProvider: JSBundleNameProvider) = apply { this.jsBundleNameProvider = jsBundleNameProvider; return this }
         fun beforeReactNativeInit(beforeReactNativeInit: (() -> Unit)) = apply { this.beforeReactNativeInit = beforeReactNativeInit; return this }
         fun afterReactNativeInit(afterReactNativeInit: (() -> Unit)) = apply { this.afterReactNativeInit = afterReactNativeInit; return this }
+        fun onJSRuntimeInitialized(onJSRuntimeInitialized: (() -> Unit)) = apply { this.onJSRuntimeInitialized = onJSRuntimeInitialized; return this }
+        fun onJSBundleLoaded(onJSBundleLoaded: ((bundleName: String) -> Unit)) = apply { this.onJSBundleLoaded = onJSBundleLoaded; return this }
         fun nativeModulePackages(nativeModulePackages: MutableList<ReactPackage>) = apply { this.nativeModulePackages = nativeModulePackages; return this }
         fun shouldEagerInit(eagerInit: Boolean) = apply { this.eagerInit = eagerInit; return this }
         fun javaScriptExecutorFactory(javaScriptExecutorFactory: JavaScriptExecutorFactory) = apply { this.javaScriptExecutorFactory = javaScriptExecutorFactory; return this }
@@ -97,6 +103,8 @@ class ReactNativeHost private constructor (
                 jsBundleNameProvider,
                 beforeReactNativeInit,
                 afterReactNativeInit,
+                onJSRuntimeInitialized,
+                onJSBundleLoaded,
                 nativeModulePackages,
                 javaScriptExecutorFactory,
                 customDevOptions,
@@ -189,11 +197,11 @@ class ReactNativeHost private constructor (
             val baseExecutorFactory = HermesExecutorFactory()
             val wrappedExecutorFactory = OfficeExecutorFactory(application.applicationContext, baseExecutorFactory, platformBundleNames?.toTypedArray()?: arrayOf<String>(), object: OfficeExecutorObserver{
                 override fun OnBundleLoaded(bundleUrl: String?) {
-                    Log.w(LOG_TAG, "Not yet implemented")
+                    onJSBundleLoaded?.invoke(bundleUrl!!)
                 }
 
                 override fun OnInitialized() {
-                    Log.w(LOG_TAG, "Not yet implemented")
+                    onJSRuntimeInitialized?.invoke()
                 }
             })
             builder.setJavaScriptExecutorFactory(wrappedExecutorFactory)
