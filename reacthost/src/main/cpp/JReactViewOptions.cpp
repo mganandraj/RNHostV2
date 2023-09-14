@@ -12,6 +12,10 @@ local_ref<JReactViewOptions::jhybridobject> JReactViewOptions::create(const Mso:
     return makeCxxInstance(std::move(options));
 }
 
+const Mso::React::ReactViewOptions& JReactViewOptions::Options() const noexcept {
+    return options_;
+}
+
 std::string JReactViewOptions::getComponentName(){
     return options_.ComponentName;
 }

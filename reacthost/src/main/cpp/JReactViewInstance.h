@@ -1,7 +1,3 @@
-//
-// Created by anandrag on 9/2/2023.
-//
-
 #ifndef ornhost_JREACTVIEWINSTANCE_H
 #define ornhost_JREACTVIEWINSTANCE_H
 
@@ -19,6 +15,8 @@ struct JOfficeReactRootView : facebook::jni::HybridClass<JOfficeReactRootView> {
     Mso::Future<void> Unload() noexcept;
 
     JOfficeReactRootView(facebook::jni::alias_ref<jhybridobject> jThis);
+
+    OfficeReactViewInstance& ViewInstance() { return *m_ReactViewInstance; }
 
     Mso::CntPtr<OfficeReactViewInstance> m_ReactViewInstance;
     facebook::jni::weak_ref<JOfficeReactRootView::jhybridobject> m_jThis;

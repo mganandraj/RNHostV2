@@ -3,14 +3,35 @@
 #include "ReactNativeHost/React.h"
 #include "ReactHost.h"
 
+#include <android/log.h>
+
+#define LOG_TAG "ReactHost::MainActivity"
+
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,    LOG_TAG, __VA_ARGS__)
+#define LOGW(...) __android_log_print(ANDROID_LOG_WARN,     LOG_TAG, __VA_ARGS__)
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,     LOG_TAG, __VA_ARGS__)
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,    LOG_TAG, __VA_ARGS__)
+
 using namespace facebook::jni;
 using namespace Mso::React;
+
+/*static */void MainActivity::test(facebook::jni::alias_ref<MainActivity> thiz, facebook::jni::alias_ref<JInstanceCreatedCallback> callback) {
+    // LOGE("MainActivity::runReactOnView::OnInstanceCreated");
+    // JInstanceCreatedCallback::run(callback);
+}
+
+/*static */void MainActivity::libletInit(facebook::jni::alias_ref<MainActivity> thiz) {
+    ReactHostRegistry::OnLibletInit();
+}
 
 /*static */void MainActivity::runReactOnView(facebook::jni::alias_ref<MainActivity> thiz,
                                              facebook::jni::alias_ref<JOfficeReactRootView::jhybridobject> viewInstance) {
 
     ReactOptions options;
     options.Identity = "V2App";
+    options.OnInstanceCreated = [](IReactInstance& instance){
+        LOGE("MainActivity::runReactOnView::OnInstanceCreated");
+    };
 
     ReactHostRegistry::OnLibletInit();
 
@@ -28,6 +49,8 @@ using namespace Mso::React;
 
 void MainActivity::registerNatives() {
     javaClassStatic()->registerNatives({
-        makeNativeMethod("runReactOnView", MainActivity::runReactOnView)
+        makeNativeMethod("runReactOnView", MainActivity::runReactOnView),
+        makeNativeMethod("libletInit", MainActivity::libletInit),
+        makeNativeMethod("test", MainActivity::test)
     });
 }

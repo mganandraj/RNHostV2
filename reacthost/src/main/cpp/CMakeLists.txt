@@ -15,6 +15,11 @@ add_library(reacthost
         BundleServerJSBundle.cpp
         InstanceFactory_Android.cpp
         ReactInstanceAndroid.cpp
+        JInstanceCreatedCallback.cpp
+        JReactHost.cpp
+        JReactHostStatics.cpp
+        JReactInstance.cpp
+        JReactViewHost.cpp
         JReactOptions.cpp
         JReactViewOptions.cpp
         JReactViewInstance.cpp

@@ -2,8 +2,12 @@
 #define ornhost_JREACTOPTIONS_H
 
 #include <fbjni/fbjni.h>
+#include <fbjni/NativeRunnable.h>
 #include "ReactNativeHost/React.h"
 
+using namespace Mso::React;
+
+struct JInstanceCreatedCallback;
 struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
     static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/ReactOptions;";
     static facebook::jni::local_ref<jhybriddata> initHybrid(facebook::jni::alias_ref<jhybridobject> jThis);
@@ -19,6 +23,9 @@ struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
 
     std::string getIdentity();
     void setIdentity(std::string identity);
+
+    void setInstanceCreatedCallback(facebook::jni::alias_ref<JInstanceCreatedCallback>);
+    facebook::jni::alias_ref<JInstanceCreatedCallback> getInstanceCreatedCallback();
 };
 
 #endif //ornhost_JREACTOPTIONS_H

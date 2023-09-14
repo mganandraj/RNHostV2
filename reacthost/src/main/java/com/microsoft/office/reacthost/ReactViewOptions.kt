@@ -10,7 +10,7 @@ class ReactViewOptions {
         mHybridData = hybridData
     }
 
-    internal constructor() {
+    constructor() {
         mHybridData = initHybrid()
     }
 

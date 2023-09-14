@@ -1,4 +1,7 @@
+#include "JInstanceCreatedCallback.h"
 #include "JReactOptions.h"
+#include "ReactInstanceAndroid.h"
+
 using namespace facebook::jni;
 using namespace Mso::React;
 
@@ -19,6 +22,18 @@ void JReactOptions::setIdentity(std::string identity) {
     options_.Identity = identity;
 }
 
+void JReactOptions::setInstanceCreatedCallback(facebook::jni::alias_ref<JInstanceCreatedCallback> callback) {
+    options_.OnInstanceCreated = [callback = make_global(callback)](IReactInstance& instance){
+        // TODO :: Make it safer
+        ReactInstanceAndroid* instanceImpl = static_cast<ReactInstanceAndroid*>(&instance);
+        JInstanceCreatedCallback::run(callback, instanceImpl->m_jReactInstance);
+    };
+}
+
+facebook::jni::alias_ref<JInstanceCreatedCallback> JReactOptions::getInstanceCreatedCallback() {
+
+}
+
 const ReactOptions& JReactOptions::Options() const noexcept
 {
     return options_;
@@ -28,6 +43,8 @@ const ReactOptions& JReactOptions::Options() const noexcept
     registerHybrid({
         makeNativeMethod("initHybrid", JReactOptions::initHybrid),
         makeNativeMethod("getIdentity", JReactOptions::getIdentity),
-        makeNativeMethod("setIdentity", JReactOptions::setIdentity)
+        makeNativeMethod("setIdentity", JReactOptions::setIdentity),
+        makeNativeMethod("getInstanceCreatedCallback", JReactOptions::getInstanceCreatedCallback),
+        makeNativeMethod("setInstanceCreatedCallback", JReactOptions::setInstanceCreatedCallback),
     });
 }

@@ -1,22 +1,9 @@
 #include "ReactInstanceAndroid.h"
+#include "JReactInstance.h"
 
 using namespace facebook::jni;
 
 namespace Mso::React {
-
-/*static */facebook::jni::local_ref<JReactInstance::jhybriddata> JReactInstance::initHybrid(facebook::jni::alias_ref<jhybridobject> jThis) {
-    return makeCxxInstance();
-}
-
-/*static */void JReactInstance::registerNatives() {
-    registerHybrid({
-        makeNativeMethod("initHybrid", JReactInstance::initHybrid),
-    });
-}
-
-/*static*/ facebook::jni::local_ref<JReactInstance::jhybridobject> JReactInstance::create(facebook::jni::alias_ref<JReactOptions::jhybridobject> options) {
-        return JReactInstance::newObjectJavaArgs(options);
-}
 
 ReactInstanceAndroid::ReactInstanceAndroid(IReactHost& reactHost, ReactOptions&& options) noexcept
     : Super{reactHost.NativeQueue()}
@@ -30,6 +17,11 @@ ReactInstanceAndroid::~ReactInstanceAndroid() noexcept
     Destroy();
 }
 
+void ReactInstanceAndroid::onInitialized() noexcept {
+    if(Options().OnInstanceCreated)
+        Options().OnInstanceCreated(*this);
+}
+
 void ReactInstanceAndroid::Initialize() noexcept
 {
     ThreadScope ts;
@@ -37,7 +29,7 @@ void ReactInstanceAndroid::Initialize() noexcept
     // https://developer.android.com/training/articles/perf-jni#faq_FindClass
     ThreadScope::WithClassLoader([this](){
         m_jOptions = make_global(JReactOptions::create(std::move(m_options)));
-        m_jReactInstance = make_global(JReactInstance::create(m_jOptions));
+        m_jReactInstance = make_global(JReactInstance::create(m_jOptions, this));
     });
 }
 

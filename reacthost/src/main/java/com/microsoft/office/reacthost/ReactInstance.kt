@@ -9,12 +9,18 @@ import com.microsoft.office.reactnative.host.ReactNativeHost
 class ReactInstance internal constructor(reactOptions: ReactOptions) {
     companion object {
         val LOG_TAG = "ReactInstance"
+
+        init {
+            System.loadLibrary("reacthost");
+        }
     }
 
     private external fun initHybrid(): HybridData
     private val mHybridData: HybridData
     private var mReactNativeHost: ReactNativeHost? = null
     private val mReactOptions: ReactOptions
+
+    private external fun onInitialized()
 
     init {
         mHybridData = initHybrid()
@@ -26,8 +32,15 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                 .application(initialActivity!!.get()!!.application)
                 .isDev(true)
                 .jsMainModulePath("index")
-                .onJSRuntimeInitialized { Log.i(LOG_TAG, "ReactIntegration.RootView.onJSRuntimeInitialized") }
-                .onJSBundleLoaded { bundleName: String -> Log.i(LOG_TAG, "ReactIntegration.RootView.onJSBundleLoaded : $bundleName") }
+                .onJSRuntimeInitialized {
+                    onInitialized();
+                    // mReactOptions.OnInstanceCreated?.run();
+                    Log.i(LOG_TAG, "ReactIntegration.RootView.onJSRuntimeInitialized")
+                }
+                .onJSBundleLoaded {  bundleName: String ->
+                    Log.i(LOG_TAG, "ReactIntegration.RootView.onJSBundleLoaded : $bundleName")
+                    // mReactOptions.OnInstanceCreated?.run();
+                }
                 .build() }
         )
     }

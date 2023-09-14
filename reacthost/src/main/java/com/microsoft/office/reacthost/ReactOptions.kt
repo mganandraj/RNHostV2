@@ -10,13 +10,17 @@ class ReactOptions {
         mHybridData = hybridData
     }
 
-    internal constructor() {
+    constructor() {
         mHybridData = initHybrid()
     }
 
     var identity: String?
         external get
-        external set
+        public external set
+
+    var instanceCreatedCallback: IInstanceCreatedCallback
+        public external get
+        public external set
 
     companion object {
         init {

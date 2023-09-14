@@ -6,17 +6,10 @@
 #include "activeObject/activeObject.h"
 #include <fbjni/fbjni.h>
 
+#include "JReactInstance.h"
 #include "JReactOptions.h"
 
 namespace Mso::React {
-
-struct JReactInstance  : facebook::jni::HybridClass<JReactInstance> {
-    static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/ReactInstance;";
-    static facebook::jni::local_ref<jhybriddata> initHybrid(facebook::jni::alias_ref<jhybridobject> jThis);
-    static void registerNatives();
-
-    static facebook::jni::local_ref<jhybridobject> create(facebook::jni::alias_ref<JReactOptions::jhybridobject> );
-};
 
 MSO_CLASS_GUID(ReactInstanceAndroid, "36788a2a-5b5e-4ec4-b8de-21bee9534721")
 class ReactInstanceAndroid final : public Mso::ActiveObject<IReactInstanceInternal>{
@@ -32,6 +25,9 @@ public: // IReactInstance
 
 public: // IReactInstanceInternal
     Mso::Future<void> Destroy() noexcept override;
+
+    void onInitialized() noexcept;
+
 
 private:
     friend MakePolicy;
