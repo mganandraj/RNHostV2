@@ -17,8 +17,8 @@ public class OfficeExecutor extends JavaScriptExecutor {
     SoLoader.loadLibrary("rnx-host");
   }
 
-  /* package */ OfficeExecutor(AssetManager assetManager, JavaScriptExecutor baseExecutor, String[] preloadBundles, OfficeExecutorObserver officeExecutorObserver) {
-    super(initHybrid(assetManager, baseExecutor, preloadBundles, officeExecutorObserver));
+  /* package */ OfficeExecutor(AssetManager assetManager, JavaScriptExecutor baseExecutor, String[] preloadBundles, JSBundle[] platformBundles, OfficeExecutorObserver officeExecutorObserver) {
+    super(initHybrid(assetManager, baseExecutor, preloadBundles, platformBundles, officeExecutorObserver));
   }
 
   @Override
@@ -26,5 +26,5 @@ public class OfficeExecutor extends JavaScriptExecutor {
     return "OfficeExecutor";
   }
 
-  private static native HybridData initHybrid(AssetManager assetManager, JavaScriptExecutor baseExecutor, String[] preloadBundles, OfficeExecutorObserver officeExecutorObserver);
+  private static native HybridData initHybrid(AssetManager assetManager, JavaScriptExecutor baseExecutor, String[] preloadBundles, JSBundle[] platformBundles, OfficeExecutorObserver officeExecutorObserver);
 }

@@ -26,6 +26,10 @@ class ReactOptions {
         external get
         external set
 
+    var JSBundles: ArrayList<JSBundle>
+        external set
+        external get
+
     var instanceCreatedCallback: IInstanceCreatedCallback
         public external get
         public external set

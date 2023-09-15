@@ -16,6 +16,7 @@ add_library(reacthost
         InstanceFactory_Android.cpp
         ReactInstanceAndroid.cpp
         JInstanceCreatedCallback.cpp
+        JJSBundle.cpp
         JReactHost.cpp
         JReactHostStatics.cpp
         JReactInstance.cpp

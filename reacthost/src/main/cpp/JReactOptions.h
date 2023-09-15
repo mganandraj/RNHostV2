@@ -4,6 +4,7 @@
 #include <fbjni/fbjni.h>
 #include <fbjni/NativeRunnable.h>
 #include "ReactNativeHost/React.h"
+#include "JJSBundle.h"
 
 using namespace Mso::React;
 
@@ -26,6 +27,9 @@ struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
 
     facebook::jni::alias_ref<facebook::jni::JArrayList<facebook::jni::JString>> getJavaModuleNames();
     void setJavaModuleNames(facebook::jni::alias_ref<facebook::jni::JArrayList<facebook::jni::JString>>);
+
+    facebook::jni::alias_ref<facebook::jni::JArrayList<JJSBundle>> getJSBundles();
+    void setJSBundles(facebook::jni::alias_ref<facebook::jni::JArrayList<JJSBundle>>);
 
     void setInstanceCreatedCallback(facebook::jni::alias_ref<JInstanceCreatedCallback>);
     facebook::jni::alias_ref<JInstanceCreatedCallback> getInstanceCreatedCallback();

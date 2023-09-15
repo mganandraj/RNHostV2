@@ -12,9 +12,11 @@ namespace react {
 
 OfficeExecutorFactory::OfficeExecutorFactory(jni::weak_ref<JAssetManager::javaobject> assetManager, std::shared_ptr<JSExecutorFactory> baseExecutorFactory
   , std::vector<std::string> preloadBundles
+  , std::vector<std::unique_ptr<IJSBundle>> platformBundles
   , jni::weak_ref<JOfficeExecutorObserver::javaobject> observer) {
     m_baseExecutorFactory = std::move(baseExecutorFactory);
     m_preloadBundles = std::move(preloadBundles);
+    m_platformBundles = std::move(platformBundles);
     m_assetManager = assetManager;
     m_observer = observer;
 }

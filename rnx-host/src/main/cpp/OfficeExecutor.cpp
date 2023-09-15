@@ -7,6 +7,16 @@
 #include <cxxreact/JSBigString.h>
 #include <react/jni/JSLoader.h>
 
+#include <android/log.h>
+
+#define LOG_TAG "RNX_HOST::OfficeExecutor"
+
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,    LOG_TAG, __VA_ARGS__)
+#define LOGW(...) __android_log_print(ANDROID_LOG_WARN,     LOG_TAG, __VA_ARGS__)
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,     LOG_TAG, __VA_ARGS__)
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,    LOG_TAG, __VA_ARGS__)
+
+
 namespace facebook {
 namespace react {
 
@@ -44,6 +54,13 @@ void OfficeExecutor::loadBundle(std::unique_ptr<const facebook::react::JSBigStri
             }
         }
     }
+
+    for (auto &platformBundle : m_platformBundles) {
+        auto content = platformBundle->Content();
+    }
+
+    LOGE("sourceURL: %s", sourceURL.c_str());
+    LOGE("script: %s", script->c_str());
    
     m_baseExecutor->loadBundle(std::move(script), sourceURL);
     if(observer) {

@@ -11,6 +11,7 @@ project("rnx-host")
 
 add_library(rnx-host
         SHARED
+        JJSBundle.cpp
         OfficeExecutorFactory.cpp
         OfficeExecutor.cpp
         JOfficeExecutorObserver.cpp

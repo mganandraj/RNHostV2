@@ -51,9 +51,9 @@ class MainActivity : AppCompatActivity() {
         var reactOptions = ReactOptions()
         reactOptions.identity = "AwesomeProject"
 
-        // TODO :: This is ugly .. Should be more like "reactOptions.JavaModuleNames.add("MyClass")"
+        // TODO :: This is not intuitive .. Should be more like "reactOptions.JavaModuleNames.add("MyClass")"
         // TODO :: Avoid copying.
-        var javaModuleNames: ArrayList<String> = ArrayList<String>()
+        var javaModuleNames = ArrayList<String>()
         javaModuleNames.add("MyClass")
 
         reactOptions.JavaModuleNames = javaModuleNames;
@@ -62,6 +62,11 @@ class MainActivity : AppCompatActivity() {
                 Log.w("MainActivity", "run");
             }
         };
+
+        var jsBundles = ArrayList<JSBundle>()
+        jsBundles.add(JSBundleFromString("Hello from me", "myUrl"))
+        reactOptions.JSBundles = jsBundles
+
 
         mReactHost = ReactHostStatics.makeReactHost(reactOptions)
 

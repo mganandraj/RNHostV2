@@ -6,6 +6,7 @@
 #include <cxxreact/RAMBundleRegistry.h>
 #include <fbjni/fbjni.h>
 #include <react/jni/JSLoader.h>
+#include "JSBundle.h"
 
 #include "JOfficeExecutorObserver.h"
 
@@ -16,8 +17,9 @@ struct OfficeExecutor : facebook::react::JSExecutor {
 	OfficeExecutor(jni::weak_ref<JAssetManager::javaobject> assetManager
 		, std::unique_ptr<facebook::react::JSExecutor> &&baseExecutor
 		, std::vector<std::string> &&preloadBundles
+		, std::vector<std::unique_ptr<IJSBundle>> &&platformBundles
 		, jni::weak_ref<JOfficeExecutorObserver::javaobject> observer) noexcept
-	    : m_assetManager(assetManager), m_baseExecutor{std::move(baseExecutor)}, m_preloadBundles(std::move(preloadBundles)), m_observer(observer)
+	    : m_assetManager(assetManager), m_baseExecutor{std::move(baseExecutor)}, m_preloadBundles(std::move(preloadBundles)), m_platformBundles(std::move(platformBundles)), m_observer(observer)
 	{}
 
 	void initializeRuntime() override;
@@ -34,6 +36,7 @@ private:
 	jni::weak_ref<JAssetManager::javaobject> m_assetManager;
 	std::unique_ptr<facebook::react::JSExecutor> m_baseExecutor;
 	std::vector<std::string> m_preloadBundles;
+	std::vector<std::unique_ptr<IJSBundle>> m_platformBundles;
 	jni::weak_ref<JOfficeExecutorObserver::javaobject> m_observer;
 };
 

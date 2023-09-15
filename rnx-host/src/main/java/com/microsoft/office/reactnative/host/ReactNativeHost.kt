@@ -23,6 +23,7 @@ class ReactNativeHost private constructor (
     private val bundleFilePath: String?,
     private val jsMainModulePath: String?,
     private val platformBundleNames: MutableList<String>?,
+    private val platformBundles: MutableList<JSBundle>?,
     private val jsBundleLoaderProvider: JSBundleLoaderProvider?,
     private val jsBundleNameProvider: JSBundleNameProvider?,
     private val beforeReactNativeInit: (() -> Unit)?,
@@ -55,6 +56,7 @@ class ReactNativeHost private constructor (
         private var bundleFilePath: String? = null,
         private var jsMainModulePath: String? = null,
         private var platformBundleNames: MutableList<String>? = null,
+        private var platformBundles: MutableList<JSBundle>? = null,
         private var jsBundleLoaderProvider: JSBundleLoaderProvider? = null,
         private var jsBundleNameProvider: JSBundleNameProvider? = null,
         private var beforeReactNativeInit: (() -> Unit)? = null,
@@ -75,6 +77,7 @@ class ReactNativeHost private constructor (
         fun bundleFilePath(bundleFilePath: String) = apply { this.bundleFilePath = bundleFilePath; return this }
         fun jsMainModulePath(jsMainModulePath: String) = apply { this.jsMainModulePath = jsMainModulePath; return this }
         fun platformBundleNames(platformBundleNames: MutableList<String>) = apply { this.platformBundleNames = platformBundleNames; return this }
+        fun platformBundles(platformBundles: MutableList<JSBundle>) = apply { this.platformBundles = platformBundles; return this }
         fun jsBundleLoaderProvider(jsundleLoaderProvider: JSBundleLoaderProvider) = apply { this.jsBundleLoaderProvider = jsundleLoaderProvider; return this }
         fun jsBundleNameProvider(jsBundleNameProvider: JSBundleNameProvider) = apply { this.jsBundleNameProvider = jsBundleNameProvider; return this }
         fun beforeReactNativeInit(beforeReactNativeInit: (() -> Unit)) = apply { this.beforeReactNativeInit = beforeReactNativeInit; return this }
@@ -99,6 +102,7 @@ class ReactNativeHost private constructor (
                 bundleFilePath,
                 jsMainModulePath,
                 platformBundleNames,
+                platformBundles,
                 jsBundleLoaderProvider,
                 jsBundleNameProvider,
                 beforeReactNativeInit,
@@ -195,7 +199,7 @@ class ReactNativeHost private constructor (
         else {
             SoLoader.init(application, false)
             val baseExecutorFactory = HermesExecutorFactory()
-            val wrappedExecutorFactory = OfficeExecutorFactory(application.applicationContext, baseExecutorFactory, platformBundleNames?.toTypedArray()?: arrayOf<String>(), object: OfficeExecutorObserver{
+            val wrappedExecutorFactory = OfficeExecutorFactory(application.applicationContext, baseExecutorFactory, platformBundleNames?.toTypedArray()?: arrayOf<String>(), platformBundles?.toTypedArray(), object: OfficeExecutorObserver{
                 override fun OnBundleLoaded(bundleUrl: String?) {
                     onJSBundleLoaded?.invoke(bundleUrl!!)
                 }

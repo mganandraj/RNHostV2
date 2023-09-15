@@ -36,6 +36,16 @@ void JReactOptions::setJavaModuleNames(facebook::jni::alias_ref<facebook::jni::J
     }
 }
 
+facebook::jni::alias_ref<facebook::jni::JArrayList<JJSBundle>> JReactOptions::getJSBundles() {
+
+}
+
+void JReactOptions::setJSBundles(facebook::jni::alias_ref<facebook::jni::JArrayList<JJSBundle>> jsBundles) {
+    for (const auto& elem : *jsBundles) {
+        options_.JSBundles.push_back(JJSBundle::get(make_local(elem)));
+    }
+}
+
 void JReactOptions::setInstanceCreatedCallback(facebook::jni::alias_ref<JInstanceCreatedCallback> callback) {
     options_.OnInstanceCreated = [callback = make_global(callback)](IReactInstance& instance){
         // TODO :: Make it safer
@@ -60,6 +70,8 @@ const ReactOptions& JReactOptions::Options() const noexcept
         makeNativeMethod("setIdentity", JReactOptions::setIdentity),
         makeNativeMethod("getJavaModuleNames", JReactOptions::getJavaModuleNames),
         makeNativeMethod("setJavaModuleNames", JReactOptions::setJavaModuleNames),
+        makeNativeMethod("getJSBundles", JReactOptions::getJSBundles),
+        makeNativeMethod("setJSBundles", JReactOptions::setJSBundles),
         makeNativeMethod("getInstanceCreatedCallback", JReactOptions::getInstanceCreatedCallback),
         makeNativeMethod("setInstanceCreatedCallback", JReactOptions::setInstanceCreatedCallback),
     });
