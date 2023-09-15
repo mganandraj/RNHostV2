@@ -26,6 +26,9 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
         mHybridData = initHybrid()
         mReactOptions = reactOptions
 
+        var identity = mReactOptions.identity
+        var javaModuleNames = reactOptions.JavaModuleNames
+
         ReactHostStatics.initialActivity?.get()?.runOnUiThread(Runnable {
             this.mReactNativeHost = ReactNativeHost.Builder()
                 .activity(initialActivity!!.get()!!)
@@ -34,11 +37,9 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                 .jsMainModulePath("index")
                 .onJSRuntimeInitialized {
                     onInitialized();
-                    // mReactOptions.OnInstanceCreated?.run();
                     Log.i(LOG_TAG, "ReactIntegration.RootView.onJSRuntimeInitialized")
                 }
                 .onJSBundleLoaded {  bundleName: String ->
-                    Log.i(LOG_TAG, "ReactIntegration.RootView.onJSBundleLoaded : $bundleName")
                     // mReactOptions.OnInstanceCreated?.run();
                 }
                 .build() }

@@ -50,6 +50,13 @@ class MainActivity : AppCompatActivity() {
 
         var reactOptions = ReactOptions()
         reactOptions.identity = "AwesomeProject"
+
+        // TODO :: This is ugly .. Should be more like "reactOptions.JavaModuleNames.add("MyClass")"
+        // TODO :: Avoid copying.
+        var javaModuleNames: ArrayList<String> = ArrayList<String>()
+        javaModuleNames.add("MyClass")
+
+        reactOptions.JavaModuleNames = javaModuleNames;
         reactOptions.instanceCreatedCallback = object: IInstanceCreatedCallback{
             override fun run(instance: ReactInstance?) {
                 Log.w("MainActivity", "run");

@@ -22,6 +22,20 @@ void JReactOptions::setIdentity(std::string identity) {
     options_.Identity = identity;
 }
 
+facebook::jni::alias_ref<facebook::jni::JArrayList<facebook::jni::JString>> JReactOptions::getJavaModuleNames() {
+    auto jJavaModuleNames = JArrayList<JString>::create();
+    std::for_each(options_.JavaModuleNames.begin(), options_.JavaModuleNames.end(), [&jJavaModuleNames](std::string item) {
+        jJavaModuleNames->add(make_jstring(item));
+    } );
+    return jJavaModuleNames.release();
+}
+
+void JReactOptions::setJavaModuleNames(facebook::jni::alias_ref<facebook::jni::JArrayList<facebook::jni::JString>> jJavaModuleNames) {
+    for (const auto& elem : *jJavaModuleNames) {
+        options_.JavaModuleNames.push_back(elem->toStdString());
+    }
+}
+
 void JReactOptions::setInstanceCreatedCallback(facebook::jni::alias_ref<JInstanceCreatedCallback> callback) {
     options_.OnInstanceCreated = [callback = make_global(callback)](IReactInstance& instance){
         // TODO :: Make it safer
@@ -44,6 +58,8 @@ const ReactOptions& JReactOptions::Options() const noexcept
         makeNativeMethod("initHybrid", JReactOptions::initHybrid),
         makeNativeMethod("getIdentity", JReactOptions::getIdentity),
         makeNativeMethod("setIdentity", JReactOptions::setIdentity),
+        makeNativeMethod("getJavaModuleNames", JReactOptions::getJavaModuleNames),
+        makeNativeMethod("setJavaModuleNames", JReactOptions::setJavaModuleNames),
         makeNativeMethod("getInstanceCreatedCallback", JReactOptions::getInstanceCreatedCallback),
         makeNativeMethod("setInstanceCreatedCallback", JReactOptions::setInstanceCreatedCallback),
     });

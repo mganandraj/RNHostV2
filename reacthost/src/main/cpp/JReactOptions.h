@@ -24,6 +24,9 @@ struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
     std::string getIdentity();
     void setIdentity(std::string identity);
 
+    facebook::jni::alias_ref<facebook::jni::JArrayList<facebook::jni::JString>> getJavaModuleNames();
+    void setJavaModuleNames(facebook::jni::alias_ref<facebook::jni::JArrayList<facebook::jni::JString>>);
+
     void setInstanceCreatedCallback(facebook::jni::alias_ref<JInstanceCreatedCallback>);
     facebook::jni::alias_ref<JInstanceCreatedCallback> getInstanceCreatedCallback();
 };

@@ -18,6 +18,14 @@ class ReactOptions {
         external get
         public external set
 
+
+    // CxxModuleNames - Unsupported
+    // CxxModuleProviders - Unsupported
+
+    var JavaModuleNames: ArrayList<String>
+        external get
+        external set
+
     var instanceCreatedCallback: IInstanceCreatedCallback
         public external get
         public external set
