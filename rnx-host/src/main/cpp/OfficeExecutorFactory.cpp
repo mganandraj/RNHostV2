@@ -31,6 +31,7 @@ std::unique_ptr<JSExecutor> OfficeExecutorFactory::createJSExecutor(
     std::unique_ptr<JSExecutor> officeExecutor = std::make_unique<OfficeExecutor>(m_assetManager
       , std::move(baseExecutor)
       , std::move(m_preloadBundles)
+      , std::move(m_platformBundles)
       , m_observer);
 
     return officeExecutor;

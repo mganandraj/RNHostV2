@@ -4,8 +4,6 @@
 
 #include "JJSBundle.h"
 
-#include <fbjni/ByteBuffer.h>
-
 using namespace facebook::jni;
 using namespace Mso::React;
 
@@ -48,7 +46,7 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
     const auto iFieldContent = cls->getField<JByteBuffer>("Content");
     local_ref<JByteBuffer> content = make_local(thizz->getFieldValue(iFieldContent));
     const auto iFieldInfo = cls->getField<JJSBundleInfo>("Info");
-    local_ref<JJSBundleInfo> info = make_local(thizz->getFieldValue(iFieldContent));
+    local_ref<JJSBundleInfo> info = make_local(thizz->getFieldValue(iFieldInfo));
 
     Mso::CntPtr<Mso::React::IJSBundle>jsBundle;
     if(content) {
@@ -61,10 +59,35 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
     Mso::React::JSBundleInfo info;
     const auto cls = javaClassStatic();
     const auto iFieldId = cls->getField<JString>("Id");
-    info.Id = thizz->getFieldValue(iFieldId)->toStdString();
+    auto idValue = thizz->getFieldValue(iFieldId);
+    if(idValue) {
+        info.Id = idValue->toStdString();
+    }
+
     const auto iFieldFileName = cls->getField<JString>("FileName");
-    info.FileName = thizz->getFieldValue(iFieldFileName)->toStdString();
+    auto fileNameValue = thizz->getFieldValue(iFieldFileName);
+    if(fileNameValue) {
+        info.FileName = fileNameValue->toStdString();
+    }
+
     const auto iFieldTimestamp = cls->getField<JLong>("Timestamp");
-    info.Timestamp = thizz->getFieldValue(iFieldTimestamp)->value();
+    auto timestampValue = thizz->getFieldValue(iFieldTimestamp);
+    if(timestampValue) {
+        info.Timestamp = timestampValue->value();
+    }
+
     return info;
+}
+
+/*static */facebook::jni::local_ref<JJSBundleInfo> JJSBundleInfo::create(Mso::React::JSBundleInfo info) {
+    return newInstance(make_jstring(info.Id), make_jstring(info.FileName), JLong::valueOf(info.Timestamp));
+}
+
+/*static */facebook::jni::local_ref<JJSBundle> JJSBundle::create(Mso::React::IJSBundle& bundle) {
+    local_ref<facebook::jni::JByteBuffer> content;
+    if(!bundle.Content().empty()) {
+        content = facebook::jni::JByteBuffer::wrapBytes(const_cast<uint8_t*>(reinterpret_cast<const uint8_t*>(bundle.Content().data())), bundle.Content().size());
+    }
+
+    return newInstance(content, JJSBundleInfo::create(bundle.Info()));
 }

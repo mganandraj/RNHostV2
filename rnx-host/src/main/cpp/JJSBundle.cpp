@@ -45,7 +45,7 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
     const auto iFieldContent = cls->getField<JByteBuffer>("Content");
     local_ref<JByteBuffer> content = make_local(thizz->getFieldValue(iFieldContent));
     const auto iFieldInfo = cls->getField<JJSBundleInfo>("Info");
-    local_ref<JJSBundleInfo> info = make_local(thizz->getFieldValue(iFieldContent));
+    local_ref<JJSBundleInfo> info = make_local(thizz->getFieldValue(iFieldInfo));
 
     std::unique_ptr<IJSBundle>jsBundle;
     if(content) {

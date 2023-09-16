@@ -57,6 +57,8 @@ void OfficeExecutor::loadBundle(std::unique_ptr<const facebook::react::JSBigStri
 
     for (auto &platformBundle : m_platformBundles) {
         auto content = platformBundle->Content();
+
+        LOGE("script buffer: %s", platformBundle->Content().data());
     }
 
     LOGE("sourceURL: %s", sourceURL.c_str());

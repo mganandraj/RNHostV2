@@ -37,7 +37,13 @@ void JReactOptions::setJavaModuleNames(facebook::jni::alias_ref<facebook::jni::J
 }
 
 facebook::jni::alias_ref<facebook::jni::JArrayList<JJSBundle>> JReactOptions::getJSBundles() {
+    auto jJSBundles = facebook::jni::JArrayList<JJSBundle>::create(options_.JSBundles.size());
+    for (auto&jsBundle: options_.JSBundles) {
+        jJSBundles->add(JJSBundle::create(*jsBundle));
+    }
 
+    // TODO :: Is this the right pattern to return ? What is releaseAlias ?
+    return jJSBundles.release();
 }
 
 void JReactOptions::setJSBundles(facebook::jni::alias_ref<facebook::jni::JArrayList<JJSBundle>> jsBundles) {
