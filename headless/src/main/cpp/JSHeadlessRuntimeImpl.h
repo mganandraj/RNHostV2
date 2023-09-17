@@ -1,11 +1,14 @@
 #pragma once
 
-#include <jshostheadless/JSHeadlessRuntime.h>
+// #include <jshostheadless/JSHeadlessRuntime.h>
+#include "JSHeadlessRuntime.h"
 
 #include <ReactNativeHost/React.h>
 #include <jsi/jsi.h>
-#include <ExecutionContext/ExecutionContext.h>
-#include "JSINative.g.h"
+// #include <ExecutionContext/ExecutionContext.h>
+// #include "JSINative.g.h"
+
+#include <object/refCountedObject.h>
 
 // We have two different implementations available of ReactNativeHost for headless (UI-less) Javascript computation
 //
@@ -37,38 +40,39 @@ private:
     //     function initialize(): void;
     // }
 
-    struct JsiNativeImpl : public JsiNative
-    {
-        JsiNativeImpl(facebook::jsi::Runtime &runtime, JSHeadlessRuntime &parent)
-            : JsiNative(runtime), m_parent(parent)
-        {
-        }
-
-        // This gets called from the JavaScript bundle, so we know it finished loading at this time
-        void initialize() override
-        {
-            m_parent.OnJSLoaded(m_runtime);
-        }
-
-    private:
-        JSHeadlessRuntime &m_parent;
-    };
+//    struct JsiNativeImpl : public JsiNative
+//    {
+//        JsiNativeImpl(facebook::jsi::Runtime &runtime, JSHeadlessRuntime &parent)
+//            : JsiNative(runtime), m_parent(parent)
+//        {
+//        }
+//
+//        // This gets called from the JavaScript bundle, so we know it finished loading at this time
+//        void initialize() override
+//        {
+//            m_parent.OnJSLoaded(m_runtime);
+//        }
+//
+//    private:
+//        JSHeadlessRuntime &m_parent;
+//    };
 
 
     Mso::React::ReactOptions CreateReactOptions();
     void CreateReactInstance();
     void EnsureSDXRegisteration();
-    void Initialize(Mso::TCntPtr<Mso::ApplicationModel::IExecutionContext> executionContext =
-                    Mso::ApplicationModel::GetCurrentExecutionContext());
+//    void Initialize(Mso::TCntPtr<Mso::ApplicationModel::IExecutionContext> executionContext =
+//                    Mso::ApplicationModel::GetCurrentExecutionContext());
+    void Initialize();
     facebook::jsi::Runtime& GetJsiRuntime() const noexcept;
 
 #ifdef USE_OLD_RNHOST
     Mso::TCntPtr<Mso::React::IReactInstance> m_spReactInstance {nullptr};
 #else
-    Mso::TCntPtr<Mso::React::IReactHost> m_spReactInstance {nullptr};
+    Mso::CntPtr<Mso::React::IReactHost> m_spReactInstance {nullptr};
 #endif
 
-    std::shared_ptr<JsiNativeImpl> m_spJsiNativeImpl { nullptr };
+    // std::shared_ptr<JsiNativeImpl> m_spJsiNativeImpl { nullptr };
     facebook::jsi::Runtime *m_runtime { nullptr };
     std::vector<std::function<void(facebook::jsi::Runtime& runtime)>> m_pendingFuncs;
     std::atomic<bool> m_initialized;

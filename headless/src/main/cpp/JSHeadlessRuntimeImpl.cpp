@@ -1,25 +1,25 @@
 // #include "precomp.h"
 
-#include "JSHeadlessRuntimeHelpers.h"
+// #include "JSHeadlessRuntimeHelpers.h"
 #include "JSHeadlessRuntimeImpl.h"
 
-#include <jshostassets/assetconfiguration.h>
+// #include <jshostassets/assetconfiguration.h>
 #include <JSHostOfficePal/PlatformJSBundles.h>
 #include <ReactNativeHost/JSBundle.h>
-#include <Reka/RekaServiceRegistration.h>
+// #include <Reka/RekaServiceRegistration.h>
 #include <ReactNativeHost/React.h>
 
-#include <osfclient/osfreacthelper.h>
-#include <osfclient/hostintegrationmanager.h>
-#include <jshostrichapids/IRichApiProxyDataService.h>
+//#include <osfclient/osfreacthelper.h>
+//#include <osfclient/hostintegrationmanager.h>
+//#include <jshostrichapids/IRichApiProxyDataService.h>
 
-#include <ExecutionContext/ExecutionContext.h>
-#include <synchronization/simpleEvent.h>
+//#include <ExecutionContext/ExecutionContext.h>
+//#include <synchronization/simpleEvent.h>
 
 namespace Mso::JSHost::Headless {
 
-static constexpr const Mso::JSHost::NamedProperty<IOsfControlContainer> ControlContainerProperty {"ControlContainer"};
-static constexpr const Mso::JSHost::NamedProperty<uint64_t> DocCookieProperty{ "DocCookie" };
+//static constexpr const Mso::JSHost::NamedProperty<IOsfControlContainer> ControlContainerProperty {"ControlContainer"};
+//static constexpr const Mso::JSHost::NamedProperty<uint64_t> DocCookieProperty{ "DocCookie" };
 
 JSRuntime::~JSRuntime() {}
 
@@ -62,63 +62,65 @@ Mso::React::ReactOptions JSHeadlessRuntime::CreateReactOptions() {
     reactOptions.DeveloperSettings.UseFastRefresh = true;
 #endif
 
-    if(m_options.EnableOfficeJS) 
-    {
-        // For now, we assume that the caller ensures that the call is made in App thread.
-        VerifyElseCrashTag(Mso::ApplicationModel::VerifyAppThread(Mso::ApplicationModel::GetCurrentExecutionContext().Get()), 0x1e4d52c0 /* tag_4tvla */);
-        Mso::JSHost::EnsureRichApiDataServiceRegistration();
-        Mso::TCntPtr<Mso::React::IJSBundle> spHostSpecificOfficeJsBundle;
-        VerifySucceededElseCrashTag(Osf::React::CreateHostSpecificOfficeJsBundle(spHostSpecificOfficeJsBundle), 0x1e4d52a3 /* tag_4tvk9 */);
-        reactOptions.JSBundles.push_back(spHostSpecificOfficeJsBundle);
-    }
+//    if(m_options.EnableOfficeJS)
+//    {
+//        // For now, we assume that the caller ensures that the call is made in App thread.
+//        VerifyElseCrashTag(Mso::ApplicationModel::VerifyAppThread(Mso::ApplicationModel::GetCurrentExecutionContext().Get()), 0x1e4d52c0 /* tag_4tvla */);
+//        Mso::JSHost::EnsureRichApiDataServiceRegistration();
+//        Mso::TCntPtr<Mso::React::IJSBundle> spHostSpecificOfficeJsBundle;
+//        VerifySucceededElseCrashTag(Osf::React::CreateHostSpecificOfficeJsBundle(spHostSpecificOfficeJsBundle), 0x1e4d52a3 /* tag_4tvk9 */);
+//        reactOptions.JSBundles.push_back(spHostSpecificOfficeJsBundle);
+//    }
 
 #ifndef USE_OLD_RNHOST
     // MakeReactHost API requires the feature bundle to be explicitly added to the bundle list.
     // Note that we are adding the disk file path overlooking the Metro bundler running on the developer machine.   
-    const std::string bundlePath = GetBundlePath(m_options.Identity.c_str());
+    const std::string bundlePath = "TODODODO"; // GetBundlePath(m_options.Identity.c_str());
     reactOptions.AddFileJSBundle(m_options.Identity.c_str(), bundlePath);
 #endif
 
-    Mso::JSHost::RichApiExecutionContextHolderPtr richApiExecutionContextHolder = std::make_shared< Mso::JSHost::RichApiExecutionContextHolder >(Mso::ApplicationModel::GetCurrentExecutionContext());
-    reactOptions.OnInitialized = [spThis = Mso::TCntPtr(this), richApiExecutionContextHolder](Mso::JSHost::IRekaContext& rekaContext)
-    {
-        rekaContext.Properties().Set( Mso::JSHost::RichApiExecContextProperty, richApiExecutionContextHolder );
-        
-        DWORD_PTR docCookie{};
-        VerifySucceededElseCrashTag(OsfHostGetCurrentDocCookie(&docCookie), 0x1e4d52a2 /* tag_4tvk8 */);
-        rekaContext.Properties().Set(DocCookieProperty, docCookie);
-    
-        Mso::TCntPtr<IOsfControlContainer> spControlContainer;
-        VerifySucceededElseCrashTag(Osf::React::CreateExternalSdxControlContainer(docCookie, 0, /* out */ spControlContainer), 0x1e4d52a1 /* tag_4tvk7 */);
-        rekaContext.Properties().Set(ControlContainerProperty, spControlContainer);
-    
-        Osf::React::RichApiReactConnectionOptions richApiConnectionOptions = {};
-        richApiConnectionOptions.DocCookie = docCookie;
-        richApiConnectionOptions.SubDocCookie = 0;
-        richApiConnectionOptions.Readonly = false;
-        richApiConnectionOptions.OsfControlContainer = spControlContainer;
-        Osf::React::SetupRichApiReactConnection(rekaContext, std::move(richApiConnectionOptions));
+//    reactOptions.OnInitialized =
 
-        if(spThis->Options().OnRekaInitialized){
-            spThis->Options().OnRekaInitialized(*spThis, rekaContext);
-        }
-    };
+//    Mso::JSHost::RichApiExecutionContextHolderPtr richApiExecutionContextHolder = std::make_shared< Mso::JSHost::RichApiExecutionContextHolder >(Mso::ApplicationModel::GetCurrentExecutionContext());
+//    reactOptions.OnInitialized = [spThis = Mso::TCntPtr(this), richApiExecutionContextHolder](Mso::JSHost::IRekaContext& rekaContext)
+//    {
+//        rekaContext.Properties().Set( Mso::JSHost::RichApiExecContextProperty, richApiExecutionContextHolder );
+//
+//        DWORD_PTR docCookie{};
+//        VerifySucceededElseCrashTag(OsfHostGetCurrentDocCookie(&docCookie), 0x1e4d52a2 /* tag_4tvk8 */);
+//        rekaContext.Properties().Set(DocCookieProperty, docCookie);
+//
+//        Mso::TCntPtr<IOsfControlContainer> spControlContainer;
+//        VerifySucceededElseCrashTag(Osf::React::CreateExternalSdxControlContainer(docCookie, 0, /* out */ spControlContainer), 0x1e4d52a1 /* tag_4tvk7 */);
+//        rekaContext.Properties().Set(ControlContainerProperty, spControlContainer);
+//
+//        Osf::React::RichApiReactConnectionOptions richApiConnectionOptions = {};
+//        richApiConnectionOptions.DocCookie = docCookie;
+//        richApiConnectionOptions.SubDocCookie = 0;
+//        richApiConnectionOptions.Readonly = false;
+//        richApiConnectionOptions.OsfControlContainer = spControlContainer;
+//        Osf::React::SetupRichApiReactConnection(rekaContext, std::move(richApiConnectionOptions));
+//
+//        if(spThis->Options().OnRekaInitialized){
+//            spThis->Options().OnRekaInitialized(*spThis, rekaContext);
+//        }
+//    };
 
-    reactOptions.OnDestroyed = [spThis = Mso::TCntPtr(this)](Mso::JSHost::IRekaContext& rekaContext)
-    {
-        Mso::TCntPtr<IOsfControlContainer> spControlContainer = rekaContext.Properties().Get(ControlContainerProperty);
-        if (spControlContainer != nullptr)
-        {
-            Osf::React::DeleteExternalSdxControlContainer(spControlContainer.Get());
-        }
-
-        if(spThis->Options().OnRekaDestroyed) {
-            spThis->Options().OnRekaDestroyed(*spThis, rekaContext);
-        }
-    };
- 
+//    reactOptions.OnDestroyed = [spThis = Mso::TCntPtr(this)](Mso::JSHost::IRekaContext& rekaContext)
+//    {
+//        Mso::TCntPtr<IOsfControlContainer> spControlContainer = rekaContext.Properties().Get(ControlContainerProperty);
+//        if (spControlContainer != nullptr)
+//        {
+//            Osf::React::DeleteExternalSdxControlContainer(spControlContainer.Get());
+//        }
+//
+//        if(spThis->Options().OnRekaDestroyed) {
+//            spThis->Options().OnRekaDestroyed(*spThis, rekaContext);
+//        }
+//    };
+//
     // The following callbacks are not called with legacy RNHost.
-    reactOptions.OnInstanceLoaded = [spThis = Mso::TCntPtr(this)](Mso::React::IReactInstance&, const Mso::ErrorCode& errorCode)
+    reactOptions.OnInstanceLoaded = [spThis=this/*spThis = Mso::TCntPtr(this)*/](Mso::React::IReactInstance&, const Mso::ErrorCode& errorCode)
     {
         auto executor = spThis->GetRuntimeExecutor();
         executor([spThis](facebook::jsi::Runtime &runtime)
@@ -131,14 +133,14 @@ Mso::React::ReactOptions JSHeadlessRuntime::CreateReactOptions() {
         }
     };
 
-    reactOptions.OnInstanceCreated = [spThis = Mso::TCntPtr(this)](Mso::React::IReactInstance&)
+    reactOptions.OnInstanceCreated = [spThis = /*Mso::TCntPtr*/(this)](Mso::React::IReactInstance&)
     {
         if(spThis->Options().OnCreated){
             spThis->Options().OnCreated(*spThis);
         }
     };
 
-    reactOptions.OnInstanceDestroyed = [spThis = Mso::TCntPtr(this)](Mso::React::IReactInstance&)
+    reactOptions.OnInstanceDestroyed = [spThis = /*Mso::TCntPtr*/(this)](Mso::React::IReactInstance&)
     {
         if(spThis->Options().OnDestroyed){
             spThis->Options().OnDestroyed(*spThis);
@@ -150,21 +152,22 @@ Mso::React::ReactOptions JSHeadlessRuntime::CreateReactOptions() {
 
 void JSHeadlessRuntime::EnsureSDXRegisteration()
 {
-    static std::once_flag once;
-    std::call_once(once, [this](){
-        Mso::Synchronization::SimpleEvent event;
-    
-        // OSF initialization requires app thread.
-        Mso::Async::InvokeElsePost( Mso::ApplicationModel::GetCurrentExecutionContext()->UseAppContext(), [&event, this]() noexcept {
-            Mso::React::ReactOptions descriptor(CreateReactOptions());
-            Mso::React::RegisterSDX( std::move( descriptor ) );
-            event.Set();
-        });
-        event.Wait();
-    });
+//    static std::once_flag once;
+//    std::call_once(once, [this](){
+//        Mso::Synchronization::SimpleEvent event;
+//
+//        // OSF initialization requires app thread.
+//        Mso::Async::InvokeElsePost( Mso::ApplicationModel::GetCurrentExecutionContext()->UseAppContext(), [&event, this]() noexcept {
+//            Mso::React::ReactOptions descriptor(CreateReactOptions());
+//            Mso::React::RegisterSDX( std::move( descriptor ) );
+//            event.Set();
+//        });
+//        event.Wait();
+//    });
 }
 
-void JSHeadlessRuntime::Initialize(Mso::TCntPtr<Mso::ApplicationModel::IExecutionContext>)
+void JSHeadlessRuntime::Initialize()
+// void JSHeadlessRuntime::Initialize(Mso::TCntPtr<Mso::ApplicationModel::IExecutionContext>)
 {
     CreateReactInstance();
 #ifdef USE_OLD_RNHOST
@@ -208,7 +211,7 @@ void JSHeadlessRuntime::Post(std::function<void(facebook::jsi::Runtime& runtime)
     }
 }
 
-Mso::TCntPtr<JSRuntime> CreateJSRuntime(JSRuntimeOptions&& options)
+Mso::CntPtr<JSRuntime> CreateJSRuntime(JSRuntimeOptions&& options)
 {
     return Mso::Make<JSHeadlessRuntime>(std::move(options));
 }

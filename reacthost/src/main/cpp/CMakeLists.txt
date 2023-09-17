@@ -29,10 +29,42 @@ add_library(reacthost
         MsoUtils.cpp
         OnLoad.cpp
         ReactHost.cpp
+        PlatformJSBundles_android.cpp
+        GetRuntimeExecutor_android.cpp
 )
 
 # TODO:: Why is this necessary ?
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+find_package(ReactAndroid REQUIRED CONFIG)
+target_link_libraries(reacthost ReactAndroid::fabricjni)
+target_link_libraries(reacthost ReactAndroid::folly_runtime)
+target_link_libraries(reacthost ReactAndroid::glog)
+target_link_libraries(reacthost ReactAndroid::hermes_executor)
+#target_link_libraries(reacthost ReactAndroid::jscexecutor)
+target_link_libraries(reacthost ReactAndroid::jsi)
+target_link_libraries(reacthost ReactAndroid::jsinspector)
+target_link_libraries(reacthost ReactAndroid::react_codegen_rncore)
+target_link_libraries(reacthost ReactAndroid::react_debug)
+target_link_libraries(reacthost ReactAndroid::react_nativemodule_core)
+target_link_libraries(reacthost ReactAndroid::react_newarchdefaults)
+target_link_libraries(reacthost ReactAndroid::react_render_animations)
+target_link_libraries(reacthost ReactAndroid::react_render_componentregistry)
+target_link_libraries(reacthost ReactAndroid::react_render_core)
+target_link_libraries(reacthost ReactAndroid::react_render_debug)
+target_link_libraries(reacthost ReactAndroid::react_render_graphics)
+target_link_libraries(reacthost ReactAndroid::react_render_imagemanager)
+target_link_libraries(reacthost ReactAndroid::react_render_mapbuffer)
+target_link_libraries(reacthost ReactAndroid::react_render_mounting)
+target_link_libraries(reacthost ReactAndroid::react_render_scheduler)
+target_link_libraries(reacthost ReactAndroid::react_render_uimanager)
+target_link_libraries(reacthost ReactAndroid::reactnativejni)
+target_link_libraries(reacthost ReactAndroid::rrc_image)
+target_link_libraries(reacthost ReactAndroid::rrc_root)
+target_link_libraries(reacthost ReactAndroid::rrc_view)
+target_link_libraries(reacthost ReactAndroid::runtimeexecutor)
+target_link_libraries(reacthost ReactAndroid::turbomodulejsijni)
+target_link_libraries(reacthost ReactAndroid::yoga)
 
 find_package(mso REQUIRED CONFIG)
 target_compile_definitions(reacthost PRIVATE MS_TARGET_ANDROID)

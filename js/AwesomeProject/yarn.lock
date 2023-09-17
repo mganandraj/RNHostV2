@@ -23,10 +23,15 @@
     "@babel/highlight" "^7.22.13"
     chalk "^2.4.2"
 
-"@babel/compat-data@^7.20.5", "@babel/compat-data@^7.22.20", "@babel/compat-data@^7.22.6", "@babel/compat-data@^7.22.9":
+"@babel/compat-data@^7.20.5", "@babel/compat-data@^7.22.6", "@babel/compat-data@^7.22.9":
   version "7.22.9"
   resolved "https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/@babel/compat-data/-/compat-data-7.22.9.tgz#71cdb00a1ce3a329ce4cbec3a44f9fef35669730"
   integrity sha1-cc2wChzjoynOTL7DpE+f7zVmlzA=
+
+"@babel/compat-data@^7.22.20":
+  version "7.22.20"
+  resolved "https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/@babel/compat-data/-/compat-data-7.22.20.tgz#8df6e96661209623f1975d66c35ffca66f3306d0"
+  integrity sha1-jfbpZmEgliPxl11mw1/8pm8zBtA=
 
 "@babel/core@^7.11.6", "@babel/core@^7.12.3", "@babel/core@^7.13.16", "@babel/core@^7.14.0", "@babel/core@^7.20.0", "@babel/core@^7.9.0":
   version "7.22.20"
@@ -7743,10 +7748,10 @@ react-native-gradle-plugin@^0.71.19:
   resolved "https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.19.tgz#3379e28341fcd189bc1f4691cefc84c1a4d7d232"
   integrity sha1-M3nig0H80Ym8H0aRzvyEwaTX0jI=
 
-react-native@0.71.12:
-  version "0.71.12"
-  resolved "https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/react-native/-/react-native-0.71.12.tgz#a4a37de71931b5f483a15b8ab9114b9c01e1317d"
-  integrity sha1-pKN95xkxtfSDoVuKuRFLnAHhMX0=
+react-native@0.71.13:
+  version "0.71.13"
+  resolved "https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/react-native/-/react-native-0.71.13.tgz#e20007904f5f8a4b8b1faf1e60f0d7eb9f578ed6"
+  integrity sha1-4gAHkE9fikuLH68eYPDX659XjtY=
   dependencies:
     "@jest/create-cache-key-function" "^29.2.1"
     "@react-native-community/cli" "10.2.4"
@@ -7784,10 +7789,10 @@ react-native@0.71.12:
     whatwg-fetch "^3.0.0"
     ws "^6.2.2"
 
-react-native@0.71.13:
-  version "0.71.13"
-  resolved "https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/react-native/-/react-native-0.71.13.tgz#e20007904f5f8a4b8b1faf1e60f0d7eb9f578ed6"
-  integrity sha1-4gAHkE9fikuLH68eYPDX659XjtY=
+react-native@0.71.27-office:
+  version "0.71.27-office"
+  resolved "https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/react-native/-/react-native-0.71.27-office.tgz#9b55d2cefbd570f72a39533c80c4dbba15d599bd"
+  integrity sha1-m1XSzvvVcPcqOVM8gMTbuhXVmb0=
   dependencies:
     "@jest/create-cache-key-function" "^29.2.1"
     "@react-native-community/cli" "10.2.4"

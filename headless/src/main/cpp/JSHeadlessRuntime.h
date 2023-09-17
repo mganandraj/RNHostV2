@@ -1,10 +1,10 @@
 #pragma once
 
 #include <jsi/jsi.h>
-#include <core/functor.h>
+#include <functional/functor.h>
 #include <ErrorCode/ErrorCode.h>
 #include <object/RefCounted.h>
-#include <Reka/RekaApi.h>
+// #include <Reka/RekaApi.h>
 
 namespace Mso::JSHost::Headless
 {
@@ -30,8 +30,8 @@ namespace Mso::JSHost::Headless
     using OnLoadedCallback = Mso::Functor<void(JSRuntime&, const Mso::ErrorCode&)>;
     using OnDestroyedCallback = Mso::Functor<void(JSRuntime&)>;
 
-    using OnRekaInitializedCallback = Mso::Functor<void(JSRuntime&, IRekaContext&)>;
-    using OnRekaDestroyedCallback = Mso::Functor<void(JSRuntime&, IRekaContext&)>;
+    //using OnRekaInitializedCallback = Mso::Functor<void(JSRuntime&, IRekaContext&)>;
+    //using OnRekaDestroyedCallback = Mso::Functor<void(JSRuntime&, IRekaContext&)>;
 
     struct JSRuntimeOptions
     {
@@ -52,7 +52,7 @@ namespace Mso::JSHost::Headless
         //! If more JS bundles are to be loaded after Reka initialization, then this callback could be called
         //! before OnReactInstanceLoaded.
         //! It is called from the native queue.
-        OnRekaInitializedCallback OnRekaInitialized;
+        //OnRekaInitializedCallback OnRekaInitialized;
 
         //! Reka Instance Destruction
         //! The callback is called when Reka instance is destroyed.
@@ -60,7 +60,7 @@ namespace Mso::JSHost::Headless
         //! This callback is called only if OnInitialized callback called before.
         //! It is called before the OnReactInstanceDestroyed callback.
         //! It is called from the native queue.
-        OnRekaDestroyedCallback OnRekaDestroyed;
+        //OnRekaDestroyedCallback OnRekaDestroyed;
             
         //! The callback is called when IReactInstance is created, and JS bundles are started to load.
         //! It is called from the native queue.
@@ -83,6 +83,6 @@ namespace Mso::JSHost::Headless
 
     };
 
-    Mso::TCntPtr<JSRuntime> CreateJSRuntime(JSRuntimeOptions&&);
+    Mso::CntPtr<JSRuntime> CreateJSRuntime(JSRuntimeOptions&&);
 
 } // namespace Mso::JSHost::Headless

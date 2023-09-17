@@ -64,4 +64,12 @@ dependencies {
     implementation(project(":rnx-host"))
     implementation(project(":fbjni"))
     implementation(project(":reacthost"))
+
+    implementation ("com.facebook.react:react-android:${RN_VERSION}") {
+        exclude group:'com.facebook.fbjni', module:'fbjni'
+    }
+
+    implementation ("com.facebook.react:hermes-android:${RN_VERSION}") {
+        exclude group:'com.facebook.fbjni', module:'fbjni'
+    }
 }
