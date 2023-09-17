@@ -34,6 +34,7 @@ static bool isFilePath(const std::string& path) {
 
 void OfficeExecutor::loadBundle(std::unique_ptr<const facebook::react::JSBigString> script, std::string sourceURL) {
     jni::local_ref<JOfficeExecutorObserver::javaobject> observer = m_observer.lockLocal();
+
     if(m_preloadBundles.size() > 0) {
         jni::local_ref<JAssetManager::javaobject> jAssetManager = m_assetManager.lockLocal();
         if(jAssetManager) {
@@ -56,9 +57,34 @@ void OfficeExecutor::loadBundle(std::unique_ptr<const facebook::react::JSBigStri
     }
 
     for (auto &platformBundle : m_platformBundles) {
+        auto info = platformBundle->Info();
         auto content = platformBundle->Content();
+        if(!content.empty()) {
+            auto bundleBigString = std::make_unique<facebook::react::JSBigStdString>(std::string(content.data(), content.size()));
+            m_baseExecutor->loadBundle(std::move(bundleBigString), info.Id);
+            if(observer) {
+                observer->OnLoaded(info.Id);
+            }
+        } else if (!info.FileName.empty()) {
+            auto bundleBigString = JSBigFileString::fromPath(info.FileName);
+            m_baseExecutor->loadBundle(std::move(bundleBigString), info.Id);
+            if(observer) {
+                observer->OnLoaded(info.Id);
+            }
+        } else {
+            // Assuming assets with name as url
+            jni::local_ref<JAssetManager::javaobject> jAssetManager = m_assetManager.lockLocal();
+            if(jAssetManager) {
+                AAssetManager *assetManager = extractAssetManager(jAssetManager);
+                auto bundleBigString = loadScriptFromAssets(assetManager, info.Id);
+                m_baseExecutor->loadBundle(std::move(bundleBigString), info.Id);
+                if(observer) {
+                    observer->OnLoaded(info.Id);
+                }
+            }
+        }
 
-        LOGE("script buffer: %s", platformBundle->Content().data());
+        // LOGE("script buffer: %s", platformBundle->Content().data());
     }
 
     LOGE("sourceURL: %s", sourceURL.c_str());

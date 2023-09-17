@@ -26,5 +26,11 @@ fun JSBundleFromString(str: String, url: String): JSBundle {
 // TODO :: Very this is performant
 fun JSBundleFromFilePath(filePath: String, url: String): JSBundle {
     return JSBundle(
-        StandardCharsets.UTF_8.encode(File(filePath).readText()) , JSBundleInfo(url, null, null));
+        StandardCharsets.UTF_8.encode(File(filePath).readText()) , JSBundleInfo(url, filePath, null));
+}
+
+// We have native code in the JS executor to read the content from the APK assets. Hence we are not doing File IO here.
+// We assume the ID as the asset name if the buffer and filePath is not set
+fun JSBundleFromAssetName(assetName: String): JSBundle {
+    return JSBundle(null , JSBundleInfo(assetName, null, null));
 }

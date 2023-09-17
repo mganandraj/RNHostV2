@@ -24,12 +24,40 @@ private:
 
 };
 
+struct InfoJSBundle : public Mso::UnknownObject<IJSBundle>
+{
+public:
+    std::string_view Content() noexcept override;
+    JSBundleInfo Info() noexcept override;
+
+private:
+    friend MakePolicy; // Allows Mso::Make to access private constructor
+    InfoJSBundle(JSBundleInfo&& info) noexcept;
+    uint64_t Timestamp() noexcept;
+
+private:
+    JSBundleInfo m_info;
+};
+
 ByteBufferJSBundle::ByteBufferJSBundle(
         JSBundleInfo&& info,
         local_ref<JByteBuffer> content) noexcept
         : m_info(std::move(info))
         , m_byteBuffer(make_global(content))
 {}
+
+InfoJSBundle::InfoJSBundle(
+        JSBundleInfo&& info) noexcept
+        : m_info(std::move(info))
+{}
+
+std::string_view InfoJSBundle::Content() noexcept  {
+    return std::string_view();
+}
+
+JSBundleInfo InfoJSBundle::Info() noexcept  {
+    return m_info;
+}
 
 std::string_view ByteBufferJSBundle::Content() noexcept  {
     size_t size = m_byteBuffer->getDirectSize();
@@ -51,6 +79,8 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
     Mso::CntPtr<Mso::React::IJSBundle>jsBundle;
     if(content) {
         jsBundle = Mso::Make<ByteBufferJSBundle>( std::move(JJSBundleInfo::get(info)), content);
+    } else {
+        jsBundle = Mso::Make<InfoJSBundle>( std::move(JJSBundleInfo::get(info)));
     }
     return jsBundle;
 }
