@@ -63,10 +63,10 @@ class MainActivity : AppCompatActivity() {
             }
         };
 
-        var jsBundles = ArrayList<JSBundle>()
-        jsBundles.add(JSBundleFromAssetName("foundation.android.bundle"))
-        jsBundles.add(JSBundleFromAssetName("ui.android.bundle"))
-        reactOptions.JSBundles = jsBundles
+//        var jsBundles = ArrayList<JSBundle>()
+//        jsBundles.add(JSBundleFromAssetName("foundation.android.bundle"))
+//        jsBundles.add(JSBundleFromAssetName("ui.android.bundle"))
+//        reactOptions.JSBundles = jsBundles
 
         mReactHost = ReactHostStatics.makeReactHost(reactOptions)
 
