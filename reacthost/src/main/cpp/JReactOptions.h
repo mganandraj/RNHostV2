@@ -9,6 +9,7 @@
 using namespace Mso::React;
 
 struct JInstanceCreatedCallback;
+struct JInstanceLoadedCallback;
 struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
     static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/ReactOptions;";
     static facebook::jni::local_ref<jhybriddata> initHybrid(facebook::jni::alias_ref<jhybridobject> jThis);
@@ -33,6 +34,9 @@ struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
 
     void setInstanceCreatedCallback(facebook::jni::alias_ref<JInstanceCreatedCallback>);
     facebook::jni::alias_ref<JInstanceCreatedCallback> getInstanceCreatedCallback();
+
+    void setInstanceLoadedCallback(facebook::jni::alias_ref<JInstanceLoadedCallback>);
+    facebook::jni::alias_ref<JInstanceLoadedCallback> getInstanceLoadedCallback();
 };
 
 #endif //ornhost_JREACTOPTIONS_H

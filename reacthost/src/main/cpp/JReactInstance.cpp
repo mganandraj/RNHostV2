@@ -12,10 +12,15 @@
     jThis->cthis()->m_wNativeInstance.GetStrongPtr()->onInitialized();
 }
 
+/*static*/ void JReactInstance::onBundleLoaded(facebook::jni::alias_ref<jhybridobject> jThis, facebook::jni::alias_ref<JString> bundleName) {
+    jThis->cthis()->m_wNativeInstance.GetStrongPtr()->onBundleLoaded(bundleName->toStdString());
+}
+
 /*static */void JReactInstance::registerNatives() {
     registerHybrid({
                            makeNativeMethod("initHybrid", JReactInstance::initHybrid),
                            makeNativeMethod("onInitialized", JReactInstance::onInitialized),
+                           makeNativeMethod("onBundleLoaded", JReactInstance::onBundleLoaded),
                    });
 }
 
@@ -28,6 +33,6 @@
 /*static */facebook::react::RuntimeExecutor JReactInstance::GetRuntimeExecutor(facebook::jni::alias_ref<JReactInstance::javaobject> instance) {
     auto clazz = javaClassLocal();
     auto getRuntimeExecutorMethod = clazz->getMethod<facebook::react::JRuntimeExecutor::jhybridobject ()>("getRuntimeExecutor");
-    alias_ref<facebook::react::JRuntimeExecutor::jhybridobject> jRuntimeExecutor = getRuntimeExecutorMethod(instance);
+    local_ref<facebook::react::JRuntimeExecutor::jhybridobject> jRuntimeExecutor = make_local(getRuntimeExecutorMethod(instance));
     return jRuntimeExecutor->cthis()->get();
 }

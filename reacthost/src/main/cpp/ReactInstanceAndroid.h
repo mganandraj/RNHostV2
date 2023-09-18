@@ -27,7 +27,7 @@ public: // IReactInstanceInternal
     Mso::Future<void> Destroy() noexcept override;
 
     void onInitialized() noexcept;
-
+    void onBundleLoaded(std::string&& bundleName) noexcept;
 
 private:
     friend MakePolicy;

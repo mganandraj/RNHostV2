@@ -23,6 +23,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
     private val mReactOptions: ReactOptions
 
     private external fun onInitialized()
+    private external fun onBundleLoaded(bundleName: String)
 
     init {
         mHybridData = initHybrid()
@@ -46,10 +47,11 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                 .jsMainModulePath("index")
                 .platformBundles(platformBundles)
                 .onJSRuntimeInitialized {
-                    onInitialized();
+                    onInitialized()
                     Log.i(LOG_TAG, "ReactIntegration.RootView.onJSRuntimeInitialized")
                 }
                 .onJSBundleLoaded {  bundleName: String ->
+                    onBundleLoaded(bundleName)
                     // mReactOptions.OnInstanceCreated?.run();
                 }
                 .build() }
@@ -61,6 +63,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
     }
 
     fun getRuntimeExecutor() : RuntimeExecutor? {
-        return mReactNativeHost?.reactInstanceManager!!.getCurrentReactContext()?.catalystInstance?.runtimeExecutor
+        var runtimeExecutor = mReactNativeHost?.reactInstanceManager!!.getCurrentReactContext()?.catalystInstance?.runtimeExecutor
+        return runtimeExecutor
     }
 }

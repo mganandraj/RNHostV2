@@ -1,3 +1,4 @@
+#include <errorCode/hresultErrorProvider.h>
 #include "ReactInstanceAndroid.h"
 #include "JReactInstance.h"
 
@@ -20,6 +21,11 @@ ReactInstanceAndroid::~ReactInstanceAndroid() noexcept
 void ReactInstanceAndroid::onInitialized() noexcept {
     if(Options().OnInstanceCreated)
         Options().OnInstanceCreated(*this);
+}
+
+void ReactInstanceAndroid::onBundleLoaded(std::string&& /*bundleName*/) noexcept {
+    if(Options().OnInstanceLoaded)
+        Options().OnInstanceLoaded(*this, Mso::HResultErrorProvider().MakeErrorCode(S_OK));
 }
 
 void ReactInstanceAndroid::Initialize() noexcept

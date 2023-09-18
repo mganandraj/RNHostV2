@@ -1,6 +1,8 @@
 #include "JInstanceCreatedCallback.h"
+#include "JInstanceLoadedCallback.h"
 #include "JReactOptions.h"
 #include "ReactInstanceAndroid.h"
+#include "JErrorCode.h"
 
 using namespace facebook::jni;
 using namespace Mso::React;
@@ -64,6 +66,19 @@ facebook::jni::alias_ref<JInstanceCreatedCallback> JReactOptions::getInstanceCre
 
 }
 
+void JReactOptions::setInstanceLoadedCallback(facebook::jni::alias_ref<JInstanceLoadedCallback> callback) {
+    options_.OnInstanceLoaded = [callback = make_global(callback)](IReactInstance& instance, const Mso::ErrorCode& errorCode){
+        // TODO :: Make it safer
+        ReactInstanceAndroid* instanceImpl = static_cast<ReactInstanceAndroid*>(&instance);
+        Mso::ErrorCode errorCodeCopy = errorCode;
+        JInstanceLoadedCallback::run(callback, instanceImpl->m_jReactInstance, JErrorCode::create(std::move(errorCodeCopy)));
+    };
+}
+
+facebook::jni::alias_ref<JInstanceLoadedCallback> JReactOptions::getInstanceLoadedCallback() {
+
+}
+
 const ReactOptions& JReactOptions::Options() const noexcept
 {
     return options_;
@@ -80,5 +95,8 @@ const ReactOptions& JReactOptions::Options() const noexcept
         makeNativeMethod("setJSBundles", JReactOptions::setJSBundles),
         makeNativeMethod("getInstanceCreatedCallback", JReactOptions::getInstanceCreatedCallback),
         makeNativeMethod("setInstanceCreatedCallback", JReactOptions::setInstanceCreatedCallback),
-    });
+        makeNativeMethod("getInstanceLoadedCallback", JReactOptions::getInstanceLoadedCallback),
+        makeNativeMethod("setInstanceLoadedCallback", JReactOptions::setInstanceLoadedCallback),
+
+                   });
 }

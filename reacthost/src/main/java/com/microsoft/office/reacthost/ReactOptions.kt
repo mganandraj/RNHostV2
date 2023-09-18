@@ -34,6 +34,10 @@ class ReactOptions {
         public external get
         public external set
 
+    var instanceLoadedCallback: IInstanceLoadedCallback
+        public external get
+        public external set
+
     companion object {
         init {
             System.loadLibrary("fbjni")

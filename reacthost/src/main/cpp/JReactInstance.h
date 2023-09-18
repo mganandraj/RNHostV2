@@ -20,6 +20,7 @@ struct JReactInstance  : facebook::jni::HybridClass<JReactInstance> {
     static void registerNatives();
 
     static void onInitialized(facebook::jni::alias_ref<jhybridobject> jThis);
+    static void onBundleLoaded(facebook::jni::alias_ref<jhybridobject> jThis, facebook::jni::alias_ref<JString> bundleName);
 
     static facebook::jni::local_ref<jhybridobject> create(facebook::jni::alias_ref<JReactOptions::jhybridobject>, Mso::CntPtr<ReactInstanceAndroid> nativeInstance);
 

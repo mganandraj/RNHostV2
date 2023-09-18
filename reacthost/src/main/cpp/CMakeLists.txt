@@ -15,7 +15,9 @@ add_library(reacthost
         BundleServerJSBundle.cpp
         InstanceFactory_Android.cpp
         ReactInstanceAndroid.cpp
+        JErrorCode.cpp
         JInstanceCreatedCallback.cpp
+        JInstanceLoadedCallback.cpp
         JJSBundle.cpp
         JReactHost.cpp
         JReactHostStatics.cpp

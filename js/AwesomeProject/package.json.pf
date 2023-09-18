@@ -45,5 +45,42 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "nativeBundles": {
+    "platformBundleEnabled": false,
+    "targets": [
+      "android.dev",
+      "android.ship"
+    ]
+  },
+  "rnx-kit": {
+    "kitType": "app",
+    "alignDeps": {
+      "presets": [
+        "microsoft/react-native",
+        "fabric-internal-build/align-deps-profiles.js"
+      ],
+      "requirements": [
+        "react-native@0.71"
+      ],
+      "capabilities": [
+        "@ms/office-build-tools",
+        "@office-iss/reka",
+        "@office-iss/reka-react-native",
+        "@office-iss/sdx-build-tools",
+        "@office-iss/sdx-metro-config",
+        "@office-iss/sdx-string-resources",
+        "core-microsoft",
+        "hermes",
+        "react"
+      ]
+    },
+    "bundle": {
+      "treeShake": true,
+      "plugins": [
+        "@office-iss/metro-plugin-recommended",
+        "@rnx-kit/metro-plugin-typescript"
+      ]
+    }
   }
 }
