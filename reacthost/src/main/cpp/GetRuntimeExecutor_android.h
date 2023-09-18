@@ -8,7 +8,8 @@
 #include "ReactNativeHost/React.h"
 #include <ReactCommon/RuntimeExecutor.h>
 
-facebook::react::RuntimeExecutor GetRuntimeExecutor2(Mso::React::IReactInstance& instance);
-
+namespace Mso::React {
+facebook::react::RuntimeExecutor GetRuntimeExecutor2(Mso::React::IReactInstance &instance) noexcept;
+}
 
 #endif //ORNHOST_GETRUNTIMEEXECUTOR_ANDROID_H

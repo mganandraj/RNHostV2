@@ -47,7 +47,7 @@
     "preset": "react-native"
   },
   "nativeBundles": {
-    "platformBundleEnabled": true,
+    "platformBundleEnabled": false,
     "targets": [
       "android.dev",
       "android.ship"

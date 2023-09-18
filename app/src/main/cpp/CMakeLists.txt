@@ -45,12 +45,17 @@ target_link_libraries(reacthostapp mso::span)
 target_link_libraries(reacthostapp mso::tagUtils)
 target_link_libraries(reacthostapp mso::typeTraits)
 
+find_package(ReactAndroid REQUIRED CONFIG)
+target_link_libraries(reacthostapp ReactAndroid::jsi)
+
 find_package(fbjni REQUIRED CONFIG)
 target_link_libraries(reacthostapp fbjni::fbjni)
 
 find_package(reacthost REQUIRED CONFIG)
 target_link_libraries(reacthostapp reacthost::reacthost)
 
+find_package(headless REQUIRED CONFIG)
+target_link_libraries(reacthostapp headless::headless)
 
 find_library(log-lib log)
 target_link_libraries(reacthostapp ${log-lib})

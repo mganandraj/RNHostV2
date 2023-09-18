@@ -50,7 +50,9 @@ void JSHeadlessRuntime::CreateReactInstance()
 
 Mso::React::ReactOptions JSHeadlessRuntime::CreateReactOptions() {
     Mso::React::ReactOptions reactOptions{};
-    reactOptions.JSBundles = Mso::React::GetJSBundles( { Mso::React::JSBundles::SDXFoundation, Mso::React::JSBundles::SDXUI } );
+
+    // TODO
+    // reactOptions.JSBundles = Mso::React::GetJSBundles( { Mso::React::JSBundles::SDXFoundation, Mso::React::JSBundles::SDXUI } );
 
     reactOptions.Identity = m_options.Identity;
     reactOptions.DataServiceProviderName = m_options.RekaProviderName;
@@ -75,8 +77,8 @@ Mso::React::ReactOptions JSHeadlessRuntime::CreateReactOptions() {
 #ifndef USE_OLD_RNHOST
     // MakeReactHost API requires the feature bundle to be explicitly added to the bundle list.
     // Note that we are adding the disk file path overlooking the Metro bundler running on the developer machine.   
-    const std::string bundlePath = "TODODODO"; // GetBundlePath(m_options.Identity.c_str());
-    reactOptions.AddFileJSBundle(m_options.Identity.c_str(), bundlePath);
+    // const std::string bundlePath = "TODODODO"; // GetBundlePath(m_options.Identity.c_str());
+    // reactOptions.AddFileJSBundle(m_options.Identity.c_str(), bundlePath);
 #endif
 
 //    reactOptions.OnInitialized =
@@ -120,7 +122,7 @@ Mso::React::ReactOptions JSHeadlessRuntime::CreateReactOptions() {
 //    };
 //
     // The following callbacks are not called with legacy RNHost.
-    reactOptions.OnInstanceLoaded = [spThis=this/*spThis = Mso::TCntPtr(this)*/](Mso::React::IReactInstance&, const Mso::ErrorCode& errorCode)
+    reactOptions.OnInstanceLoaded = [spThis = Mso::CntPtr(this)](Mso::React::IReactInstance&, const Mso::ErrorCode& errorCode)
     {
         auto executor = spThis->GetRuntimeExecutor();
         executor([spThis](facebook::jsi::Runtime &runtime)
@@ -133,14 +135,14 @@ Mso::React::ReactOptions JSHeadlessRuntime::CreateReactOptions() {
         }
     };
 
-    reactOptions.OnInstanceCreated = [spThis = /*Mso::TCntPtr*/(this)](Mso::React::IReactInstance&)
+    reactOptions.OnInstanceCreated = [spThis = Mso::CntPtr(this)](Mso::React::IReactInstance&)
     {
         if(spThis->Options().OnCreated){
             spThis->Options().OnCreated(*spThis);
         }
     };
 
-    reactOptions.OnInstanceDestroyed = [spThis = /*Mso::TCntPtr*/(this)](Mso::React::IReactInstance&)
+    reactOptions.OnInstanceDestroyed = [spThis = Mso::CntPtr(this)](Mso::React::IReactInstance&)
     {
         if(spThis->Options().OnDestroyed){
             spThis->Options().OnDestroyed(*spThis);

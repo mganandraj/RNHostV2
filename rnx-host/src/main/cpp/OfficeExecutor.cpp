@@ -65,13 +65,7 @@ void OfficeExecutor::loadBundle(std::unique_ptr<const facebook::react::JSBigStri
             if(observer) {
                 observer->OnLoaded(info.Id);
             }
-        } else if (!info.FileName.empty()) {
-            auto bundleBigString = JSBigFileString::fromPath(info.FileName);
-            m_baseExecutor->loadBundle(std::move(bundleBigString), info.Id);
-            if(observer) {
-                observer->OnLoaded(info.Id);
-            }
-        } else {
+        } else if (!info.Id.empty()){
             // Assuming assets with name as url
             jni::local_ref<JAssetManager::javaobject> jAssetManager = m_assetManager.lockLocal();
             if(jAssetManager) {
@@ -81,6 +75,12 @@ void OfficeExecutor::loadBundle(std::unique_ptr<const facebook::react::JSBigStri
                 if(observer) {
                     observer->OnLoaded(info.Id);
                 }
+            }
+        } else if (!info.FileName.empty()) {
+            auto bundleBigString = JSBigFileString::fromPath(info.FileName);
+            m_baseExecutor->loadBundle(std::move(bundleBigString), info.FileName);
+            if(observer) {
+                observer->OnLoaded(info.Id);
             }
         }
 

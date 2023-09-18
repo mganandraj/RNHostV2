@@ -4,6 +4,7 @@ import android.util.Log
 import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
 import com.facebook.jni.HybridData
 import com.facebook.react.ReactInstanceManager
+import com.facebook.react.bridge.RuntimeExecutor
 import com.microsoft.office.reactnative.host.JSBundle
 import com.microsoft.office.reactnative.host.ReactNativeHost
 
@@ -57,5 +58,9 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
 
     fun getReactInstanceManager() : ReactInstanceManager {
        return mReactNativeHost?.reactInstanceManager!!
+    }
+
+    fun getRuntimeExecutor() : RuntimeExecutor? {
+        return mReactNativeHost?.reactInstanceManager!!.getCurrentReactContext()?.catalystInstance?.runtimeExecutor
     }
 }

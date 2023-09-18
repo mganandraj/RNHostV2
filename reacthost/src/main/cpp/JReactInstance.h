@@ -5,6 +5,8 @@
 #include <ReactNativeHost/React.h>
 #include "JReactOptions.h"
 
+#include <ReactCommon/RuntimeExecutor.h>
+
 using namespace facebook::jni;
 using namespace Mso::React;
 
@@ -20,6 +22,8 @@ struct JReactInstance  : facebook::jni::HybridClass<JReactInstance> {
     static void onInitialized(facebook::jni::alias_ref<jhybridobject> jThis);
 
     static facebook::jni::local_ref<jhybridobject> create(facebook::jni::alias_ref<JReactOptions::jhybridobject>, Mso::CntPtr<ReactInstanceAndroid> nativeInstance);
+
+    static facebook::react::RuntimeExecutor GetRuntimeExecutor(facebook::jni::alias_ref<JReactInstance::javaobject>);
 
     Mso::WeakPtr<ReactInstanceAndroid> m_wNativeInstance;
 };

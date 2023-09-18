@@ -48,33 +48,36 @@ class MainActivity : AppCompatActivity() {
         libletInit();
         // runReactOnView(mreactViewInstance);
 
-        var reactOptions = ReactOptions()
-        reactOptions.identity = "AwesomeProject"
-
-        // TODO :: This is not intuitive .. Should be more like "reactOptions.JavaModuleNames.add("MyClass")"
-        // TODO :: Avoid copying.
-        var javaModuleNames = ArrayList<String>()
-        javaModuleNames.add("MyClass")
-
-        reactOptions.JavaModuleNames = javaModuleNames;
-        reactOptions.instanceCreatedCallback = object: IInstanceCreatedCallback{
-            override fun run(instance: ReactInstance?) {
-                Log.w("MainActivity", "run");
-            }
-        };
+        testHeadless();
+//
+//
+//        var reactOptions = ReactOptions()
+//        reactOptions.identity = "AwesomeProject"
+//
+//        // TODO :: This is not intuitive .. Should be more like "reactOptions.JavaModuleNames.add("MyClass")"
+//        // TODO :: Avoid copying.
+//        var javaModuleNames = ArrayList<String>()
+//        javaModuleNames.add("MyClass")
+//
+//        reactOptions.JavaModuleNames = javaModuleNames;
+//        reactOptions.instanceCreatedCallback = object: IInstanceCreatedCallback{
+//            override fun run(instance: ReactInstance?) {
+//                Log.w("MainActivity", "run");
+//            }
+//        };
 
 //        var jsBundles = ArrayList<JSBundle>()
 //        jsBundles.add(JSBundleFromAssetName("foundation.android.bundle"))
 //        jsBundles.add(JSBundleFromAssetName("ui.android.bundle"))
 //        reactOptions.JSBundles = jsBundles
 
-        mReactHost = ReactHostStatics.makeReactHost(reactOptions)
+//        mReactHost = ReactHostStatics.makeReactHost(reactOptions)
+//
+//        var viewOptions: ReactViewOptions = ReactViewOptions()
+//        viewOptions.ComponentName = "AwesomeProject"
+//        mReactViewHost = mReactHost?.MakeViewHost(viewOptions)
 
-        var viewOptions: ReactViewOptions = ReactViewOptions()
-        viewOptions.ComponentName = "AwesomeProject"
-        mReactViewHost = mReactHost?.MakeViewHost(viewOptions)
-
-        mReactViewHost?.AttachViewInstance(mreactViewInstance)
+        // mReactViewHost?.AttachViewInstance(mreactViewInstance)
 
         // Delayed because the Popup Windows shown by RN DevSupport can't be done too early.
         Handler().postDelayed({ this@MainActivity.setContentView(mreactViewInstance) }, 100)
@@ -89,6 +92,7 @@ class MainActivity : AppCompatActivity() {
 
     external fun runReactOnView(reactViewInstance: OfficeReactRootView?)
     external fun libletInit()
+    external fun testHeadless()
 
     external fun test(callback: com.microsoft.office.reacthost.IInstanceCreatedCallback)
 }

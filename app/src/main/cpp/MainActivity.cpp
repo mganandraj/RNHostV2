@@ -3,6 +3,8 @@
 #include "ReactNativeHost/React.h"
 #include "ReactHost.h"
 
+#include "JSHeadlessRuntime.h"
+
 #include <android/log.h>
 
 #define LOG_TAG "ReactHost::MainActivity"
@@ -15,9 +17,18 @@
 using namespace facebook::jni;
 using namespace Mso::React;
 
-/*static */void MainActivity::test(facebook::jni::alias_ref<MainActivity> thiz, facebook::jni::alias_ref<JInstanceCreatedCallback> callback) {
-    // LOGE("MainActivity::runReactOnView::OnInstanceCreated");
-    // JInstanceCreatedCallback::run(callback);
+///*static */void MainActivity::test(facebook::jni::alias_ref<MainActivity> thiz, facebook::jni::alias_ref<JInstanceCreatedCallback> callback) {
+//    // LOGE("MainActivity::runReactOnView::OnInstanceCreated");
+//    // JInstanceCreatedCallback::run(callback);
+//}
+
+/*static*/ void MainActivity::testHeadless(facebook::jni::alias_ref<MainActivity> thiz) {
+
+    Mso::JSHost::Headless::JSRuntimeOptions options;
+    auto runtime = Mso::JSHost::Headless::CreateJSRuntime(std::move(options));
+    runtime->Post([](facebook::jsi::Runtime& jsiRuntime){
+       auto global = jsiRuntime.global();
+    });
 }
 
 /*static */void MainActivity::libletInit(facebook::jni::alias_ref<MainActivity> thiz) {
@@ -51,6 +62,7 @@ void MainActivity::registerNatives() {
     javaClassStatic()->registerNatives({
         makeNativeMethod("runReactOnView", MainActivity::runReactOnView),
         makeNativeMethod("libletInit", MainActivity::libletInit),
-        makeNativeMethod("test", MainActivity::test)
+        makeNativeMethod("testHeadless", MainActivity::testHeadless),
+        // makeNativeMethod("test", MainActivity::test)
     });
 }

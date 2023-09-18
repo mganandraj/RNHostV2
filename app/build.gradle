@@ -70,4 +70,5 @@ dependencies {
     implementation(project(":rnx-host"))
     implementation(project(":fbjni"))
     implementation(project(":reacthost"))
+    implementation(project(":headless"))
 }
