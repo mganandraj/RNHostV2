@@ -75,4 +75,6 @@ dependencies {
     implementation(project(":mso"))
     implementation(project(":rnx-host"))
     implementation(project(":fbjni"))
+    implementation(project(":reka"))
+    implementation(project(":json"))
 }

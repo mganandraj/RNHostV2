@@ -298,13 +298,6 @@ int Mso::StringAscii::SgnCompareWz(const void *pv1, const void *pv2) noexcept
 
 	Locale-invariant upper-casing function.
 */
-
-typedef WORD LID;
-WCHAR MsoWchToUpperLid(WCHAR a, LID, WORD) noexcept
-{
-return a;
-}
-
 wchar_t Mso::StringInvariant::ToUpperChar(wchar_t wch) noexcept
 	{
 	return MsoWchToUpperLid(wch, 0, 0);

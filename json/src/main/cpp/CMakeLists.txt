@@ -15,11 +15,13 @@ add_library(json STATIC
         jsonStorage.cpp
         jsonWriter.cpp
         writer.cpp
+        stringcore/localeSupport_android.cpp
         stringcore/stringComparison.cpp
         stringcore/stringParsing.cpp
         stringcore/stringConversion.cpp
         stringcore/stringTraits.cpp
         stringcore/stringUtils.cpp
+        stubs.cpp
         )
 
 target_include_directories(json PRIVATE D:/github/RNHostv2/json/src/main/cpp/wchar16)

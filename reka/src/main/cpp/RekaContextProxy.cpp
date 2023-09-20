@@ -9,7 +9,7 @@ namespace Mso { namespace JSHost {
 // RekaContextProxy implementation
 //=============================================================================================
 
-RekaContextProxy::RekaContextProxy(Mso::TCntPtr<Mso::Async::IDispatchQueue>&& queue) noexcept
+RekaContextProxy::RekaContextProxy(Mso::DispatchQueue queue) noexcept
 	: Super { std::move(queue) }
 {
 }
@@ -116,7 +116,7 @@ void RekaContextProxy::DrainQueueWithError(const std::string& errorMessage) noex
 	callQueue.clear();
 }
 
-Mso::Async::IDispatchQueue& RekaContextProxy::GetDispatchQueue() const noexcept
+Mso::DispatchQueue RekaContextProxy::GetDispatchQueue() const noexcept
 {
 	return Queue();
 }
@@ -126,7 +126,7 @@ const PropertyBag& RekaContextProxy::Properties() const noexcept
 	VerifyElseCrashSzTag(false, "Properties is not implemented", 0x0281d34b /* tag_c63nl */);
 }
 
-LIBLET_PUBLICAPI Mso::TCntPtr<IRekaContextProxy> MakeRekaContextProxy(Mso::TCntPtr<Mso::Async::IDispatchQueue>&& queue) noexcept
+LIBLET_PUBLICAPI Mso::TCntPtr<IRekaContextProxy> MakeRekaContextProxy(Mso::DispatchQueue queue) noexcept
 {
 	return Mso::Make<RekaContextProxy, IRekaContextProxy>(std::move(queue));
 }

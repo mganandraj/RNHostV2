@@ -27,7 +27,7 @@ struct RekaInstance : Mso::UnknownObject<Mso::RefCountStrategy::WeakRef,
 								Mso::QueryCastChain<IRekaInstance, IRekaBridge>>
 {
 public:
-	Mso::Async::IDispatchQueue& GetDispatchQueue() noexcept;
+	Mso::DispatchQueue GetDispatchQueue() noexcept;
 	int32_t GetJsPromiseId(Mso::TCntPtr<IRekaResult>&& result) noexcept;
 
 	const PropertyBag& Properties() const noexcept;
@@ -55,7 +55,7 @@ private:
 
 private:
 	mutable std::mutex m_lock;
-	Mso::TCntPtr<Mso::Async::IDispatchQueue> m_dispatchQueue;
+	Mso::DispatchQueue m_dispatchQueue;
 	std::map<int32_t /*promiseId*/, Mso::TCntPtr<IRekaResult>> m_jsResults;
 	int32_t m_nextJsPromiseId{0};
 	Mso::TCntPtr<RekaContext> m_serviceContext;

@@ -1,6 +1,6 @@
 #include "precomp.h"
 #include "StringConversion.h"
-#include <msostringConversion.h>
+#include <core_root/msostringConversion.h>
 #include <crash/verifyElseCrash.h>
 
 #undef new

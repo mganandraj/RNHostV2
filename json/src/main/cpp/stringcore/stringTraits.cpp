@@ -8,25 +8,11 @@
 #include "precomp.h"
 #include "insetof.h"
 // #include <msostd.h>
-// #include <msostringConversion.h>
-// #include <msostringTraits.h>
+#include <core_root/msostringConversion.h>
+#include <core_root/msostringTraits.h>
 #include "stringcore/core/stringTraits.h"
 
 #include <cstdlib>
-
-#define MSODLL_MANDATED_C_EXPORT
-#define OACR_WARNING_SUPPRESS(a,b)
-
-#if !defined(_countof)
-#define _countof(array) (sizeof(array)/sizeof(array[0]))
-#endif
-
-
-typedef unsigned long DWORD_PTR, *PDWORD_PTR;
-
-#define AssertTag(x, y)  if(!x) { std::abort(); }
-#define AssertSzTag(x, y, z)  if(!x) { std::abort(); }
-#define AssertDoTag(f, tag)	(void)(f)
 
 //
 //  CType 1 Flag Bits.

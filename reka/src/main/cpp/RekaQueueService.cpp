@@ -37,11 +37,11 @@ RekaQueueService::~RekaQueueService() noexcept
 }
 
 void RekaQueueService::InitializeThis(
-	Mso::TCntPtr<Mso::Async::IDispatchQueue>&& queue,
+	Mso::DispatchQueue queue,
 	Mso::Functor<void(Mso::TCntPtr<IRekaService>&)>&& rekaServiceMaker) noexcept
 {
 	m_queue = std::move(queue);
-	m_queue->Post([
+	m_queue.Post([
 		thisPtr = Mso::TCntPtr<RekaQueueService>{this},
 		rekaServiceMaker = std::move(rekaServiceMaker)
 	]() noexcept {
@@ -52,7 +52,7 @@ void RekaQueueService::InitializeThis(
 void RekaQueueService::DestroyThis() noexcept
 {
 	// Make sure that wrapped service is deleted in the queue
-	m_queue->Post([this]() noexcept {
+	m_queue.Post([this]() noexcept {
 		RefCountPolicy::Delete(this);
 	});
 }
@@ -60,7 +60,7 @@ void RekaQueueService::DestroyThis() noexcept
 void RekaQueueService::Invoke(const char* methodName, const char* serializedValue,
 	Mso::TCntPtr<IRekaResult>&& result) noexcept
 {
-	m_queue->Post([
+	m_queue.Post([
 		weakThis = Mso::MakeWeakPtr(this),
 		args = RekaServiceArgs{methodName, serializedValue, std::move(result)}
 	]() mutable noexcept {
@@ -79,7 +79,7 @@ void RekaQueueService::InvokeWithReader(const char* /*methodName*/, IRekaReader&
 }
 
 LIBLET_PUBLICAPI Mso::TCntPtr<IRekaService> MakeRekaQueueService(
-	Mso::TCntPtr<Mso::Async::IDispatchQueue>&& queue,
+	Mso::DispatchQueue queue,
 	Mso::Functor<void(Mso::TCntPtr<IRekaService>&)>&& rekaServiceMaker) noexcept
 {
 	VerifyElseCrashSzTag(queue, "DispatchQueue to run service on is null", 0x0281d34f /* tag_c63np */);

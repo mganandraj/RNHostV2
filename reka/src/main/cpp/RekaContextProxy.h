@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-#include <dispatchqueue/ActiveObject.h>
+#include <activeObject/ActiveObject.h>
 #include <reka/RekaApi.h>
 
 namespace Mso { namespace JSHost {
@@ -25,7 +25,7 @@ public: // IRekaContext interface
 
 	Mso::TCntPtr<IRekaCallContext> PrepareCall(const char* serviceName, const char* methodName) const noexcept override;
 
-	Mso::Async::IDispatchQueue& GetDispatchQueue() const noexcept override;
+	Mso::DispatchQueue GetDispatchQueue() const noexcept override;
 
 	const PropertyBag& Properties() const noexcept override;
 
@@ -37,7 +37,7 @@ public: // IRekaContextProxy interface
 private:
 	using Super = ActiveObjectType;
 	friend MakePolicy;
-	RekaContextProxy(Mso::TCntPtr<Mso::Async::IDispatchQueue>&& queue) noexcept;
+	RekaContextProxy(Mso::DispatchQueue queue) noexcept;
 	~RekaContextProxy() noexcept override;
 	void CallRemote(RemoteCallData&& callData) const noexcept;
 	void DrainQueueWithError(const std::string& serializedError) noexcept;

@@ -13,11 +13,9 @@ project("reka")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-
-
-add_library(reka SHARED reka.cpp
-        RekaReader.cpp
-        RekaWriter.cpp
+add_library(reka STATIC
+        JsonReader.cpp
+        JsonWriter.cpp
         PropertyBag.cpp
         reka.cpp
         RekaCallContext.cpp

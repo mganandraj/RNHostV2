@@ -83,7 +83,7 @@ Mso::TCntPtr<IRekaCallContext> RekaContext::PrepareCall(const char* serviceName,
 	});
 }
 
-Mso::Async::IDispatchQueue& RekaContext::GetDispatchQueue() const noexcept
+Mso::DispatchQueue RekaContext::GetDispatchQueue() const noexcept
 {
 	if (auto rekaInstance = m_rekaInstanceWeak.GetStrongPtr())
 	{

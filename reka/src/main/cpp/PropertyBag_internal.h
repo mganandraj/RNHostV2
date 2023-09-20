@@ -6,6 +6,8 @@
 #include <mutex>
 #include <string>
 
+#include <functional/functorRef.h>
+
 namespace Mso { namespace JSHost {
 
 struct IsolatedId

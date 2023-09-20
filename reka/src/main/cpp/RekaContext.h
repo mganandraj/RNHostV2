@@ -34,7 +34,7 @@ public: // IRekaContext interface
 
 	Mso::TCntPtr<IRekaCallContext> PrepareCall(const char* serviceName, const char* methodName) const noexcept override;
 
-	Mso::Async::IDispatchQueue& GetDispatchQueue() const noexcept override;
+	Mso::DispatchQueue GetDispatchQueue() const noexcept override;
 
 	const PropertyBag& Properties() const noexcept override;
 

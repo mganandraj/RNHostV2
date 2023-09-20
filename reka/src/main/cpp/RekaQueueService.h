@@ -32,13 +32,13 @@ private:
 	RekaQueueService() noexcept;
 	~RekaQueueService() noexcept override;
 	void InitializeThis(
-		Mso::TCntPtr<Mso::Async::IDispatchQueue>&& queue,
+		Mso::DispatchQueue queue,
 		Mso::Functor<void(Mso::TCntPtr<IRekaService>&)>&& rekaServiceMaker) noexcept;
 	void DestroyThis() noexcept;
 
 private:
 	Mso::TCntPtr<IRekaService> m_service;
-	Mso::TCntPtr<Mso::Async::IDispatchQueue> m_queue;
+	Mso::DispatchQueue m_queue;
 };
 
 

@@ -88,7 +88,7 @@ private:
 			{
 				if (auto dataService = GetRekaService(reg->ServiceName(), serviceContext))
 				{
-					if (auto constants = query_cast<IRekaConstants*>(dataService.get()))
+					if (auto constants = query_cast<IRekaConstants*>(dataService.Get()))
 					{
 						constants->EnumerateConstants([&callback, reg](const char* propertyName) noexcept {
 							return Mso::Make<ConstantWriter, IRekaConstantWriter>(callback, reg->ServiceName(), propertyName);

@@ -8,7 +8,7 @@ template <typename TChar>
 class JsonRekaReader : public Mso::UnknownObject<IRekaReader>
 {
 public:
-	using MakeJsonReader = Mso::TCntRef<Mso::Json::TIReader<TChar>>(const Mso::basic_string<TChar>&) noexcept;
+	using MakeJsonReader = Mso::TCntPtr<Mso::Json::TIReader<TChar>>(const Mso::basic_string<TChar>&) noexcept;
 
 	JsonRekaReader(const TChar* jsonReader, MakeJsonReader* makeReader) noexcept;
 
@@ -37,7 +37,7 @@ protected:
 
 	//private:
 	Mso::basic_string<TChar> m_jsonText;
-	Mso::TCntRef<Mso::Json::TIReader<TChar>> m_reader;
+	Mso::TCntPtr<Mso::Json::TIReader<TChar>> m_reader;
 	Mso::Json::ParseState::Enum m_state{Mso::Json::ParseState::ErrorInvalidData};
 	Mso::basic_string_view<TChar> m_propertyName;
 	Mso::basic_string_view<TChar> m_stringValue;
@@ -56,7 +56,7 @@ public: // IRekaReader interface
 	bool MatchPropertyName(const wchar_t* name) noexcept override;
 
 private:
-	static Mso::TCntRef<Mso::Json::TIReader<wchar_t>> MakeReader(const Mso::basic_string<wchar_t>& jsonText) noexcept;
+	static Mso::TCntPtr<Mso::Json::TIReader<wchar_t>> MakeReader(const Mso::basic_string<wchar_t>& jsonText) noexcept;
 };
 
 class Utf8JsonRekaReader : public JsonRekaReader<char>
@@ -71,7 +71,7 @@ public: // IRekaReader interface
 	bool MatchPropertyName(const wchar_t* name) noexcept override;
 
 private:
-	static Mso::TCntRef<Mso::Json::TIReader<char>> MakeReader(const Mso::basic_string<char>& jsonText) noexcept;
+	static Mso::TCntPtr<Mso::Json::TIReader<char>> MakeReader(const Mso::basic_string<char>& jsonText) noexcept;
 };
 
 //=============================================================================
@@ -273,7 +273,7 @@ Utf16JsonRekaReader::Utf16JsonRekaReader(const wchar_t* jsonText) noexcept
 {
 }
 
-Mso::TCntRef<Mso::Json::TIReader<wchar_t>> Utf16JsonRekaReader::MakeReader(const Mso::basic_string<wchar_t>& jsonText) noexcept
+Mso::TCntPtr<Mso::Json::TIReader<wchar_t>> Utf16JsonRekaReader::MakeReader(const Mso::basic_string<wchar_t>& jsonText) noexcept
 {
 	return Mso::Json::Unicode::MakeReader(Mso::basic_string_view<wchar_t>(jsonText.data(), jsonText.size()));
 }
@@ -323,7 +323,7 @@ Utf8JsonRekaReader::Utf8JsonRekaReader(const char* jsonText) noexcept
 {
 }
 
-Mso::TCntRef<Mso::Json::TIReader<char>> Utf8JsonRekaReader::MakeReader(const Mso::basic_string<char>& jsonText) noexcept
+Mso::TCntPtr<Mso::Json::TIReader<char>> Utf8JsonRekaReader::MakeReader(const Mso::basic_string<char>& jsonText) noexcept
 {
 	return Mso::Json::Utf8::MakeReader(Mso::basic_string_view<char>(jsonText.data(), jsonText.size()));
 }

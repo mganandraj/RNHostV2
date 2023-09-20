@@ -157,18 +157,10 @@ typedef struct _SYSTEMTIME {
     WORD wMilliseconds;
 } SYSTEMTIME;
 
-BOOL SystemTimeToFileTime(const SYSTEMTIME* pst, FILETIME* pft)
-{
-    std::abort();
-}
+BOOL SystemTimeToFileTime(const SYSTEMTIME* pst, FILETIME* pft);
+BOOL FileTimeToSystemTime(const FILETIME* pft, SYSTEMTIME* pst);
+void GetSystemTime(SYSTEMTIME *ioTime);
 
-BOOL FileTimeToSystemTime(const FILETIME* pft, SYSTEMTIME* pst) {
-    std::abort();
-}
-
-void GetSystemTime(SYSTEMTIME *ioTime) {
-    std::abort();
-}
 
 typedef union _LARGE_INTEGER {
     struct {
@@ -281,10 +273,7 @@ struct IMsoMemHeap
 #endif // DEBUG
 };
 
-TASKLIBTECHDEBT_(HRESULT) HrMsoAllocHost(size_t cbAlloc, void **ppvRes, IMsoMemHeap* pmmh) noexcept
-{
-    std::abort();
-}
+TASKLIBTECHDEBT_(HRESULT) HrMsoAllocHost(size_t cbAlloc, void **ppvRes, IMsoMemHeap* pmmh) noexcept;
 
 typedef unsigned char UCHAR;
 #define MakeWordFirstSecond(b1, b2) ((WORD)(b1) << 8 | (WORD)(UCHAR)(b2))

@@ -1,7 +1,7 @@
 #include "precomp.h"
 #include "RekaServiceProviderRegistration.h"
 #include <reka/RekaServiceRegistration.h>
-#include <core/memoryapi.h>
+// #include <core/memoryapi.h>
 
 namespace Mso { namespace JSHost {
 
@@ -19,7 +19,7 @@ RekaServiceProviderRegistry& RekaServiceProviderRegistry::Instance() noexcept
 			instance = newInstance.release();
 
 			//Temporary fix to unblock memory leak tests while implementing ILiblet uninit memory release solution.
-			MsoSetLazyLeakDetection(instance);
+			// MsoSetLazyLeakDetection(instance);
 		}
 	}
 

@@ -41,7 +41,7 @@ RekaInstance::RekaInstance(RekaBridgeOptions&& options) noexcept
 
 	if (!m_dispatchQueue)
 	{
-		m_dispatchQueue = Mso::Async::CreateBackgroundSequentialDispatchQueue();
+		m_dispatchQueue = Mso::DispatchQueue::MakeSerialQueue();
 	}
 
 	m_serviceContext = Mso::Make<RekaContext>(this, m_properties);
@@ -63,8 +63,7 @@ void RekaInstance::Destroy() noexcept
 {
 	if (m_onDestroyed)
 	{
-		Mso::Async::InvokeElsePost(m_dispatchQueue.Get(),
-			[rekaInstance = Mso::TCntPtr<RekaInstance>(this) /*Copy*/]() noexcept {
+		m_dispatchQueue.InvokeElsePost(	[rekaInstance = Mso::TCntPtr<RekaInstance>(this) /*Copy*/]() noexcept {
 				// Note, RekaInstance is kept alive
 				// during onDestroyed callback.
 				// Thus users can access any stored objects from
@@ -84,8 +83,7 @@ void RekaInstance::EnumerateConstants(const EnumerateConstantsCallback& callback
 
 _Noexcept_mayterminate_ RekaInstance::~RekaInstance() noexcept
 {
-	Mso::Async::InvokeElsePost(m_dispatchQueue,
-		[jsResults = std::move(m_jsResults)]() noexcept {
+	m_dispatchQueue.InvokeElsePost(	[jsResults = std::move(m_jsResults)]() noexcept {
 			// Call OnFailure() for leftover m_jsResults
 			for (const auto& jsResultEntry : jsResults)
 			{
@@ -94,9 +92,9 @@ _Noexcept_mayterminate_ RekaInstance::~RekaInstance() noexcept
 		});
 }
 
-Mso::Async::IDispatchQueue& RekaInstance::GetDispatchQueue() noexcept
+Mso::DispatchQueue RekaInstance::GetDispatchQueue() noexcept
 {
-	return *m_dispatchQueue;
+	return m_dispatchQueue;
 }
 
 int32_t RekaInstance::GetJsPromiseId(Mso::TCntPtr<IRekaResult>&& result) noexcept
@@ -125,8 +123,7 @@ const Mso::TCntPtr<RekaContext>& RekaInstance::GetContext() const noexcept
 
 void RekaInstance::Invoke(const RekaBridgeInvokeArgs& args) noexcept
 {
-	Mso::Async::Post(m_dispatchQueue,
-		[weakPtr = Mso::WeakPtr<RekaInstance>{this},
+	m_dispatchQueue.Post([weakPtr = Mso::WeakPtr<RekaInstance>{this},
 			args = MovableRekaBridgeInvokeArgs{args}]() noexcept {
 
 			auto spThis = weakPtr.GetStrongPtr();
@@ -288,8 +285,8 @@ RekaInstanceOwner::~RekaInstanceOwner() noexcept
 	if (rekaInstance)
 	{
 		// Make sure that Reka instance is destroyed in the queue associated with it.
-		Mso::Async::IDispatchQueue* queue{&rekaInstance->GetDispatchQueue()};
-		Mso::Async::InvokeElsePost(queue, [rekaInstance = std::move(rekaInstance)]() noexcept {
+		Mso::DispatchQueue queue{rekaInstance->GetDispatchQueue()};
+		queue.InvokeElsePost( [rekaInstance = std::move(rekaInstance)]() noexcept {
 			rekaInstance->Destroy();
 		});
 	}
