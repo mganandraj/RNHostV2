@@ -1,3 +1,5 @@
+#include "precomp.h"
+
 #include "GetRuntimeExecutor_android.h"
 #include "ReactInstanceAndroid.h"
 

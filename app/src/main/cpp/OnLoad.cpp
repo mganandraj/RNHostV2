@@ -1,3 +1,4 @@
+#include "precomp.h"
 #include <fbjni/fbjni.h>
 
 #include "MainActivity.h"

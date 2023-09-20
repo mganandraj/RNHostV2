@@ -72,4 +72,7 @@ dependencies {
     implementation ("com.facebook.react:hermes-android:${RN_VERSION}") {
         exclude group:'com.facebook.fbjni', module:'fbjni'
     }
+
+    implementation(project(":reka"))
+    implementation(project(":json"))
 }

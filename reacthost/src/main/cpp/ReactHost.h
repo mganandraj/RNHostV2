@@ -98,7 +98,7 @@ class ReactHost final
 public: // IReactHost
 	ReactOptions Options() const noexcept override;
 	Mso::CntPtr<IReactInstance> Instance() const noexcept override;
-	// Mso::JSHost::IRekaContext& RekaContext() noexcept override;
+	Mso::JSHost::IRekaContext& RekaContext() noexcept override;
 	Mso::DispatchQueue NativeQueue() const noexcept override;
 	Mso::Future<void> ReloadInstance() noexcept override;
 	Mso::Future<void> ReloadInstanceWithOptions(ReactOptions&& options) noexcept override;
@@ -151,7 +151,7 @@ private:
 	const Mso::InvokeElsePostExecutor m_executor{Queue()};
 	const Mso::ActiveField<Mso::Promise<void>> m_onInstanceLoaded{Queue()};
 	const Mso::ActiveReadableField<Mso::CntPtr<AsyncActionQueue>> m_actionQueue{Mso::Make<AsyncActionQueue>(Queue()), Queue(), m_mutex};
-	// const Mso::CntPtr<Mso::JSHost::IRekaContextProxy> m_rekaContextProxy;
+	const Mso::CntPtr<Mso::JSHost::IRekaContextProxy> m_rekaContextProxy;
 	const Mso::ActiveField<Mso::ErrorCode> m_lastError{Queue()};
 	const Mso::ActiveReadableField<ReactOptions> m_options{Queue(), m_mutex};
 	const Mso::ActiveField<std::unordered_map<uintptr_t, Mso::WeakPtr<ReactViewHost>>> m_viewHosts{Queue()};

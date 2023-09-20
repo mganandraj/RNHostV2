@@ -1,3 +1,5 @@
+#include "precomp.h"
+
 #include <jshostofficepal/PlatformJSBundles.h>
 #include <reactnativehost/JSBundle.h>
 

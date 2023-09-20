@@ -1,4 +1,4 @@
-//#include "precomp.h"
+#include "precomp.h"
 #include "ReactHost.h"
 //#include "ChangeGate.h"
 #include <Future/FutureWait.h>
@@ -264,10 +264,10 @@ Mso::CntPtr<IReactInstance> ReactHost::Instance() const noexcept
 	return m_reactInstance.LoadWithLock();
 }
 
-//Mso::JSHost::IRekaContext& ReactHost::RekaContext() noexcept
-//{
-//	return *m_rekaContextProxy;
-//}
+Mso::JSHost::IRekaContext& ReactHost::RekaContext() noexcept
+{
+	return *m_rekaContextProxy;
+}
 
 Mso::DispatchQueue ReactHost::NativeQueue() const noexcept
 {

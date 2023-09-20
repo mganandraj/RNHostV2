@@ -1,3 +1,5 @@
+#include "precomp.h"
+
 #include "ReactNativeHost/React.h"
 #include <smartPtr/cntPtr.h>
 #include "InstanceFactory.h"

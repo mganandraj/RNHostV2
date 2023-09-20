@@ -1,9 +1,10 @@
+#include "precomp.h"
 #include "MainActivity.h"
 
 #include "ReactNativeHost/React.h"
 #include "ReactHost.h"
 
-#include "JSHeadlessRuntime.h"
+#include <jshostheadless/JSHeadlessRuntime.h>
 
 #include <android/log.h>
 

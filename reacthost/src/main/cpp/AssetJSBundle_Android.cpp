@@ -1,3 +1,5 @@
+#include "precomp.h"
+
 #include "AssetJSBundle_Android.h"
 
 namespace Mso { namespace React {

@@ -1,7 +1,4 @@
-//
-// Created by anandrag on 9/2/2023.
-//
-
+#include "precomp.h"
 #include "JReactViewInstance.h"
 #include "ReactInstanceAndroid.h"
 #include "JReactViewOptions.h"

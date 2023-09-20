@@ -1,7 +1,4 @@
-//
-// Created by anandrag on 9/14/2023.
-//
-
+#include "precomp.h"
 #include "JInstanceCreatedCallback.h"
 
 using namespace Mso::React;

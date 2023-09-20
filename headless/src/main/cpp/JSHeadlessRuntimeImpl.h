@@ -1,7 +1,7 @@
 #pragma once
 
 // #include <jshostheadless/JSHeadlessRuntime.h>
-#include "JSHeadlessRuntime.h"
+#include "jshostheadless/JSHeadlessRuntime.h"
 
 #include <ReactNativeHost/React.h>
 #include <jsi/jsi.h>

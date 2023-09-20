@@ -9,6 +9,9 @@ set(CMAKE_CXX_STANDARD 17)
 
 project("headless")
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 add_library(headless SHARED headless.cpp JSHeadlessRuntimeImpl.cpp)
 
 find_library(log-lib log)
@@ -77,3 +80,9 @@ target_link_libraries(headless fbjni::fbjni)
 
 find_package(reacthost REQUIRED CONFIG)
 target_link_libraries(headless reacthost::reacthost)
+
+find_package(json REQUIRED CONFIG)
+target_link_libraries(headless json::json)
+
+find_package(reka REQUIRED CONFIG)
+target_link_libraries(headless reka::reka)

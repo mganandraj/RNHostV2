@@ -7,6 +7,9 @@ cmake_minimum_required(VERSION 3.18.1)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 project("reacthostapp")
 
 add_library(reacthostapp
@@ -59,3 +62,9 @@ target_link_libraries(reacthostapp headless::headless)
 
 find_library(log-lib log)
 target_link_libraries(reacthostapp ${log-lib})
+
+find_package(json REQUIRED CONFIG)
+target_link_libraries(reacthostapp json::json)
+
+find_package(reka REQUIRED CONFIG)
+target_link_libraries(reacthostapp reka::reka)

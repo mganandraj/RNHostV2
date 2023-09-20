@@ -1,3 +1,5 @@
+#include "precomp.h"
+
 #include <errorCode/hresultErrorProvider.h>
 #include "ReactInstanceAndroid.h"
 #include "JReactInstance.h"

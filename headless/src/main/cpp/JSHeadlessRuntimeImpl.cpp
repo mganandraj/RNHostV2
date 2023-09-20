@@ -1,4 +1,4 @@
-// #include "precomp.h"
+#include "precomp.h"
 
 // #include "JSHeadlessRuntimeHelpers.h"
 #include "JSHeadlessRuntimeImpl.h"
@@ -6,7 +6,7 @@
 // #include <jshostassets/assetconfiguration.h>
 #include <JSHostOfficePal/PlatformJSBundles.h>
 #include <ReactNativeHost/JSBundle.h>
-// #include <Reka/RekaServiceRegistration.h>
+#include <Reka/RekaServiceRegistration.h>
 #include <ReactNativeHost/React.h>
 
 //#include <osfclient/osfreacthelper.h>
@@ -18,8 +18,8 @@
 
 namespace Mso::JSHost::Headless {
 
-//static constexpr const Mso::JSHost::NamedProperty<IOsfControlContainer> ControlContainerProperty {"ControlContainer"};
-//static constexpr const Mso::JSHost::NamedProperty<uint64_t> DocCookieProperty{ "DocCookie" };
+// static constexpr const Mso::JSHost::NamedProperty<IOsfControlContainer> ControlContainerProperty {"ControlContainer"};
+static constexpr const Mso::JSHost::NamedProperty<uint64_t> DocCookieProperty{ "DocCookie" };
 
 JSRuntime::~JSRuntime() {}
 

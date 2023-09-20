@@ -1,3 +1,5 @@
+#include "precomp.h"
+
 #include "JReactViewHost.h"
 
 void JReactViewHost::registerNatives() {

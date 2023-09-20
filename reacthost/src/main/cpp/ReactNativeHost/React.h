@@ -13,7 +13,7 @@
 #include "ReactNativeHost/JSBundle.h"
 //#include <ReactNativeHost/JSExceptionInfo.h>
 //#include <ReactNativeHost/ModuleProvider.h>
-//#include <Reka/RekaApi.h>
+#include <Reka/RekaApi.h>
 //#include <ShipAssertApi/ShipAssertApi.h>
 
 #pragma pack(push, _CRT_PACKING)
@@ -76,13 +76,13 @@ using OnReactInstanceLoadedCallback = Mso::Functor<void(IReactInstance&, const M
 using OnReactInstanceDestroyedCallback = Mso::Functor<void(IReactInstance&)>;
 
 ////! PropertyBag named property for JavaScript dispatch queue.
-//inline constexpr const Mso::JSHost::NamedProperty<Mso::Async::IDispatchQueue> JSDispatchQueueProperty{"JSDispatchQueue"};
-//
+inline constexpr const Mso::JSHost::NamedProperty<Mso::DispatchQueue> JSDispatchQueueProperty{"JSDispatchQueue"};
+
 ////! PropertyBag named property for Native dispatch queue.
-//inline constexpr const Mso::JSHost::NamedProperty<Mso::Async::IDispatchQueue> NativeDispatchQueueProperty{"NativeDispatchQueue"};
+inline constexpr const Mso::JSHost::NamedProperty<Mso::DispatchQueue> NativeDispatchQueueProperty{"NativeDispatchQueue"};
 //
 ////! PropertyBag named property for UI dispatch queue.
-//inline constexpr const Mso::JSHost::NamedProperty<Mso::Async::IDispatchQueue> UIDispatchQueueProperty{"UIDispatchQueue"};
+inline constexpr const Mso::JSHost::NamedProperty<Mso::DispatchQueue> UIDispatchQueueProperty{"UIDispatchQueue"};
 
 //! Every individual breaking behavior change on the platform should have its own quirk.  This way if
 //! there is a breaking change that is a significant amount of work for an SDX to fix, they can maintain that
@@ -259,7 +259,7 @@ struct ReactOptions
 	//! If more JS bundles are to be loaded after Reka initialization, then this callback could be called
 	//! before OnReactInstanceLoaded.
 	//! It is called from the native queue.
-	// Mso::JSHost::OnInitializedCallback OnInitialized;
+	Mso::JSHost::OnInitializedCallback OnInitialized;
 
 	//! Reka Instance Destruction
 	//! The callback is called when Reka instance is destroyed.
@@ -267,7 +267,7 @@ struct ReactOptions
 	//! This callback is called only if OnInitialized callback called before.
 	//! It is called before the OnReactInstanceDestroyed callback.
 	//! It is called from the native queue.
-	// Mso::JSHost::OnDestroyedCallback OnDestroyed;
+	Mso::JSHost::OnDestroyedCallback OnDestroyed;
 
 	//! ReactNative Infrastructure Error
 	//! Error types include:
@@ -310,10 +310,10 @@ struct ReactOptions
 	// Mso::TCntPtr<IMemoryTracker> MemoryTracker;
 
 	//! Custom Provider Factory. Optional.
-	// Mso::Functor<Mso::TCntPtr<Mso::JSHost::IRekaServiceProvider>(Mso::JSHost::IRekaContext&)> RekaProviderFactory;
+	Mso::Functor<Mso::CntPtr<Mso::JSHost::IRekaServiceProvider>(Mso::JSHost::IRekaContext&)> RekaProviderFactory;
 
 	//! Additional properties associated with the ReactOptions.
-	// Mso::JSHost::PropertyBag Properties;
+	Mso::JSHost::PropertyBag Properties;
 
 	//! Adds registered JS bundle to JSBundles.
 	LIBLET_PUBLICAPI ReactOptions& AddRegisteredJSBundle(std::string_view jsBundleId) noexcept;
@@ -375,7 +375,7 @@ struct DECLSPEC_NOVTABLE IReactHost : IUnknown
 	virtual Mso::CntPtr<IReactInstance> Instance() const noexcept = 0;
 
 	//! Gets Reka context proxy to queue up and run Reka proxies that call JavaScript services or JavaScript event handlers.
-	// virtual Mso::JSHost::IRekaContext& RekaContext() noexcept = 0;
+	virtual Mso::JSHost::IRekaContext& RekaContext() noexcept = 0;
 
 	//! A native sequential queue associated with IReactHost.
 	//! All internal operations are done using this queue to synchronize internal state.

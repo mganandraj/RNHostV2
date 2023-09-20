@@ -1,4 +1,4 @@
-// #include "precomp.h"
+#include "precomp.h"
 #include "compileradapters/compilerwarnings.h"
 #include "MsoUtils.h"
 #include <object/refCountedObject.h>

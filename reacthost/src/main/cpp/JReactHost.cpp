@@ -1,3 +1,4 @@
+#include "precomp.h"
 #include "JReactHost.h"
 
 #include "JReactViewHost.h"

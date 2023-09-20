@@ -6,6 +6,7 @@
 cmake_minimum_required(VERSION 3.18.1)
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 project("reacthost")
 
@@ -100,3 +101,9 @@ target_link_libraries(reacthost fbjni::fbjni)
 
 find_library(log-lib log)
 target_link_libraries(reacthost ${log-lib})
+
+find_package(json REQUIRED CONFIG)
+target_link_libraries(reacthost json::json)
+
+find_package(reka REQUIRED CONFIG)
+target_link_libraries(reacthost reka::reka)

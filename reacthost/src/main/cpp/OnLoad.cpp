@@ -1,3 +1,5 @@
+#include "precomp.h"
+
 #include <fbjni/fbjni.h>
 
 #include "JReactOptions.h"

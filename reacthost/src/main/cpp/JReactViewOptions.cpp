@@ -1,3 +1,5 @@
+#include "precomp.h"
+
 #include "JReactViewOptions.h"
 
 using namespace facebook::jni;

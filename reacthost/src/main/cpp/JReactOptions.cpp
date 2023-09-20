@@ -1,3 +1,5 @@
+#include "precomp.h"
+
 #include "JInstanceCreatedCallback.h"
 #include "JInstanceLoadedCallback.h"
 #include "JReactOptions.h"

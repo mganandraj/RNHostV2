@@ -1,3 +1,4 @@
+#include "precomp.h"
 #include "JReactInstance.h"
 #include "ReactInstanceAndroid.h"
 

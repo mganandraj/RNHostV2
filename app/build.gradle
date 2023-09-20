@@ -72,5 +72,6 @@ dependencies {
     implementation(project(":reacthost"))
     implementation(project(":headless"))
 
+    implementation(project(":reka"))
     implementation(project(":json"))
 }

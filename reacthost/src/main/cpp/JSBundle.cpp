@@ -1,3 +1,5 @@
+#include "precomp.h"
+
 #include "ReactNativeHost/JSBundle.h"
 
 #include <vector>
