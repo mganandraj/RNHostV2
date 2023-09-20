@@ -1,0 +1,72 @@
+#include "precomp.h"
+#include "json/JsonGuid.h.bak"
+// #include <oguid/guid.h>
+
+namespace Mso { namespace Json {
+
+static const Mso::ErrorProvider<GetGuidErrorResult, GetGuidErrorProviderGuid> s_GetGuidErrorProvider;
+
+const Mso::ErrorProvider<GetGuidErrorResult, GetGuidErrorProviderGuid>& GetGuidResultErrorProvider() noexcept
+{
+	return s_GetGuidErrorProvider;
+}
+
+namespace Details
+{
+
+/*------------------------------------------------------------------------------
+	Return the current value as a GUID (returns error through GetGuidResultErrorProvider on failure to parse)
+------------------------------------------------------------------------------*/
+template<typename TChar>
+Mso::Maybe<GUID> GetGuid(TIReader<TChar>& jsonReader) noexcept
+{
+	Mso::basic_string_view<TChar> value;
+	if (!jsonReader.GetString(value))
+	{
+		return s_GetGuidErrorProvider.MakeMaybe<GUID>(GetGuidErrorResult::NotStringValue);
+	}
+
+	if (value.empty())
+	{
+		return s_GetGuidErrorProvider.MakeMaybe<GUID>(GetGuidErrorResult::MissingValue);
+	}
+	
+	if (value.front() != '{' || value.back() != '}')
+	{
+		return s_GetGuidErrorProvider.MakeMaybe<GUID>(GetGuidErrorResult::NotGuidString);
+	}
+
+	auto optGuid = Mso::Guid::TryParse(value);
+	if (!optGuid)
+	{
+		return s_GetGuidErrorProvider.MakeMaybe<GUID>(GetGuidErrorResult::NotGuidString);
+	}
+
+	return Mso::Maybe<GUID>(*optGuid);
+}
+
+} // Details
+
+Mso::Maybe<GUID> GetGuid(Utf8::IReader& jsonReader) noexcept
+{
+	return Details::GetGuid(jsonReader);
+}
+
+Mso::Maybe<GUID> GetGuid(Unicode::IReader& jsonReader) noexcept
+{
+	return Details::GetGuid(jsonReader);
+}
+
+/**
+WriteGuid return false if value not allowed otherwise writes the GUID (VEC if fail to write)
+*/
+LIBLET_PUBLICAPI bool WriteGuid(IJsonWriter& jsonWriter, const GUID& value) noexcept
+{
+	WCHAR wzValue[64];
+	wzValue[0] = L'\0';
+	VerifyElseCrashSzTag(::StringFromGUID2(value, wzValue, _countof(wzValue)) > 0, "StringFromGUID2 failed", 0x0139109a /* tag_borc0 */);
+
+	return jsonWriter.WriteString(wzValue);
+}
+
+}} // Mso::Json

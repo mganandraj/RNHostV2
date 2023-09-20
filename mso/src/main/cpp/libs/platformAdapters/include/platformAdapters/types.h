@@ -39,12 +39,12 @@ typedef unsigned int UINT;
 
 #ifndef _LONG_DEFINED
 #define _LONG_DEFINED
-typedef int32_t LONG; // MS_TARGET_APPLE LONG as a Windows type must stay 32-bit even in 64-bit code
+typedef long LONG; // MS_TARGET_APPLE LONG as a Windows type must stay 32-bit even in 64-bit code
 #endif // !_LONG_DEFINED
 
 #ifndef _ULONG_DEFINED
 #define _ULONG_DEFINED
-typedef uint32_t ULONG;
+typedef unsigned long ULONG;
 #endif // !_ULONG_DEFINED
 
 #ifndef _BOOL_DEFINED
@@ -71,7 +71,7 @@ typedef UINT_PTR WPARAM;
 
 #ifndef _DWORD_DEFINED
 #define _DWORD_DEFINED
-typedef uint32_t DWORD; // MS_TARGET_APPLE DWORD as a Windows type must stay 32-bit even in 64-bit code
+typedef unsigned long DWORD; // MS_TARGET_APPLE DWORD as a Windows type must stay 32-bit even in 64-bit code
 #endif // !_DWORD_DEFINED
 
 #ifndef _LPARAM_DEFINED

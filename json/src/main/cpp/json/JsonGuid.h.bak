@@ -1,0 +1,66 @@
+/*------------------------------------------------------------------------------
+	APIs to write GUIDs as Json data
+------------------------------------------------------------------------------*/
+#pragma once
+#include <optional>
+#include <errorcode/errorprovider.h>
+#include <errorcode/maybe.h>
+#include <json/ijsonreader.h>
+#include <json/ijsonwriter.h>
+
+namespace Mso::Json {
+
+enum class GetGuidErrorResult : uint32_t
+{
+	MissingValue,
+	NotStringValue,
+	NotGuidString
+};
+
+MSO_STRUCT_GUID(GetGuidErrorProviderGuid, "C33205A2-95DA-4E42-9550-FF30EEBE3379")
+
+/**
+	Gets the error provider for handling Mso::Maybe<GUID> GetGuid() errors
+*/
+LIBLET_PUBLICAPI const Mso::ErrorProvider<GetGuidErrorResult, GetGuidErrorProviderGuid>& GetGuidResultErrorProvider() noexcept;
+
+/**
+	Returns error (see GetGuidResultErrorProvider) if the current state is not a string or can't be parsed into a GUID
+
+	Returning Maybe<GUID> is useful because it provides a lightweight mechanism for handling 
+	errors with full support for chaining, which will be useful when used in the full office stack. 
+*/
+LIBLET_PUBLICAPI Mso::Maybe<GUID> GetGuid(Utf8::IReader& jsonReader) noexcept;
+LIBLET_PUBLICAPI Mso::Maybe<GUID> GetGuid(Unicode::IReader& jsonReader) noexcept;
+
+template<typename TChar>
+struct TOptionalGuidExtractor final
+{
+	using result_type = std::optional<GUID>;
+	static bool ExtractValue(TIReader<TChar>& input, _Out_ std::optional<GUID>& value) noexcept
+	{
+		Mso::Maybe<GUID> guid { GetGuid(input) };
+		if (guid.IsError())
+		{
+			value = std::nullopt;
+			// Since this is optional a missing value is not a parse error, other errors (e.g. not a guid string) are likely a parse error
+			// return true if it is MissingValue to indicate parse succeeded (value should be std::nullopt), false otherwise (likely an error)
+			return (GetGuidResultErrorProvider().GetErrorInfo(guid.GetError()) == GetGuidErrorResult::MissingValue);
+		}
+
+		value = std::optional<GUID> { guid.GetValue() };
+		return true;
+	}
+};
+
+/**
+	Write GUID value
+*/
+LIBLET_PUBLICAPI bool WriteGuid(IJsonWriter& jsonWriter, const GUID& value) noexcept;
+
+/**
+	Used to extract std::optional<guid> from structured json (for reference see Structured.h)
+*/
+using OptionalGuidExtractor = TOptionalGuidExtractor<wchar_t>;
+
+} // namespace

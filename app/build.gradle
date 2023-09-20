@@ -71,4 +71,6 @@ dependencies {
     implementation(project(":fbjni"))
     implementation(project(":reacthost"))
     implementation(project(":headless"))
+
+    implementation(project(":json"))
 }

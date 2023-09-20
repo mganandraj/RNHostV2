@@ -1,0 +1,58 @@
+#pragma once
+#include <json/ijsonwriter.h>
+#include <streambase/bytestream.h>
+
+namespace Mso::Json {
+
+/**
+	TIOutput object that sends the JSON to an IByteStream
+
+	Mso::TCntPtr<IByteStream> stream = { ... };
+	auto output = Mso::Make<Mso::Json::ByteStreamOutput<wchar_t>(*stream);
+	auto writer = Mso::Json::Unicode::MakeWriter(*output);
+	...
+	if (writer->IsValid())
+	{
+		Use stream...
+	}
+*/
+template<typename TChar>
+class ByteStreamOutput final : public Mso::RefCountedObject<TIOutput<TChar>>
+{
+public:
+	ByteStreamOutput(IByteStream& stream) noexcept : ByteStreamOutput(stream, 0)
+	{
+	}
+
+	ByteStreamOutput(IByteStream& stream, uint64_t offset) noexcept : m_stream(&stream), m_offset(offset)
+	{
+	}
+
+	bool TryWrite(const Mso::basic_string_view<TChar>& view) noexcept override
+	{
+		uint64_t bytesWritten {};
+		m_lastResult = m_stream->WriteAt(m_offset, reinterpret_cast<const uint8_t*>(view.data()), view.size() * sizeof(TChar), &bytesWritten, {});
+		if (FAILED(m_lastResult))
+			return false;
+
+		m_offset += bytesWritten;
+		return true;
+	}
+
+	uint64_t GetOffset() const noexcept
+	{
+		return m_offset;
+	}
+
+	HRESULT GetLastResult() const noexcept
+	{
+		return m_lastResult;
+	}
+
+private:
+	Mso::TCntRef<IByteStream> m_stream;
+	uint64_t m_offset {};
+	HRESULT m_lastResult {};
+};
+
+} // namespace Mso::Json

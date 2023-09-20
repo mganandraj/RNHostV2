@@ -1,0 +1,4 @@
+1. Change Mso::TCntRef to Mso::TCntPtr
+2. Change Mso::TCntPtr to Mso::CntPtr
+3. Removed all GUID functions
+4. Remove all stream functions

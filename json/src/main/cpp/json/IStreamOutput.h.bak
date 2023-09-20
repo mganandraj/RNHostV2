@@ -1,0 +1,43 @@
+#pragma once
+#include <json/ijsonwriter.h>
+
+namespace Mso::Json {
+
+/**
+	TIOutput object that sends the JSON to an IStream
+
+	Mso::TCntPtr<IStream> stream = { ... };
+	auto output = Mso::Make<Mso::Json::IStreamOutput<wchar_t>(*stream);
+	auto writer = Mso::Json::Unicode::MakeWriter(*output);
+	...
+	if (writer->IsValid())
+	{
+		Use stream...
+	}
+*/
+template<typename TChar>
+class IStreamOutput final : public Mso::RefCountedObject<TIOutput<TChar>>
+{
+public:
+	IStreamOutput(ISequentialStream& stream) noexcept : m_stream(stream)
+	{
+	}
+
+	bool TryWrite(const Mso::basic_string_view<TChar>& view) noexcept override
+	{
+		ULONG bytesWritten {};
+		m_lastResult = m_stream->Write(reinterpret_cast<const void*>(view.data()), static_cast<ULONG>(view.size() * sizeof(TChar)), &bytesWritten);
+		return SUCCEEDED(m_lastResult);
+	}
+	
+	HRESULT GetLastResult() const noexcept
+	{
+		return m_lastResult;
+	}
+
+private:
+	Mso::TCntRef<ISequentialStream> m_stream;
+	HRESULT m_lastResult {};
+};
+
+} // namespace Mso::Json
