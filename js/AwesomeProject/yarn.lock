@@ -1714,6 +1714,18 @@
     ejs "^3.1.6"
     typescript "^4.7.0"
 
+"@office-iss/reka-react-native@6.0.26":
+  version "6.0.26"
+  resolved "https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/@office-iss/reka-react-native/-/reka-react-native-6.0.26.tgz#0ed6443381553ce234dec9ca66513447c3e1414d"
+  integrity sha1-DtZEM4FVPOI03snKZlE0R8PhQU0=
+  dependencies:
+    "@office-iss/reka" "5.0.26"
+
+"@office-iss/reka@5.0.26":
+  version "5.0.26"
+  resolved "https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/@office-iss/reka/-/reka-5.0.26.tgz#a8dcaff60290ab68b3914ed0f0995bff3dd331d0"
+  integrity sha1-qNyv9gKQq2izkU7Q8Jlb/z3TMdA=
+
 "@office-iss/sdx-base-build-tools@6.0.1":
   version "6.0.1"
   resolved "https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/@office-iss/sdx-base-build-tools/-/sdx-base-build-tools-6.0.1.tgz#b13d13b8c06f9355620ae5e0a80108fe1901c0fb"

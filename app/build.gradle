@@ -74,4 +74,6 @@ dependencies {
 
     implementation(project(":reka"))
     implementation(project(":json"))
+
+    implementation(project(":reactreka"))
 }

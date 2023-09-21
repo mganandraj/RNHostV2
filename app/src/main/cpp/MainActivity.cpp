@@ -44,6 +44,7 @@ using namespace Mso::React;
     options.OnInstanceCreated = [](IReactInstance& instance){
         LOGE("MainActivity::runReactOnView::OnInstanceCreated");
     };
+    options.JavaModuleNames.push_back("com.microsoft.office.reactreka.RekaReactPackage");
 
     ReactHostRegistry::OnLibletInit();
 

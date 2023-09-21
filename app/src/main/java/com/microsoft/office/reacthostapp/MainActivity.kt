@@ -46,9 +46,9 @@ class MainActivity : AppCompatActivity() {
         mreactViewInstance = OfficeReactRootView(this)
 
         libletInit();
-        // runReactOnView(mreactViewInstance);
+        runReactOnView(mreactViewInstance);
 
-        testHeadless();
+        // testHeadless();
 //
 //
 //        var reactOptions = ReactOptions()
