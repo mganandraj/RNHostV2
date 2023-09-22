@@ -20,6 +20,7 @@
     "@office-iss/metro-plugin-recommended": "1.0.0",
     "@office-iss/reka": "5.0.26",
     "@office-iss/reka-react-native": "6.0.26",
+    "@office-iss/reka-compiler": "6.0.0",
     "@office-iss/sdx-build-tools": "7.0.23",
     "@office-iss/sdx-metro-config": "6.1.2",
     "@rnx-kit/align-deps": "^2.1.3",

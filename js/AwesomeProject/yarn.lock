@@ -1705,6 +1705,14 @@
     "@rnx-kit/metro-plugin-cyclic-dependencies-detector" "^1.1.2"
     "@rnx-kit/metro-plugin-duplicates-checker" "^2.1.2"
 
+"@office-iss/reka-compiler@6.0.0":
+  version "6.0.0"
+  resolved "https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/@office-iss/reka-compiler/-/reka-compiler-6.0.0.tgz#c0d9331c4dd0045594053e5a2ce6637c7f6f5efa"
+  integrity sha1-wNkzHE3QBFWUBT5aLOZjfH9vXvo=
+  dependencies:
+    ejs "^3.1.6"
+    typescript "^4.7.0"
+
 "@office-iss/reka-compiler@6.2.0":
   version "6.2.0"
   resolved "https://pkgs.dev.azure.com/office/_packaging/Office/npm/registry/@office-iss/reka-compiler/-/reka-compiler-6.2.0.tgz#f8fc719367adf134ab32981695a8c978480ea14b"

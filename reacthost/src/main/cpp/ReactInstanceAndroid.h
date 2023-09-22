@@ -8,6 +8,7 @@
 
 #include "JReactInstance.h"
 #include "JReactOptions.h"
+#include "JReactContextHolder.h"
 
 namespace Mso::React {
 
@@ -26,14 +27,31 @@ public: // IReactInstance
 public: // IReactInstanceInternal
     Mso::Future<void> Destroy() noexcept override;
 
-    void onInitialized() noexcept;
+    void onInitialized(facebook::jni::alias_ref<JReactContextHolder> contextHolder) noexcept;
     void onBundleLoaded(std::string&& bundleName) noexcept;
+
+    Mso::JSHost::RekaBridgeOptions createRekaBridgeOptions() noexcept;
 
 private:
     friend MakePolicy;
     ReactInstanceAndroid(IReactHost& reactHost, ReactOptions&& options) noexcept;
     void Initialize() noexcept override;
     ~ReactInstanceAndroid() noexcept;
+
+    void NotifyRekaInitialized() noexcept;
+    void NotifyRekaDestroyed() noexcept;
+
+
+    const Mso::Promise<void> m_whenLoaded;
+    const Mso::Promise<void> m_whenDestroyed;
+    const Mso::TCntPtr<Mso::JSHost::IRekaContextProxy> m_rekaContextProxy;
+
+    std::atomic<bool> m_isLoaded { false };
+    std::atomic<bool> m_isDestroyed { false };
+    std::atomic<bool> m_isRekaInitialized { false };
+
+private: // fields controlled by queue
+    const Mso::ActiveField<Mso::TCntPtr<Mso::JSHost::IRekaContext>> m_rekaContext { Queue() };
 
 public:
 //private:
@@ -42,6 +60,7 @@ public:
     ReactOptions m_options;
     facebook::jni::global_ref<JReactOptions::jhybridobject> m_jOptions;
     facebook::jni::global_ref<JReactInstance::jhybridobject> m_jReactInstance;
+    facebook::jni::global_ref<JReactContextHolder> m_jReactContextHolder;
 };
 
 }

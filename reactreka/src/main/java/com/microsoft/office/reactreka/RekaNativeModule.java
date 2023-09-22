@@ -24,7 +24,8 @@ public class RekaNativeModule extends ReactContextBaseJavaModule
     private static final String LOG_TAG = "RekaNativeModule";
 
     private final HybridData mHybridData;
-    private native HybridData initHybrid(ReactContextHolder contextHolder);
+    private native HybridData initHybrid(ReactContextHolder contextHolder, RekaBridgeOptions rekaBridgeOptions);
+    private RekaBridgeOptions m_rekaBridgeOptions;
 
     static {
         try {
@@ -35,10 +36,11 @@ public class RekaNativeModule extends ReactContextBaseJavaModule
         }
     }
 
-    public RekaNativeModule(ReactApplicationContext reactContext)
+    public RekaNativeModule(ReactApplicationContext reactContext, RekaBridgeOptions rekaBridgeOptions)
     {
         super(reactContext);
-        mHybridData = initHybrid(new ReactContextHolder(reactContext));
+        m_rekaBridgeOptions = rekaBridgeOptions;
+        mHybridData = initHybrid(new ReactContextHolder(reactContext), m_rekaBridgeOptions);
     }
 
     @Override

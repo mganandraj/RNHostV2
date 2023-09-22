@@ -1,16 +1,18 @@
 package com.microsoft.office.reacthost
 
 import android.util.Log
-import androidx.core.content.PackageManagerCompat
 import com.facebook.jni.HybridData
+import com.facebook.react.ReactInstanceEventListener
 import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactPackage
+import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.RuntimeExecutor
 import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
 import com.microsoft.office.reactnative.host.ReactNativeHost
+import com.microsoft.office.reactreka.RekaBridgeOptions
+import com.microsoft.office.reactreka.RekaReactPackage
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
-
 
 class ReactInstance internal constructor(reactOptions: ReactOptions) {
     companion object {
@@ -26,17 +28,30 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
     private var mReactNativeHost: ReactNativeHost? = null
     private val mReactOptions: ReactOptions
 
-    private external fun onInitialized()
+    private external fun onInitialized(contextHolder: ReactContextHolder)
     private external fun onBundleLoaded(bundleName: String)
+    private external fun createRekaBridgeOptions() : RekaBridgeOptions
 
     init {
         mHybridData = initHybrid()
         mReactOptions = reactOptions
+    }
+
+    public fun onReactContextInitialized(reactContext: ReactContext?) {
+        onInitialized(ReactContextHolder(reactContext!!))
+    }
+
+    // Note :: This is called from native
+    fun initialize() {
 
         var identity = mReactOptions.identity
-        var javaModuleNames = reactOptions.JavaModuleNames
+        var javaModuleNames = mReactOptions.JavaModuleNames
 
         var nativeModulePackages: MutableList< ReactPackage> = ArrayList< ReactPackage>();
+
+        val rekaBridgeOptions = createRekaBridgeOptions()
+        nativeModulePackages.add(RekaReactPackage.GetReactPackage(rekaBridgeOptions))
+
         javaModuleNames.forEach {
             try {
                 val clazz = Class.forName(it)
@@ -97,15 +112,21 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                 .platformBundles(platformBundles)
                 .nativeModulePackages(nativeModulePackages)
                 .onJSRuntimeInitialized {
-                    onInitialized()
-                    Log.i(LOG_TAG, "ReactIntegration.RootView.onJSRuntimeInitialized")
+                    // Log.i(LOG_TAG, "ReactIntegration.RootView.onJSRuntimeInitialized")
                 }
                 .onJSBundleLoaded {  bundleName: String ->
                     onBundleLoaded(bundleName)
                     // mReactOptions.OnInstanceCreated?.run();
                 }
-                .build() }
-        )
+                .build()
+
+            this.mReactNativeHost?.addReactInstanceEventListener(object : ReactInstanceEventListener {
+                val instance = this;
+                override fun onReactContextInitialized(reactContext: ReactContext?) {
+                    instance.onReactContextInitialized(reactContext);
+                }
+            })
+        })
     }
 
     fun getReactInstanceManager() : ReactInstanceManager {

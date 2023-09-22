@@ -1,0 +1,84 @@
+{
+  "modules": {
+    "asts": [
+      {
+        "fileName": "AwesomeRekaDefs.ts",
+        "namespaces": [
+          "reacthostapp"
+        ],
+        "decls": [
+          {
+            "kind": "Service",
+            "name": "NativeService",
+            "nativeImplemented": true,
+            "methods": [
+              {
+                "name": "tryCall",
+                "returnType": "VoidType",
+                "synchronous": false,
+                "parameters": [
+                  {
+                    "name": "input1",
+                    "nullable": false,
+                    "propertyType": "StringType"
+                  },
+                  {
+                    "name": "input2",
+                    "nullable": false,
+                    "propertyType": {
+                      "kind": "NativeProjectionType",
+                      "nativeProjection": "int32_t",
+                      "nativeValueType": false
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "declOrder": [
+          "NativeService"
+        ],
+        "rawDeclNames": [
+          "NativeService"
+        ]
+      }
+    ]
+  },
+  "config": {
+    "version": "0.1.0",
+    "metadataOutPath": "",
+    "projections": [
+      {
+        "files": [
+          "AwesomeRekaDefs.ts"
+        ],
+        "cppOutDir": "reka",
+        "cppRekaObject_DoNotUse": true,
+        "indent": "\t",
+        "tsGenerate": true,
+        "tsGenerateForNative": false,
+        "tsIndent": "  ",
+        "cppGenerate": true,
+        "cppGenerateForJs": false,
+        "cppIndent": "\t",
+        "cppNaming": {},
+        "cppHeaderOutDir": "reka",
+        "cppImplOutDir": "reka",
+        "cppTypeMappings": {},
+        "objcGenerate": false,
+        "objcGenerateForJs": false,
+        "objcIndent": "\t",
+        "objcHeaderExt": ".g.h",
+        "objcModuleExt": ".g.m",
+        "objcTypePrefix": "Reka",
+        "objcTypeMappings": {},
+        "javaGenerate": false,
+        "javaGenerateForJs": false,
+        "javaIndent": "\t",
+        "javaPackage": "com.example.reka",
+        "javaTypeMappings": {}
+      }
+    ]
+  }
+}

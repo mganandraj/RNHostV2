@@ -8,6 +8,11 @@
 
 #include <android/log.h>
 
+#include <crash/verifyElseCrash.h>
+
+#include "AwesomeRekaService.h"
+#include <Reka/RekaServiceRegistration.h>
+
 #define LOG_TAG "ReactHost::MainActivity"
 
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,    LOG_TAG, __VA_ARGS__)
@@ -17,6 +22,8 @@
 
 using namespace facebook::jni;
 using namespace Mso::React;
+
+Mso::JSHost::DataServiceRegistration<AwesomeRekaService> registration;
 
 ///*static */void MainActivity::test(facebook::jni::alias_ref<MainActivity> thiz, facebook::jni::alias_ref<JInstanceCreatedCallback> callback) {
 //    // LOGE("MainActivity::runReactOnView::OnInstanceCreated");
@@ -44,7 +51,8 @@ using namespace Mso::React;
     options.OnInstanceCreated = [](IReactInstance& instance){
         LOGE("MainActivity::runReactOnView::OnInstanceCreated");
     };
-    options.JavaModuleNames.push_back("com.microsoft.office.reactreka.RekaReactPackage");
+    // options.JavaModuleNames.push_back("com.microsoft.office.reactreka.RekaReactPackage");
+    options.DataServiceProviderName = "reacthostapp::NativeService";
 
     ReactHostRegistry::OnLibletInit();
 

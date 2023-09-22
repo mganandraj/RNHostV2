@@ -107,3 +107,6 @@ target_link_libraries(reacthost json::json)
 
 find_package(reka REQUIRED CONFIG)
 target_link_libraries(reacthost reka::reka)
+
+find_package(reactreka REQUIRED CONFIG)
+target_link_libraries(reacthost reactreka::reactreka)

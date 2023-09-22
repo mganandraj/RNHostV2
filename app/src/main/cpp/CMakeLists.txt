@@ -14,6 +14,7 @@ project("reacthostapp")
 
 add_library(reacthostapp
         SHARED
+        AwesomeRekaService.cpp
         MainActivity.cpp
         OnLoad.cpp
 )

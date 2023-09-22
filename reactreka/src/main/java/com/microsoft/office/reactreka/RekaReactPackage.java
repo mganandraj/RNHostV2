@@ -17,13 +17,15 @@ import java.util.Map;
 
 public class RekaReactPackage extends TurboReactPackage {
 
+    private RekaBridgeOptions m_rekaBridgeOptions;
+    public RekaReactPackage(RekaBridgeOptions rekaBridgeOptions) { m_rekaBridgeOptions = rekaBridgeOptions; }
     public RekaReactPackage() { }
 
     @Override
     public NativeModule getModule(String name, ReactApplicationContext reactApplicationContext) {
         switch (name) {
             case RekaNativeModule.NAME:
-                return new RekaNativeModule(reactApplicationContext);
+                return new RekaNativeModule(reactApplicationContext, m_rekaBridgeOptions);
             default:
                 return null;
         }
@@ -58,6 +60,12 @@ public class RekaReactPackage extends TurboReactPackage {
                 return reactModuleInfoMap;
             }
         };
+    }
+
+    @Keep
+    @NonNull
+    public static RekaReactPackage GetReactPackage(RekaBridgeOptions rekaBridgeOptions) {
+        return new RekaReactPackage(rekaBridgeOptions);
     }
 
     @Keep

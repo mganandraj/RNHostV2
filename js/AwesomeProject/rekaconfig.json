@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "metadataOutPath": "reka/metadata.json",
+  "projections": [
+    {
+      "files": [
+        "reka/AwesomeRekaDefs.ts"
+      ],
+      "cppOutDir": "reka",
+      "cppRekaObject_DoNotUse": true
+    }
+  ]
+}

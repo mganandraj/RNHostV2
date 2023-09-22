@@ -14,7 +14,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_library(reactreka SHARED
         OnLoad.cpp
-        RekaNativeModuleProxy.cpp)
+        JRekaBridgeOptions.cpp
+        RekaNativeModuleProxy.cpp
+        ReactNativeRekaBridge.cpp
+        )
 
 find_library(log-lib log)
 
@@ -58,7 +61,6 @@ target_link_libraries(reactreka reka::reka)
 
 find_package(json REQUIRED CONFIG)
 target_link_libraries(reactreka json::json)
-
 
 find_package(mso REQUIRED CONFIG)
 target_compile_definitions(reactreka PRIVATE MS_TARGET_ANDROID)

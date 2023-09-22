@@ -77,4 +77,5 @@ dependencies {
     implementation(project(":fbjni"))
     implementation(project(":reka"))
     implementation(project(":json"))
+    implementation(project(":reactreka"))
 }

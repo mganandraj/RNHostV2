@@ -1,7 +1,4 @@
-//
-// Created by anandrag on 9/21/2023.
-//
-
+#pragma once
 #ifndef ORNHOST_PRECOMP_H
 #define ORNHOST_PRECOMP_H
 
