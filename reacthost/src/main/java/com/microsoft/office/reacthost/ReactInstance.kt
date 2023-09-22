@@ -11,6 +11,7 @@ import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
 import com.microsoft.office.reactnative.host.ReactNativeHost
 import com.microsoft.office.reactreka.RekaBridgeOptions
 import com.microsoft.office.reactreka.RekaReactPackage
+import java.lang.ref.WeakReference
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
@@ -37,63 +38,40 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
         mReactOptions = reactOptions
     }
 
-    public fun onReactContextInitialized(reactContext: ReactContext?) {
+    fun onReactContextInitialized(reactContext: ReactContext?) {
         onInitialized(ReactContextHolder(reactContext!!))
+    }
+
+    private fun getReactPackageFromClassName(className: String): ReactPackage? {
+        try {
+            val clazz = Class.forName(className)
+            val method: Method = clazz.getMethod("GetReactPackage")
+            return method.invoke(null /*invoking a static method*/) as ReactPackage
+        } catch (e: ClassNotFoundException) {
+            Log.e(LOG_TAG, Log.getStackTraceString(e))
+        } catch (e: NoSuchMethodException) {
+            Log.e(LOG_TAG, Log.getStackTraceString(e))
+        } catch (e: IllegalAccessException) {
+            Log.e(LOG_TAG, Log.getStackTraceString(e))
+        } catch (e: InvocationTargetException) {
+            Log.e(LOG_TAG, Log.getStackTraceString(e))
+        }
+        return null
     }
 
     // Note :: This is called from native
     fun initialize() {
-
         var identity = mReactOptions.identity
         var javaModuleNames = mReactOptions.JavaModuleNames
-
         var nativeModulePackages: MutableList< ReactPackage> = ArrayList< ReactPackage>();
 
         val rekaBridgeOptions = createRekaBridgeOptions()
         nativeModulePackages.add(RekaReactPackage.GetReactPackage(rekaBridgeOptions))
 
         javaModuleNames.forEach {
-            try {
-                val clazz = Class.forName(it)
-                val method: Method = clazz.getMethod("GetReactPackage")
-                nativeModulePackages.add(method.invoke(null /*invoking a static method*/) as ReactPackage)
-            } catch (e: ClassNotFoundException) {
-                Log.e(LOG_TAG, Log.getStackTraceString(e))
-//                failedToInstantiate.append(
-//                    java.lang.String.format(
-//                        "Package: %s, Exception: %s ;",
-//                        reactPackage,
-//                        e.javaClass.simpleName
-//                    )
-//                )
-            } catch (e: NoSuchMethodException) {
-                Log.e(LOG_TAG, Log.getStackTraceString(e))
-//                failedToInstantiate.append(
-//                    java.lang.String.format(
-//                        "Package: %s, Exception: %s ;",
-//                        reactPackage,
-//                        e.javaClass.simpleName
-//                    )
-//                )
-            } catch (e: IllegalAccessException) {
-                Log.e(LOG_TAG, Log.getStackTraceString(e))
-//                failedToInstantiate.append(
-//                    java.lang.String.format(
-//                        "Package: %s, Exception: %s ;",
-//                        reactPackage,
-//                        e.javaClass.simpleName
-//                    )
-//                )
-            } catch (e: InvocationTargetException) {
-                Log.e(LOG_TAG, Log.getStackTraceString(e))
-//                failedToInstantiate.append(
-//                    java.lang.String.format(
-//                        "Package: %s, Exception: %s ;",
-//                        reactPackage,
-//                        e.getClass().getSimpleName()
-//                    )
-//                )
-            }
+            val reactPackage = getReactPackageFromClassName(it)
+            if(reactPackage != null)
+                nativeModulePackages.add(reactPackage)
         }
 
         var platformBundles = ArrayList<com.microsoft.office.reactnative.host.JSBundle>()
@@ -107,8 +85,8 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
             this.mReactNativeHost = ReactNativeHost.Builder()
                 .activity(initialActivity!!.get()!!)
                 .application(initialActivity!!.get()!!.application)
-                .isDev(true)
-                .jsMainModulePath("index")
+                .isDev(mReactOptions.DeveloperSettings.IsDevModeEnabled)
+                .jsMainModulePath(mReactOptions.DeveloperSettings.SourceBundleName?:"index")
                 .platformBundles(platformBundles)
                 .nativeModulePackages(nativeModulePackages)
                 .onJSRuntimeInitialized {
@@ -120,12 +98,10 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                 }
                 .build()
 
-            this.mReactNativeHost?.addReactInstanceEventListener(object : ReactInstanceEventListener {
-                val instance = this;
-                override fun onReactContextInitialized(reactContext: ReactContext?) {
-                    instance.onReactContextInitialized(reactContext);
-                }
-            })
+            val weakThis = WeakReference(this)
+            this.mReactNativeHost?.addReactInstanceEventListener { reactContext ->
+                weakThis.get()?.onReactContextInitialized(reactContext);
+            }
         })
     }
 

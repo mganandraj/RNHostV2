@@ -8,6 +8,21 @@
 
 using namespace Mso::React;
 
+struct JReactDevOptions : facebook::jni::HybridClass<JReactDevOptions> {
+    static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/ReactDevOptions;";
+    static void registerNatives();
+    JReactDevOptions(Mso::React::ReactOptions &options) :
+        options_(options) {}
+    static facebook::jni::local_ref<jhybridobject> create(Mso::React::ReactOptions&);
+    Mso::React::ReactOptions& options_;
+
+    bool getIsDevModeEnabled();
+    void setIsDevModeEnabled(bool isDevModeEnabled);
+
+    std::string getSourceBundleName();
+    void setSourceBundleName(std::string sourceBundleName);
+};
+
 struct JInstanceCreatedCallback;
 struct JInstanceLoadedCallback;
 struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
@@ -37,6 +52,8 @@ struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
 
     void setInstanceLoadedCallback(facebook::jni::alias_ref<JInstanceLoadedCallback>);
     facebook::jni::alias_ref<JInstanceLoadedCallback> getInstanceLoadedCallback();
+
+    facebook::jni::alias_ref<JReactDevOptions::jhybridobject> createDeveloperSettingsPeer();
 };
 
 #endif //ornhost_JREACTOPTIONS_H

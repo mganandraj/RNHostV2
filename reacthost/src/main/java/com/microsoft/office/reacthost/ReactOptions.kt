@@ -5,19 +5,23 @@ import com.facebook.jni.HybridData
 class ReactOptions {
     private external fun initHybrid(): HybridData
     private val mHybridData: HybridData
+    var DeveloperSettings: ReactDevOptions;
 
     internal constructor(hybridData: HybridData) {
         mHybridData = hybridData
+        DeveloperSettings = createDeveloperSettingsPeer()
     }
 
     constructor() {
         mHybridData = initHybrid()
+        DeveloperSettings = createDeveloperSettingsPeer()
     }
+
+    external fun createDeveloperSettingsPeer() : ReactDevOptions
 
     var identity: String?
         external get
         public external set
-
 
     // CxxModuleNames - Unsupported
     // CxxModuleProviders - Unsupported

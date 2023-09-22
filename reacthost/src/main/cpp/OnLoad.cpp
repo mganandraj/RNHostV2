@@ -16,6 +16,7 @@ using namespace Mso::React;
 extern "C" jint JNI_OnLoad(JavaVM* vm, void*) {
     return facebook::jni::initialize(vm, [] {
         JReactOptions::registerNatives();
+        JReactDevOptions::registerNatives();
         JReactViewOptions::registerNatives();
         JReactHost::registerNatives();
         JReactHostStatics::registerNatives();

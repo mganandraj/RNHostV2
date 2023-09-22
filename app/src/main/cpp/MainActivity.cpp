@@ -53,6 +53,8 @@ Mso::JSHost::DataServiceRegistration<AwesomeRekaService> registration;
     };
     // options.JavaModuleNames.push_back("com.microsoft.office.reactreka.RekaReactPackage");
     options.DataServiceProviderName = "reacthostapp::NativeService";
+    options.DeveloperSettings.IsDevModeEnabled=true;
+    options.DeveloperSettings.SourceBundleName="index";
 
     ReactHostRegistry::OnLibletInit();
 

@@ -86,6 +86,39 @@ const ReactOptions& JReactOptions::Options() const noexcept
     return options_;
 }
 
+facebook::jni::alias_ref<JReactDevOptions::jhybridobject> JReactOptions::createDeveloperSettingsPeer() {
+    return JReactDevOptions::create(options_).release();
+}
+
+/*static*/ facebook::jni::local_ref<JReactDevOptions::jhybridobject> JReactDevOptions::create(Mso::React::ReactOptions& options) {
+    return JReactDevOptions::newObjectCxxArgs(options);
+}
+
+bool JReactDevOptions::getIsDevModeEnabled() {
+    return options_.DeveloperSettings.IsDevModeEnabled;
+}
+
+void JReactDevOptions::setIsDevModeEnabled(bool isDevModeEnabled) {
+    options_.DeveloperSettings.IsDevModeEnabled = isDevModeEnabled;
+}
+
+std::string JReactDevOptions::getSourceBundleName() {
+    return options_.DeveloperSettings.SourceBundleName;
+}
+
+void JReactDevOptions::setSourceBundleName(std::string sourceBundleName) {
+    options_.DeveloperSettings.SourceBundleName = sourceBundleName;
+}
+
+/*static*/ void JReactDevOptions::registerNatives() {
+    registerHybrid({
+        makeNativeMethod("getIsDevModeEnabled", JReactDevOptions::getIsDevModeEnabled),
+        makeNativeMethod("setIsDevModeEnabled", JReactDevOptions::setIsDevModeEnabled),
+        makeNativeMethod("getSourceBundleName", JReactDevOptions::getSourceBundleName),
+        makeNativeMethod("setSourceBundleName", JReactDevOptions::setSourceBundleName)
+    });
+}
+
 /*static*/ void JReactOptions::registerNatives() {
     registerHybrid({
         makeNativeMethod("initHybrid", JReactOptions::initHybrid),
@@ -99,6 +132,6 @@ const ReactOptions& JReactOptions::Options() const noexcept
         makeNativeMethod("setInstanceCreatedCallback", JReactOptions::setInstanceCreatedCallback),
         makeNativeMethod("getInstanceLoadedCallback", JReactOptions::getInstanceLoadedCallback),
         makeNativeMethod("setInstanceLoadedCallback", JReactOptions::setInstanceLoadedCallback),
-
+        makeNativeMethod("createDeveloperSettingsPeer", JReactOptions::createDeveloperSettingsPeer)
                    });
 }

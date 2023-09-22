@@ -17,7 +17,6 @@
     jThis->cthis()->m_wNativeInstance.GetStrongPtr()->onBundleLoaded(bundleName->toStdString());
 }
 
-
 /*static */facebook::jni::local_ref<reactreka::JRekaBridgeOptions::jhybridobject> JReactInstance::createRekaBridgeOptions(facebook::jni::alias_ref<jhybridobject> jThis) {
     return reactreka::JRekaBridgeOptions::create(jThis->cthis()->m_wNativeInstance.GetStrongPtr()->createRekaBridgeOptions());
 }
