@@ -4,6 +4,7 @@
 #include <fbjni/fbjni.h>
 #include "ReactNativeHost/React.h"
 
+#include "JReactOptions.h"
 #include "JReactViewHost.h"
 #include "JReactViewOptions.h"
 
@@ -18,6 +19,9 @@ struct JReactHost : facebook::jni::HybridClass<JReactHost> {
         : host_(std::move(host)) {}
 
     facebook::jni::alias_ref<JReactViewHost::jhybridobject> MakeViewHost(facebook::jni::alias_ref<JReactViewOptions::jhybridobject> jOptions);
+    void ReloadInstance();
+    void ReloadInstanceWithOptions(facebook::jni::alias_ref<JReactOptions::jhybridobject> jOptions);
+    void UnloadInstance();
 
     Mso::CntPtr<Mso::React::IReactHost> host_;
 };

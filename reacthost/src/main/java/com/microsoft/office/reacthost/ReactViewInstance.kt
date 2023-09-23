@@ -24,18 +24,10 @@ class OfficeReactRootView : ReactRootView {
     }
 
     // TODO:: Return Future ?
-    /*fun  Reload(viewOptions: ReactViewOptions?) {
-        // val compName = viewOptions?.ComponentName;
-        this.startReactApplication(reactInstance?.getReactInstanceManager(), viewOptions?.ComponentName)
-    }*/
-
-    fun  Reload() {
-        // this.startReactApplication(reactInstance?.getReactInstanceManager(), viewOptions?.ComponentName)
-    }
-
-    // TODO:: Return Future ?
     fun  Unload() {
-        // this.unmountReactApplication()
+        ReactHostStatics.initialActivity?.get()?.runOnUiThread(Runnable {
+            this.unmountReactApplication()
+        })
     }
 
     private external fun initHybrid(): HybridData

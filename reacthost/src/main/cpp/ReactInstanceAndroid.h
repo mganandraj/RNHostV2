@@ -41,7 +41,6 @@ private:
     void NotifyRekaInitialized() noexcept;
     void NotifyRekaDestroyed() noexcept;
 
-
     const Mso::Promise<void> m_whenLoaded;
     const Mso::Promise<void> m_whenDestroyed;
     const Mso::TCntPtr<Mso::JSHost::IRekaContextProxy> m_rekaContextProxy;

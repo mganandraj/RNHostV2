@@ -31,7 +31,10 @@ Mso::Future<void> JOfficeReactRootView::Reload(const Mso::CntPtr<Mso::React::IRe
 }
 
 Mso::Future<void> JOfficeReactRootView::Unload() noexcept {
-
+    auto clazz = javaClassLocal();
+    auto unloadMethod = clazz->getMethod<void()>("Unload");
+    unloadMethod(m_jThis.lockLocal());
+    return Mso::MakeSucceededFuture();
 }
 
 /*virtual*/ Mso::Future<void> OfficeReactViewInstance::Reload(Mso::CntPtr<Mso::React::IReactInstance>&& reactInstance,
