@@ -43,9 +43,14 @@ struct JReactOptions : facebook::jni::HybridClass<JReactOptions> {
 
     facebook::jni::alias_ref<facebook::jni::JArrayList<facebook::jni::JString>> getJavaModuleNames();
     void setJavaModuleNames(facebook::jni::alias_ref<facebook::jni::JArrayList<facebook::jni::JString>>);
+    void addJavaModuleName(std::string javaModuleName);
+
+    std::string getDataServiceProviderName();
+    void setDataServiceProviderName(std::string dataServiceProviderName);
 
     facebook::jni::alias_ref<facebook::jni::JArrayList<JJSBundle>> getJSBundles();
     void setJSBundles(facebook::jni::alias_ref<facebook::jni::JArrayList<JJSBundle>>);
+    void addJSBundle(facebook::jni::alias_ref<JJSBundle>);
 
     void setInstanceCreatedCallback(facebook::jni::alias_ref<JInstanceCreatedCallback>);
     facebook::jni::alias_ref<JInstanceCreatedCallback> getInstanceCreatedCallback();

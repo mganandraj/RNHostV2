@@ -75,14 +75,18 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
         }
 
         var platformBundles = ArrayList<com.microsoft.office.reactnative.host.JSBundle>()
-        mReactOptions.JSBundles.forEach{
+        // All except last one is platform bundles
+        mReactOptions.JSBundles.dropLast(1).forEach{
+
             var rnxBundleInfo = com.microsoft.office.reactnative.host.JSBundleInfo(it.Info?.Id, it.Info?.FileName, it.Info?.Timestamp);
             var rnxJSBundle = com.microsoft.office.reactnative.host.JSBundle(it.Content, rnxBundleInfo);
             platformBundles.add(rnxJSBundle)
         }
 
+        val featureBundle = mReactOptions.JSBundles.last()
+
         ReactHostStatics.initialActivity?.get()?.runOnUiThread(Runnable {
-            this.mReactNativeHost = ReactNativeHost.Builder()
+            val builder = ReactNativeHost.Builder()
                 .activity(initialActivity!!.get()!!)
                 .application(initialActivity!!.get()!!.application)
                 .isDev(mReactOptions.DeveloperSettings.IsDevModeEnabled)
@@ -96,8 +100,16 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                     onBundleLoaded(bundleName)
                     // mReactOptions.OnInstanceCreated?.run();
                 }
-                .build()
 
+            if (featureBundle.Info?.Id != null)
+                builder.bundleName(featureBundle.Info?.Id)
+            else if (featureBundle.Info?.FileName != null)
+                builder.bundleFilePath(featureBundle.Info?.FileName!!)
+            else
+                throw RuntimeException("Feature bundle can't be dynamic")
+
+
+            this.mReactNativeHost = builder.build()
             val weakThis = WeakReference(this)
             this.mReactNativeHost?.addReactInstanceEventListener { reactContext ->
                 weakThis.get()?.onReactContextInitialized(reactContext);

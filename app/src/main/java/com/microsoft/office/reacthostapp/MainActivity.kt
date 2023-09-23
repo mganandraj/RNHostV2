@@ -14,19 +14,12 @@ import com.microsoft.office.reacthost.*
 import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
 import java.lang.ref.WeakReference
 
-
 class MainActivity : AppCompatActivity() {
     var mreactViewInstance: OfficeReactRootView? = null
     var mReactHost: ReactHost? = null
     var mReactViewHost: ReactViewHost? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-//        test(object: IInstanceCreatedCallback{
-//            override fun run(/*instance: ReactInstance?*/) {
-//                Log.w("MainActivity", "run");
-//            }
-//        })
 
         initialActivity = WeakReference(this@MainActivity)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -43,44 +36,44 @@ class MainActivity : AppCompatActivity() {
         }
         SoLoader.init(this.applicationContext, false)
         setContentView(R.layout.activity_main)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         mreactViewInstance = OfficeReactRootView(this)
 
         libletInit();
-        runReactOnView(mreactViewInstance);
+//         runReactOnView(mreactViewInstance);
 
         // testHeadless();
 //
 //
-//        var reactOptions = ReactOptions()
-//        reactOptions.identity = "AwesomeProject"
-//
-//        // TODO :: This is not intuitive .. Should be more like "reactOptions.JavaModuleNames.add("MyClass")"
-//        // TODO :: Avoid copying.
-//        var javaModuleNames = ArrayList<String>()
-//        javaModuleNames.add("MyClass")
-//
-//        reactOptions.JavaModuleNames = javaModuleNames;
-//        reactOptions.instanceCreatedCallback = object: IInstanceCreatedCallback{
-//            override fun run(instance: ReactInstance?) {
-//                Log.w("MainActivity", "run");
-//            }
-//        };
+        var reactOptions = ReactOptions()
+        reactOptions.identity = "V2App"
+        reactOptions.DeveloperSettings.IsDevModeEnabled = true
 
-//        var jsBundles = ArrayList<JSBundle>()
-//        jsBundles.add(JSBundleFromAssetName("foundation.android.bundle"))
-//        jsBundles.add(JSBundleFromAssetName("ui.android.bundle"))
-//        reactOptions.JSBundles = jsBundles
+        reactOptions.AddJavaModuleName("com.microsoft.office.reacthostapp.MyReactPackage")
+        reactOptions.instanceCreatedCallback = object: IInstanceCreatedCallback{
+            override fun run(instance: ReactInstance?) {
+                Log.w("MainActivity", "run");
+            }
+        };
+        // reactOptions.AddRegisteredJSBundle("foundation.android.bundle")
+        // reactOptions.AddRegisteredJSBundle("ui.android.bundle")
+        reactOptions.AddRegisteredJSBundle("index.android.bundle")
 
-//        mReactHost = ReactHostStatics.makeReactHost(reactOptions)
-//
-//        var viewOptions: ReactViewOptions = ReactViewOptions()
-//        viewOptions.ComponentName = "AwesomeProject"
-//        mReactViewHost = mReactHost?.MakeViewHost(viewOptions)
+        mReactHost = ReactHostStatics.makeReactHost(reactOptions)
 
-        // mReactViewHost?.AttachViewInstance(mreactViewInstance)
+        var viewOptions: ReactViewOptions = ReactViewOptions()
+        viewOptions.ComponentName = "AwesomeProject"
+        mReactViewHost = mReactHost?.MakeViewHost(viewOptions)
+
+        mReactViewHost?.AttachViewInstance(mreactViewInstance)
 
         // Delayed because the Popup Windows shown by RN DevSupport can't be done too early.
-        Handler().postDelayed({ this@MainActivity.setContentView(mreactViewInstance) }, 100)
+        // Handler().postDelayed({ this@MainActivity.setContentView(mreactViewInstance) }, 100)
+        setContentView(mreactViewInstance)
     }
 
     companion object {

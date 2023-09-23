@@ -1,11 +1,13 @@
 package com.microsoft.office.reacthost
 
 import com.facebook.jni.HybridData
+import java.io.File
+import java.nio.ByteBuffer
+import java.nio.charset.StandardCharsets
 
 class ReactOptions {
     private external fun initHybrid(): HybridData
     private val mHybridData: HybridData
-    var DeveloperSettings: ReactDevOptions;
 
     internal constructor(hybridData: HybridData) {
         mHybridData = hybridData
@@ -21,18 +23,64 @@ class ReactOptions {
 
     var identity: String?
         external get
-        public external set
+        external set
 
     // CxxModuleNames - Unsupported
     // CxxModuleProviders - Unsupported
 
+    external fun AddJavaModuleName(javaModuleName: String)
     var JavaModuleNames: ArrayList<String>
         external get
         external set
 
+    // AppleModuleProviders
+
+    var DataServiceProviderName: String?
+        external get
+        external set
+
+    // SDXBasePath
+
+    external fun AddJSBundle(jsBundle: JSBundle)
     var JSBundles: ArrayList<JSBundle>
         external set
         external get
+
+    // Reka lifetime callbacks can be added in future if needed
+    // OnInitialized
+    // OnDestroyed
+
+    // OnError
+    // OnLogging - The default log handler writes to logcat. It is non-trivial to override it.
+    // OnJSException - The default platform behaviour is to handle through ExceptionManager native module
+
+    // EnableBytecode
+    // EnableJITCompilation
+    // EnableNativePerformanceNow
+    // EnableSensitiveTelemetry
+    // Quirks
+
+    var DeveloperSettings: ReactDevOptions;
+
+    // MemoryTracker
+
+    // RekaProviderFactory
+    // Properties - Can be done in future if needed.
+
+
+    fun AddRegisteredJSBundle(jsBundleId: String) {
+        AddJSBundle(JSBundle(null , JSBundleInfo(jsBundleId, null, null)))
+    }
+
+    fun AddFileJSBundle(jsBundleId: String, fileName: String) {
+        AddJSBundle(JSBundle(
+            StandardCharsets.UTF_8.encode(File(fileName).readText()) , JSBundleInfo(jsBundleId, fileName, null)))
+    }
+
+    fun AddDynamicJSBundle(jsBundleId: String, jsBundleContent: String) {
+        val utf8Buffer = StandardCharsets.UTF_8.encode(jsBundleContent)
+        AddJSBundle(JSBundle(ByteBuffer.allocateDirect(utf8Buffer.capacity()).put(utf8Buffer), JSBundleInfo(jsBundleId, null, null)))
+    }
 
     var instanceCreatedCallback: IInstanceCreatedCallback
         public external get

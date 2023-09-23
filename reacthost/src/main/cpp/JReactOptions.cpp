@@ -35,9 +35,22 @@ facebook::jni::alias_ref<facebook::jni::JArrayList<facebook::jni::JString>> JRea
 }
 
 void JReactOptions::setJavaModuleNames(facebook::jni::alias_ref<facebook::jni::JArrayList<facebook::jni::JString>> jJavaModuleNames) {
+    options_.JavaModuleNames.clear();
     for (const auto& elem : *jJavaModuleNames) {
         options_.JavaModuleNames.push_back(elem->toStdString());
     }
+}
+
+void JReactOptions::addJavaModuleName(std::string javaModuleName) {
+    options_.JavaModuleNames.push_back(javaModuleName);
+}
+
+std::string JReactOptions::getDataServiceProviderName() {
+    return options_.DataServiceProviderName;
+}
+
+void JReactOptions::setDataServiceProviderName(std::string dataServiceProviderName) {
+    options_.DataServiceProviderName = dataServiceProviderName;
 }
 
 facebook::jni::alias_ref<facebook::jni::JArrayList<JJSBundle>> JReactOptions::getJSBundles() {
@@ -50,10 +63,16 @@ facebook::jni::alias_ref<facebook::jni::JArrayList<JJSBundle>> JReactOptions::ge
     return jJSBundles.release();
 }
 
+// Note :: This clears the existing bundles.
 void JReactOptions::setJSBundles(facebook::jni::alias_ref<facebook::jni::JArrayList<JJSBundle>> jsBundles) {
+    options_.JSBundles.clear();
     for (const auto& elem : *jsBundles) {
         options_.JSBundles.push_back(JJSBundle::get(make_local(elem)));
     }
+}
+
+void JReactOptions::addJSBundle(facebook::jni::alias_ref<JJSBundle> jsBundle) {
+    options_.JSBundles.push_back(JJSBundle::get(make_local(jsBundle)));
 }
 
 void JReactOptions::setInstanceCreatedCallback(facebook::jni::alias_ref<JInstanceCreatedCallback> callback) {
@@ -126,12 +145,16 @@ void JReactDevOptions::setSourceBundleName(std::string sourceBundleName) {
         makeNativeMethod("setIdentity", JReactOptions::setIdentity),
         makeNativeMethod("getJavaModuleNames", JReactOptions::getJavaModuleNames),
         makeNativeMethod("setJavaModuleNames", JReactOptions::setJavaModuleNames),
+        makeNativeMethod("AddJavaModuleName", JReactOptions::addJavaModuleName),
+        makeNativeMethod("getDataServiceProviderName", JReactOptions::getDataServiceProviderName),
+        makeNativeMethod("setDataServiceProviderName", JReactOptions::setDataServiceProviderName),
         makeNativeMethod("getJSBundles", JReactOptions::getJSBundles),
         makeNativeMethod("setJSBundles", JReactOptions::setJSBundles),
+        makeNativeMethod("AddJSBundle", JReactOptions::addJSBundle),
         makeNativeMethod("getInstanceCreatedCallback", JReactOptions::getInstanceCreatedCallback),
         makeNativeMethod("setInstanceCreatedCallback", JReactOptions::setInstanceCreatedCallback),
         makeNativeMethod("getInstanceLoadedCallback", JReactOptions::getInstanceLoadedCallback),
         makeNativeMethod("setInstanceLoadedCallback", JReactOptions::setInstanceLoadedCallback),
         makeNativeMethod("createDeveloperSettingsPeer", JReactOptions::createDeveloperSettingsPeer)
-                   });
+    });
 }
