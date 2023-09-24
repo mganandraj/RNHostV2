@@ -29,7 +29,7 @@
 	Statement - used for control flow macros like Check, IfFailGo
 	Make the macro act like a statement.
 */
-#define Statement(x) __pragma(warning(push)) __pragma(warning(disable:4127 25037)) do { x; } while(0) __pragma(warning(pop))
+#define Statement(x) /*__pragma(warning(push)) __pragma(warning(disable:4127 25037))*/ do { x; } while(0) /*__pragma(warning(pop))*/
 
 /**
 	Prevent the compiler from automatically providing implementations of various

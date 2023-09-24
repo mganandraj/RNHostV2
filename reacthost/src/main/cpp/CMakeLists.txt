@@ -20,6 +20,7 @@ add_library(reacthost
         JInstanceCreatedCallback.cpp
         JInstanceLoadedCallback.cpp
         JJSBundle.cpp
+        JMsoFuture.cpp
         JReactHost.cpp
         JReactHostStatics.cpp
         JReactInstance.cpp

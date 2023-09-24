@@ -17,16 +17,18 @@ class OfficeReactRootView : ReactRootView {
     }
 
     // TODO:: Return Future ?
-    fun  Reload(reactInstance: ReactInstance?, viewOptions: ReactViewOptions?) {
+    fun  Reload(reactInstance: ReactInstance?, viewOptions: ReactViewOptions?, msoFuturePeer: MsoFuturePeer) {
         ReactHostStatics.initialActivity?.get()?.runOnUiThread(Runnable {
             this.startReactApplication(reactInstance?.getReactInstanceManager(), viewOptions?.ComponentName, fromJson(viewOptions?.InitialProps));
+            msoFuturePeer.Set()
         })
     }
 
     // TODO:: Return Future ?
-    fun  Unload() {
+    fun  Unload(msoFuturePeer: MsoFuturePeer) {
         ReactHostStatics.initialActivity?.get()?.runOnUiThread(Runnable {
             this.unmountReactApplication()
+            msoFuturePeer.Set()
         })
     }
 

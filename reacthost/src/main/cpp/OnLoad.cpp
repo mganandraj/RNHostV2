@@ -10,6 +10,7 @@
 #include "JReactHostStatics.h"
 #include "JReactViewHost.h"
 #include "ReactHost.h"
+#include "JMsoFuture.h"
 
 using namespace Mso::React;
 
@@ -22,6 +23,7 @@ extern "C" jint JNI_OnLoad(JavaVM* vm, void*) {
         JReactHostStatics::registerNatives();
         JReactInstance::registerNatives();
         JReactViewHost::registerNatives();
+        JMsoFuture::registerNatives();
         JOfficeReactRootView::registerNatives();
     });
 }

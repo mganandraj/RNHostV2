@@ -675,7 +675,7 @@ Mso::Future<void> ReactViewHost::LoadViewInstanceInQueue(ReactViewOptions&& opti
 	// Make sure that we set new options even if we do not load due to the pending unload.
 	m_options.Exchange(std::move(options));
 
-	// VerifyElseCrashSzTag(!m_isViewInstanceLoaded.Load(), "The viewInstance must be unloaded before the load with new options.", 0x0285411a /* tag_c7ue0 */);
+	VerifyElseCrashSzTag(!m_isViewInstanceLoaded.Load(), "The viewInstance must be unloaded before the load with new options.", 0x0285411a /* tag_c7ue0 */);
 
 	return LoadViewInstanceInQueue();
 }
