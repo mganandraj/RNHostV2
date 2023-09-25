@@ -51,6 +51,8 @@ target_link_libraries(reacthostapp mso::typeTraits)
 
 find_package(ReactAndroid REQUIRED CONFIG)
 target_link_libraries(reacthostapp ReactAndroid::jsi)
+target_link_libraries(reacthostapp ReactAndroid::turbomodulejsijni)
+target_link_libraries(reacthostapp ReactAndroid::react_nativemodule_core)
 
 find_package(fbjni REQUIRED CONFIG)
 target_link_libraries(reacthostapp fbjni::fbjni)

@@ -9,9 +9,9 @@ import {name as appName} from './app.json';
 import { initReka } from '@office-iss/reka-react-native';
 initReka();
 
-NativeModules.MyNativeModule.hello();
+// NativeModules.MyNativeModule.hello();
 
-import {NativeServices} from "./reka/AwesomeRekaDefs.g"
-NativeServices.NativeService.tryCall("hello", 9999);
+// import {NativeServices} from "./reka/AwesomeRekaDefs.g"
+// NativeServices.NativeService.tryCall("hello", 9999);
 
 AppRegistry.registerComponent(appName, () => App);

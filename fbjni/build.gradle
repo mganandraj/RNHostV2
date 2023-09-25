@@ -5,6 +5,7 @@ plugins {
 android {
     namespace 'com.facebook.fbjni'
     compileSdk 33
+    ndkVersion = "25.0.8775105"
 
     defaultConfig {
         minSdk 21

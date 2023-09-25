@@ -3,6 +3,7 @@
 
 #include <fbjni/fbjni.h>
 #include <ReactNativeHost/React.h>
+#include <ReactNativeHost/React_Android.h>
 #include "JReactOptions.h"
 #include "JReactContextHolder.h"
 #include <JRekaBridgeOptions.h>
@@ -27,6 +28,8 @@ struct JReactInstance  : facebook::jni::HybridClass<JReactInstance> {
 
     static facebook::jni::local_ref<jhybridobject> create(facebook::jni::alias_ref<JReactOptions::jhybridobject>, Mso::CntPtr<ReactInstanceAndroid> nativeInstance);
     static facebook::react::RuntimeExecutor GetRuntimeExecutor(facebook::jni::alias_ref<JReactInstance::javaobject>);
+    static facebook::jsi::Runtime* GetJsiRuntime(facebook::jni::alias_ref<JReactInstance::javaobject> instance);
+    static std::shared_ptr<facebook::react::CallInvoker> getJSCallInvokerHolder(facebook::jni::alias_ref<JReactInstance::javaobject> instance);
 
     Mso::WeakPtr<ReactInstanceAndroid> m_wNativeInstance;
 };

@@ -32,6 +32,7 @@ add_library(reacthost
         JSBundle_Android.cpp
         MsoUtils.cpp
         OnLoad.cpp
+        React_Android.cpp
         ReactHost.cpp
         PlatformJSBundles_android.cpp
         GetRuntimeExecutor_android.cpp

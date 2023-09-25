@@ -7,6 +7,8 @@ import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.RuntimeExecutor
+import com.facebook.react.turbomodule.core.CallInvokerHolderImpl
+import com.facebook.react.turbomodule.core.interfaces.CallInvokerHolder
 import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
 import com.microsoft.office.reactnative.host.ReactNativeHost
 import com.microsoft.office.reactreka.RekaBridgeOptions
@@ -59,6 +61,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
         return null
     }
 
+    // TODO :: Pending any error case handling ..
     // Note :: This is called from native
     fun initialize() {
         var identity = mReactOptions.identity
@@ -122,7 +125,16 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
     }
 
     fun getRuntimeExecutor() : RuntimeExecutor? {
-        var runtimeExecutor = mReactNativeHost?.reactInstanceManager!!.getCurrentReactContext()?.catalystInstance?.runtimeExecutor
-        return runtimeExecutor
+        return mReactNativeHost?.reactInstanceManager!!.getCurrentReactContext()?.catalystInstance?.runtimeExecutor
+    }
+
+    fun getJsiRuntimeRef() : Long {
+        val ref = mReactNativeHost?.reactInstanceManager!!.getCurrentReactContext()?.javaScriptContextHolder?.get()!!
+        return ref;
+    }
+
+    // TODO :: Make this function return the interface CallInvokerHolder
+    fun getJSCallInvokerHolder() : CallInvokerHolderImpl? {
+        return mReactNativeHost?.reactInstanceManager!!.getCurrentReactContext()?.catalystInstance?.jsCallInvokerHolder as CallInvokerHolderImpl
     }
 }

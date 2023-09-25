@@ -44,32 +44,32 @@ class MainActivity : AppCompatActivity() {
         mreactViewInstance = OfficeReactRootView(this)
 
         libletInit();
-//         runReactOnView(mreactViewInstance);
+        runReactOnView(mreactViewInstance);
 
         // testHeadless();
 //
 //
-        var reactOptions = ReactOptions()
-        reactOptions.identity = "V2App"
-        reactOptions.DeveloperSettings.IsDevModeEnabled = true
-
-        reactOptions.AddJavaModuleName("com.microsoft.office.reacthostapp.MyReactPackage")
-        reactOptions.instanceCreatedCallback = object: IInstanceCreatedCallback{
-            override fun run(instance: ReactInstance?) {
-                Log.w("MainActivity", "run");
-            }
-        };
-        // reactOptions.AddRegisteredJSBundle("foundation.android.bundle")
-        // reactOptions.AddRegisteredJSBundle("ui.android.bundle")
-        reactOptions.AddRegisteredJSBundle("index.android.bundle")
-
-        mReactHost = ReactHostStatics.makeReactHost(reactOptions)
-
-        var viewOptions: ReactViewOptions = ReactViewOptions()
-        viewOptions.ComponentName = "AwesomeProject"
-        mReactViewHost = mReactHost?.MakeViewHost(viewOptions)
-
-        mReactViewHost?.AttachViewInstance(mreactViewInstance)
+//        var reactOptions = ReactOptions()
+//        reactOptions.identity = "V2App"
+//        reactOptions.DeveloperSettings.IsDevModeEnabled = true
+//
+//        reactOptions.AddJavaModuleName("com.microsoft.office.reacthostapp.MyReactPackage")
+//        reactOptions.instanceCreatedCallback = object: IInstanceCreatedCallback{
+//            override fun run(instance: ReactInstance?) {
+//                Log.w("MainActivity", "run");
+//            }
+//        };
+//        // reactOptions.AddRegisteredJSBundle("foundation.android.bundle")
+//        // reactOptions.AddRegisteredJSBundle("ui.android.bundle")
+//        reactOptions.AddRegisteredJSBundle("index.android.bundle")
+//
+//        mReactHost = ReactHostStatics.makeReactHost(reactOptions)
+//
+//        var viewOptions: ReactViewOptions = ReactViewOptions()
+//        viewOptions.ComponentName = "AwesomeProject"
+//        mReactViewHost = mReactHost?.MakeViewHost(viewOptions)
+//
+//        mReactViewHost?.AttachViewInstance(mreactViewInstance)
 
         // Delayed because the Popup Windows shown by RN DevSupport can't be done too early.
         // Handler().postDelayed({ this@MainActivity.setContentView(mreactViewInstance) }, 100)

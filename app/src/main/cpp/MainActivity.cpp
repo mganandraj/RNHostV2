@@ -1,8 +1,12 @@
 #include "precomp.h"
 #include "MainActivity.h"
 
-#include "ReactNativeHost/React.h"
-#include "ReactHost.h"
+#include <ReactNativeHost/React.h>
+#include <ReactNativeHost/React_Android.h>
+#include <ReactHost.h>
+
+#include <jsi/jsi.h>
+#include <ReactCommon/CallInvokerHolder.h>
 
 #include <jshostheadless/JSHeadlessRuntime.h>
 
@@ -12,6 +16,8 @@
 
 #include "AwesomeRekaService.h"
 #include <Reka/RekaServiceRegistration.h>
+
+#include <dlfcn.h>
 
 #define LOG_TAG "ReactHost::MainActivity"
 
@@ -51,6 +57,29 @@ Mso::JSHost::DataServiceRegistration<AwesomeRekaService> registration;
     options.OnInstanceCreated = [](IReactInstance& instance){
         LOGE("MainActivity::runReactOnView::OnInstanceCreated");
     };
+    options.OnInstanceLoaded = [](IReactInstance& instance, const Mso::ErrorCode&) {
+        LOGE("MainActivity::runReactOnView::OnInstanceCreated");
+
+        std::shared_ptr<facebook::react::CallInvoker> callinvoker = Mso::React::GetJSThreadCallInvoker(instance);
+        auto jsiRuntime = Mso::React::GetJsiRuntime(instance);
+
+        auto global = jsiRuntime->global();
+
+        std::unique_ptr<void, int(*)(void*)> handle {
+                dlopen("libMfsNativeUnitTestsJNI.so", RTLD_NOW | RTLD_GLOBAL),
+                &dlclose
+        };
+
+        constexpr char TEST_BABYLON_METHOD_NAME[] = "testBabylonInit";
+        auto method = (void (*)(facebook::jsi::Runtime&, std::function<void(std::function<void()>)>))(dlsym(handle.get(), TEST_BABYLON_METHOD_NAME));
+        method(*jsiRuntime, [callinvoker](std::function<void()>func){
+            callinvoker->invokeAsync(std::move(func));
+        });
+    };
+
+    // On Android, FileJSBundle is mapped to AssetJSBundle
+    options.AddFileJSBundle("index.android.bundle", "index.android.bundle");
+
     // options.JavaModuleNames.push_back("com.microsoft.office.reactreka.RekaReactPackage");
     options.DataServiceProviderName = "reacthostapp::NativeService";
     options.DeveloperSettings.IsDevModeEnabled=true;

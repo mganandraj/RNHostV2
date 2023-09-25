@@ -5,7 +5,8 @@ plugins {
 
 android {
     namespace 'com.microsoft.office.reacthost'
-    compileSdk 32
+    compileSdk 33
+    ndkVersion = "25.0.8775105"
 
     defaultConfig {
         minSdk 21
