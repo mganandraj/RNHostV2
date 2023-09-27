@@ -16,7 +16,6 @@ add_library(reactreka SHARED
         OnLoad.cpp
         JRekaBridgeOptions.cpp
         RekaNativeModuleProxy.cpp
-        ReactNativeRekaBridge.cpp
         )
 
 find_library(log-lib log)

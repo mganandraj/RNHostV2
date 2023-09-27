@@ -2,7 +2,6 @@
 #include <jni.h>
 #include "RekaNativeModuleProxy.h"
 #include "JRekaBridgeOptions.h"
-#include "ReactNativeRekaBridge.h"
 
 extern "C"
 {

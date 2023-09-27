@@ -5,6 +5,7 @@
 #ifndef ORNHOST_REACT_ANDROID_H
 #define ORNHOST_REACT_ANDROID_H
 
+#include "jni.h"
 #include "React.h"
 
 namespace facebook {
@@ -22,6 +23,8 @@ namespace react {
 namespace Mso::React {
 facebook::jsi::Runtime* GetJsiRuntime(IReactInstance& instance) noexcept;
 std::shared_ptr<facebook::react::CallInvoker> GetJSThreadCallInvoker(IReactInstance& instance) noexcept;
+
+Mso::TCntPtr<Mso::React::IReactViewInstance> GetReactViewInstanceFromView(jobject view);
 }
 
 #endif //ORNHOST_REACT_ANDROID_H

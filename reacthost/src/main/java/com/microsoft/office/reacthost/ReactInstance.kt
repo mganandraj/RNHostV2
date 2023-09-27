@@ -31,7 +31,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
     private var mReactNativeHost: ReactNativeHost? = null
     private val mReactOptions: ReactOptions
 
-    private external fun onInitialized(contextHolder: ReactContextHolder)
+    private external fun onInitialized(/*contextHolder: ReactContextHolder*/)
     private external fun onBundleLoaded(bundleName: String)
     private external fun createRekaBridgeOptions() : RekaBridgeOptions
 
@@ -41,7 +41,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
     }
 
     fun onReactContextInitialized(reactContext: ReactContext?) {
-        onInitialized(ReactContextHolder(reactContext!!))
+        onInitialized(/*ReactContextHolder(reactContext!!)*/)
     }
 
     private fun getReactPackageFromClassName(className: String): ReactPackage? {

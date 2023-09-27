@@ -12,30 +12,15 @@ project("reacthost")
 
 add_library(reacthost
         SHARED
+        ReactInstanceAndroid.cpp
         AssetJSBundle_Android.cpp
         BundleServerJSBundle.cpp
         InstanceFactory_Android.cpp
-        ReactInstanceAndroid.cpp
-        JErrorCode.cpp
-        JInstanceCreatedCallback.cpp
-        JInstanceLoadedCallback.cpp
-        JJSBundle.cpp
-        JMsoFuture.cpp
-        JReactHost.cpp
-        JReactHostStatics.cpp
-        JReactInstance.cpp
-        JReactViewHost.cpp
-        JReactOptions.cpp
-        JReactViewOptions.cpp
-        JReactViewInstance.cpp
         JSBundle.cpp
         JSBundle_Android.cpp
         MsoUtils.cpp
-        OnLoad.cpp
-        React_Android.cpp
         ReactHost.cpp
         PlatformJSBundles_android.cpp
-        GetRuntimeExecutor_android.cpp
 )
 
 # TODO:: Why is this necessary ?

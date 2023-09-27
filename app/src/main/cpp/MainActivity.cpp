@@ -49,8 +49,10 @@ Mso::JSHost::DataServiceRegistration<AwesomeRekaService> registration;
     ReactHostRegistry::OnLibletInit();
 }
 
-/*static */void MainActivity::runReactOnView(facebook::jni::alias_ref<MainActivity> thiz,
-                                             facebook::jni::alias_ref<JOfficeReactRootView::jhybridobject> viewInstance) {
+///*static */void MainActivity::runReactOnView(facebook::jni::alias_ref<MainActivity> thiz,
+//                                             facebook::jni::alias_ref<JOfficeReactRootView::jhybridobject> viewInstance) {
+/*static*/ void MainActivity::runReactOnView(facebook::jni::alias_ref<MainActivity> thiz,
+                                             jobject viewInstance) {
 
     ReactOptions options;
     options.Identity = "V2App";
@@ -64,6 +66,7 @@ Mso::JSHost::DataServiceRegistration<AwesomeRekaService> registration;
         auto jsiRuntime = Mso::React::GetJsiRuntime(instance);
 
         auto global = jsiRuntime->global();
+
 
         std::unique_ptr<void, int(*)(void*)> handle {
                 dlopen("libMfsNativeUnitTestsJNI.so", RTLD_NOW | RTLD_GLOBAL),
@@ -92,8 +95,10 @@ Mso::JSHost::DataServiceRegistration<AwesomeRekaService> registration;
     viewOptions.ComponentName = "AwesomeProject";
     static auto viewHost = reactHost->MakeViewHost(std::move(viewOptions));
 
-    JOfficeReactRootView* viewInstanceNative =  viewInstance->cthis();
-    viewHost->AttachViewInstance(*viewInstanceNative->m_ReactViewInstance);
+    // JOfficeReactRootView* viewInstanceNative =  viewInstance->cthis();
+    auto viewInstanceNative = Mso::React::GetReactViewInstanceFromView(viewInstance);
+    // viewHost->AttachViewInstance(*viewInstanceNative->m_ReactViewInstance);
+    viewHost->AttachViewInstance(*viewInstanceNative);
 
     // auto unloadMethod = viewInstance->javaClassStatic()->getMethod<void()>("Unload");
     // unloadMethod(viewInstance);
