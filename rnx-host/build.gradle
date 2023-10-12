@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.microsoft.office.reactnative.host'
-    compileSdk 33
+    compileSdk 34
     ndkVersion = "25.0.8775105"
 
     defaultConfig {

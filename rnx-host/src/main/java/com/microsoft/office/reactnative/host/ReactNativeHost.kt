@@ -269,13 +269,18 @@ class ReactNativeHost private constructor (
     }
 
     fun createRootView(componentName: String, initialProps: Bundle?, activity: Activity) : ReactRootView {
+        val thisReactInstanceManager = reactInstanceManager
         val rootView = object : ReactRootView(activity) {
+            override fun onAttachedToWindow() {
+                startReactApplication(thisReactInstanceManager, componentName, initialProps)
+                super.onAttachedToWindow()
+            }
             override fun onDetachedFromWindow() {
                 super.onDetachedFromWindow()
                 unmountReactApplication()
             }
         }
-        rootView.startReactApplication(reactInstanceManager, componentName, initialProps)
+
         return rootView
     }
 

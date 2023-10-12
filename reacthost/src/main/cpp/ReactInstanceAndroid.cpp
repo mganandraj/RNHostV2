@@ -4,6 +4,9 @@
 #include <ReactNativeHost/React.h>
 #include <ReactNativeHost/React_Android.h>
 
+// For ReactHostRegistry
+#include <ReactHost.h>
+
 #include <errorCode/hresultErrorProvider.h>
 #include "ReactInstanceAndroid.h"
 
@@ -533,11 +536,18 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
     }
 
 /*static */void JReactInstance::onInitialized(facebook::jni::alias_ref<jhybridobject> jThis/*, facebook::jni::alias_ref<JReactContextHolder> contextHolder*/) {
-        jThis->cthis()->m_wNativeInstance.GetStrongPtr()->onInitialized(/*contextHolder*/);
+
+        auto nativeInstance= jThis->cthis()->m_wNativeInstance.GetStrongPtr();
+        if(nativeInstance) {
+            nativeInstance->onInitialized(/*contextHolder*/);
+        }
     }
 
 /*static*/ void JReactInstance::onBundleLoaded(facebook::jni::alias_ref<jhybridobject> jThis, facebook::jni::alias_ref<JString> bundleName) {
-        jThis->cthis()->m_wNativeInstance.GetStrongPtr()->onBundleLoaded(bundleName->toStdString());
+        auto nativeInstance = jThis->cthis()->m_wNativeInstance.GetStrongPtr();
+        if(nativeInstance) {
+            nativeInstance->onBundleLoaded(bundleName->toStdString());
+        }
     }
 
 /*static */facebook::jni::local_ref<reactreka::JRekaBridgeOptions::jhybridobject> JReactInstance::createRekaBridgeOptions(facebook::jni::alias_ref<jhybridobject> jThis) {
@@ -545,10 +555,10 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
 
         auto rnhandle = dlopen("libreactreka.so", RTLD_NOW | RTLD_GLOBAL);
         auto method = (facebook::jni::local_ref<reactreka::JRekaBridgeOptions::jhybridobject> (*)(Mso::JSHost::RekaBridgeOptions &&rekaOptions))(dlsym(rnhandle, "_ZN9reactreka18JRekaBridgeOptions6createEON3Mso6JSHost17RekaBridgeOptionsE"));
-
-
         // return reactreka::JRekaBridgeOptions::create(jThis->cthis()->m_wNativeInstance.GetStrongPtr()->createRekaBridgeOptions());
-        return method(jThis->cthis()->m_wNativeInstance.GetStrongPtr()->createRekaBridgeOptions());
+        auto nativeInstance = jThis->cthis()->m_wNativeInstance.GetStrongPtr();
+        VerifyElseCrash(nativeInstance);
+        return method(nativeInstance->createRekaBridgeOptions());
 }
 
 /*static */void JReactInstance::registerNatives() {
@@ -589,7 +599,6 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
 
 
         return runtimeExecutor;
-        // return jRuntimeExecutor->cthis()->get();
     }
 
 // TODO:: Null check
@@ -813,6 +822,10 @@ struct JReactHost : facebook::jni::HybridClass<JReactHost> {
     JReactHost(Mso::CntPtr<Mso::React::IReactHost> &&host)
             : host_(std::move(host)) {}
 
+    ~JReactHost() {
+        FBJNI_LOGE("~JReactHost");
+    };
+
     facebook::jni::alias_ref<JReactViewHost::jhybridobject> MakeViewHost(facebook::jni::alias_ref<JReactViewOptions::jhybridobject> jOptions);
     void ReloadInstance();
     void ReloadInstanceWithOptions(facebook::jni::alias_ref<JReactOptions::jhybridobject> jOptions);
@@ -860,6 +873,8 @@ struct JReactHostStatics : facebook::jni::JavaClass<JReactHostStatics>  {
     static void registerNatives();
 
     static facebook::jni::alias_ref<JReactHost::jhybridobject> makeJReactHost(facebook::jni::alias_ref<jclass>, facebook::jni::alias_ref<JReactOptions::jhybridobject> jOptions);
+    static void libletInit(facebook::jni::alias_ref<jclass>);
+
     // static facebook::jni::local_ref<JReactHost::jhybridobject> test(facebook::jni::alias_ref<jclass>, facebook::jni::alias_ref<JReactOptions::jhybridobject> jOptions);
 };
 
@@ -870,9 +885,14 @@ struct JReactHostStatics : facebook::jni::JavaClass<JReactHostStatics>  {
     return JReactHost::create(reactHost).release();
 }
 
+/*static*/ void JReactHostStatics::libletInit(alias_ref<jclass>) {
+    ReactHostRegistry::OnLibletInit();
+}
+
 /*static*/ void JReactHostStatics::registerNatives() {
     javaClassLocal()->registerNatives({
                                               makeNativeMethod("makeReactHost", JReactHostStatics::makeJReactHost),
+                                              makeNativeMethod("libletInit", JReactHostStatics::libletInit),
                                       });
 }
 
@@ -890,7 +910,7 @@ ReactInstanceAndroid::ReactInstanceAndroid(IReactHost& reactHost, ReactOptions&&
 
 ReactInstanceAndroid::~ReactInstanceAndroid() noexcept
 {
-    Destroy();
+    // Destroy();
 }
 
 void ReactInstanceAndroid::onInitialized(/*facebook::jni::alias_ref<JReactContextHolder> contextHolder*/) noexcept {
@@ -911,15 +931,16 @@ void ReactInstanceAndroidInternal::Initialize(ReactOptions optionsCopy, Mso::Wea
     // Note: This is required as the AcitiveObject thread is a raw pthread thread which don't have a Java stack in it yet.
     // https://developer.android.com/training/articles/perf-jni#faq_FindClass
     ThreadScope::WithClassLoader([this, optionsCopy = std::move(optionsCopy), instance](){
-        // ReactOptions optionsCopy = m_options;
         m_jOptions = make_global(JReactOptions::create(std::move(optionsCopy)));
         m_jReactInstance = make_global(JReactInstance::create(m_jOptions, instance));
     });
 }
 
 void ReactInstanceAndroidInternal::Destroy() {
-    m_jOptions.release();
-    m_jReactInstance.release();
+    ThreadScope::WithClassLoader([this](){
+        m_jOptions.release();
+        m_jReactInstance.release();
+    });
 }
 
 void ReactInstanceAndroid::Initialize() noexcept
@@ -928,11 +949,15 @@ void ReactInstanceAndroid::Initialize() noexcept
     m_internalState->Initialize(m_options, Mso::WeakPtr(this));
 }
 
-//! This method must be called from the native queue.
-Mso::Future<void> ReactInstanceAndroid::Destroy() noexcept
+void ReactInstanceAndroid::Finalize() noexcept
 {
     m_internalState->Destroy();
     m_internalState->Release();
+}
+
+//! This method must be called from the native queue.
+Mso::Future<void> ReactInstanceAndroid::Destroy() noexcept
+{
     return Mso::MakeSucceededFuture();
 }
 

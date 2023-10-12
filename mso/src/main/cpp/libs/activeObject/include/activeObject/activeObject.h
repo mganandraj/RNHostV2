@@ -5,6 +5,16 @@
 #ifndef MSO_ACTIVEOBJECT_ACTIVEOBJECT_H
 #define MSO_ACTIVEOBJECT_ACTIVEOBJECT_H
 
+#include <android/log.h>
+
+#define TAG "Log"
+
+
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,    TAG, __VA_ARGS__)
+#define LOGW(...) __android_log_print(ANDROID_LOG_WARN,     TAG, __VA_ARGS__)
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,     TAG, __VA_ARGS__)
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,    TAG, __VA_ARGS__)
+
 //!
 //! ActiveObject is a design pattern (https://en.wikipedia.org/wiki/Active_object)
 //! where method invocation is decoupled from method execution in a way
@@ -170,6 +180,7 @@ private:
 template <typename T, typename TMemoryGuard, typename... TArgs>
 /*static*/ void ActiveObjectMakePolicy::Make(TMemoryGuard& memoryGuard, TArgs&&... args) noexcept
 {
+  LOGE("ActiveObjectMakePolicy::Make");
   memoryGuard.Obj = ::new (memoryGuard.ObjMemory) T{std::forward<TArgs>(args)...};
   memoryGuard.ObjMemory = nullptr; // Memory is now controlled by the object. Set to null to avoid memory destruction.
 
@@ -190,6 +201,7 @@ template <typename T, typename TMemoryGuard, typename... TArgs>
     activeObj->Queue().InvokeElsePost([weakPtr = Mso::WeakPtr<ActiveObjectBase>{activeObj}]() noexcept {
       if (auto strongPtr = weakPtr.GetStrongPtr())
       {
+        LOGE("ActiveObjectMakePolicy::Make::1");
         strongPtr->Initialize();
         strongPtr->m_isInitialized = true;
       }
@@ -208,6 +220,7 @@ template <typename T, typename TMemoryGuard, typename... TArgs>
 template <typename TObject>
 /*static*/ void ActiveObjectDeleter::Delete(TObject* obj) noexcept
 {
+  LOGE("ActiveObjectDeleter::Delete");
   ActiveObjectBase* activeObj = static_cast<ActiveObjectBase*>(obj);
 
   // If we have user defined Finalize method, then call it in the associated queue.
@@ -229,7 +242,8 @@ template <typename TObject>
     //
     activeObj->m_queue.InvokeElsePost(Mso::MakeDispatchTask(
         [activeObj]() noexcept {
-          activeObj->Finalize();
+            LOGE("ActiveObjectDeleter::Delete::1");
+            activeObj->Finalize();
           ActiveObjectBase::DestructObject(activeObj);
         },
         /*onCancel:*/

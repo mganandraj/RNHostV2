@@ -29,13 +29,17 @@ class OfficeExecutorHolder
     auto baseFactory = baseExecutorFactory->cthis()->getExecutorFactory();
     
     std::vector<std::string> preBundlesVector;
-    for (size_t i = 0; i < prebundles->size(); ++i) {
-      preBundlesVector.push_back(prebundles->getElement(i)->toStdString());
+    if(prebundles) {
+        for (size_t i = 0; i < prebundles->size(); ++i) {
+            preBundlesVector.push_back(prebundles->getElement(i)->toStdString());
+        }
     }
 
     std::vector<std::unique_ptr<IJSBundle>> platformBundlesVector;
-    for (size_t i = 0; i < platformbundles->size(); ++i) {
-      platformBundlesVector.push_back(JJSBundle::get(platformbundles->getElement(i)));
+    if(platformbundles){
+        for (size_t i = 0; i < platformbundles->size(); ++i) {
+            platformBundlesVector.push_back(JJSBundle::get(platformbundles->getElement(i)));
+        }
     }
 
     auto factory = std::make_unique<OfficeExecutorFactory>(

@@ -7,4 +7,7 @@ object ReactHostStatics {
     var initialActivity: WeakReference<Activity>? = null
 
     external fun makeReactHost(reactOptions: ReactOptions): ReactHost
+
+    // This is not required when within Office.
+    external fun libletInit();
 }

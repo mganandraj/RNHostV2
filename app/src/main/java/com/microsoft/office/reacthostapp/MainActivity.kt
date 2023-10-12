@@ -3,9 +3,7 @@ package com.microsoft.office.reacthostapp
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.provider.Settings
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.soloader.SoLoader
 import com.facebook.soloader.nativeloader.NativeLoader

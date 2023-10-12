@@ -34,6 +34,7 @@ private:
     friend MakePolicy;
     ReactInstanceAndroid(IReactHost& reactHost, ReactOptions&& options) noexcept;
     void Initialize() noexcept override;
+    void Finalize() noexcept override;
     ~ReactInstanceAndroid() noexcept;
 
     void NotifyRekaInitialized() noexcept;
