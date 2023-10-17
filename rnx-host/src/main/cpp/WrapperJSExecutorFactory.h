@@ -6,18 +6,17 @@
 #include <react/jni/JSLoader.h>
 #include "JJSBundle.h"
 
-#include "JOfficeExecutorObserver.h"
+#include "JExecutorObserver.h"
 
 namespace facebook {
 namespace react {
 
-class OfficeExecutorFactory : public facebook::react::JSExecutorFactory {
+class WrapperJSExecutorFactory : public facebook::react::JSExecutorFactory {
 public:
-  OfficeExecutorFactory(jni::weak_ref<JAssetManager::javaobject> assetManager
+  WrapperJSExecutorFactory(jni::weak_ref<JAssetManager::javaobject> assetManager
     , std::shared_ptr<facebook::react::JSExecutorFactory> baseExecutorFactory
-    , std::vector<std::string> preloadBundles
     , std::vector<std::unique_ptr<IJSBundle>> platformBundles
-    , jni::weak_ref<JOfficeExecutorObserver::javaobject> observer);
+    , jni::weak_ref<JExecutorObserver::javaobject> observer);
 
   std::unique_ptr<facebook::react::JSExecutor> createJSExecutor(
     std::shared_ptr<facebook::react::ExecutorDelegate> delegate,
@@ -25,10 +24,9 @@ public:
 
 private:
   std::shared_ptr<facebook::react::JSExecutorFactory> m_baseExecutorFactory;
-  std::vector<std::string> m_preloadBundles;
   std::vector<std::unique_ptr<IJSBundle>> m_platformBundles;
   jni::weak_ref<JAssetManager::javaobject> m_assetManager;
-  jni::weak_ref<JOfficeExecutorObserver::javaobject> m_observer;
+  jni::weak_ref<JExecutorObserver::javaobject> m_observer;
 };
 
 }}

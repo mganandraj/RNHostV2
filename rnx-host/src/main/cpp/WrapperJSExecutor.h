@@ -8,18 +8,17 @@
 #include <react/jni/JSLoader.h>
 #include "JSBundle.h"
 
-#include "JOfficeExecutorObserver.h"
+#include "JExecutorObserver.h"
 
 namespace facebook {
 namespace react {
 
-struct OfficeExecutor : facebook::react::JSExecutor {
-	OfficeExecutor(jni::weak_ref<JAssetManager::javaobject> assetManager
-		, std::unique_ptr<facebook::react::JSExecutor> &&baseExecutor
-		, std::vector<std::string> &&preloadBundles
-		, std::vector<std::unique_ptr<IJSBundle>> &&platformBundles
-		, jni::weak_ref<JOfficeExecutorObserver::javaobject> observer) noexcept
-	    : m_assetManager(assetManager), m_baseExecutor{std::move(baseExecutor)}, m_preloadBundles(std::move(preloadBundles)), m_platformBundles(std::move(platformBundles)), m_observer(observer)
+struct WrapperJSExecutor : facebook::react::JSExecutor {
+	WrapperJSExecutor(jni::weak_ref<JAssetManager::javaobject> assetManager,
+					  std::unique_ptr<facebook::react::JSExecutor> &&baseExecutor,
+					  std::vector<std::unique_ptr<IJSBundle>> &&platformBundles,
+					  jni::weak_ref<JExecutorObserver::javaobject> observer) noexcept
+	    : m_assetManager(assetManager), m_baseExecutor{std::move(baseExecutor)}, m_platformBundles(std::move(platformBundles)), m_observer(observer)
 	{}
 
 	void initializeRuntime() override;
@@ -37,7 +36,7 @@ private:
 	std::unique_ptr<facebook::react::JSExecutor> m_baseExecutor;
 	std::vector<std::string> m_preloadBundles;
 	std::vector<std::unique_ptr<IJSBundle>> m_platformBundles;
-	jni::weak_ref<JOfficeExecutorObserver::javaobject> m_observer;
+	jni::weak_ref<JExecutorObserver::javaobject> m_observer;
 };
 
 }}

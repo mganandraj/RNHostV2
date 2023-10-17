@@ -90,7 +90,12 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
     info.Id = thizz->getFieldValue(iFieldId)->toStdString();
     const auto iFieldFileName = cls->getField<JString>("FileName");
     info.FileName = thizz->getFieldValue(iFieldFileName)->toStdString();
-    const auto iFieldTimestamp = cls->getField<JLong>("Timestamp");
-    info.Timestamp = thizz->getFieldValue(iFieldTimestamp)->value();
+    const auto iFieldVersion = cls->getField<JLong>("Version");
+    const auto fieldValue = thizz->getFieldValue(iFieldVersion);
+    if(fieldValue) {
+        info.Timestamp = fieldValue->value();
+    } else {
+        info.Timestamp = 0;
+    }
     return info;
 }

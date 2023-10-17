@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.facebook.react.ReactPackage
 import com.microsoft.office.reacthost.ReactHostStatics
 import com.microsoft.office.reacthostapp.databinding.FragmentSecondBinding
+import com.microsoft.office.reactnative.host.JSBundle
 import com.microsoft.office.reactnative.host.ReactNativeHost
 import com.microsoft.office.reactreka.RekaReactPackage
 
@@ -36,7 +37,6 @@ class SecondFragment : Fragment() {
             .isDev(true)
             .jsMainModulePath("index")
             .shouldEagerInit(true)
-            // .platformBundles(platformBundles)
             .nativeModulePackages(mutableListOf<ReactPackage>(
                 MyReactPackage.GetReactPackage(),
                 RekaReactPackage.GetReactPackage()
@@ -49,7 +49,11 @@ class SecondFragment : Fragment() {
                 // mReactOptions.OnInstanceCreated?.run();
             }
 
-        builder.bundleName("index.android.bundle")
+        var preloadBundles = ArrayList<JSBundle>()
+        preloadBundles.add(com.microsoft.office.reactnative.host.JSBundleFromFileAssetId( "foundation.android.bundle"))
+        preloadBundles.add(com.microsoft.office.reactnative.host.JSBundleFromFileAssetId( "ui.android.bundle"))
+        builder.preloadBundles(preloadBundles)
+        builder.userBundle(com.microsoft.office.reactnative.host.JSBundleFromFileAssetId( "index.android.bundle"))
 
         this.mReactNativeHost = builder.build()
 

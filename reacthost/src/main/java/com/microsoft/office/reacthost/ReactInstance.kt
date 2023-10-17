@@ -61,6 +61,11 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
         return null
     }
 
+    fun getRNXJSBundle(jsBundle: JSBundle) : com.microsoft.office.reactnative.host.JSBundle {
+        var rnxBundleInfo = com.microsoft.office.reactnative.host.JSBundleInfo(jsBundle.Info?.Id, jsBundle.Info?.FileName, jsBundle.Info?.Timestamp);
+        return com.microsoft.office.reactnative.host.JSBundle(jsBundle.Content, rnxBundleInfo);
+    }
+
     // TODO :: Pending any error case handling ..
     // Note :: This is called from native
     fun initialize() {
@@ -80,10 +85,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
         var platformBundles = ArrayList<com.microsoft.office.reactnative.host.JSBundle>()
         // All except last one is platform bundles
         mReactOptions.JSBundles.dropLast(1).forEach{
-
-            var rnxBundleInfo = com.microsoft.office.reactnative.host.JSBundleInfo(it.Info?.Id, it.Info?.FileName, it.Info?.Timestamp);
-            var rnxJSBundle = com.microsoft.office.reactnative.host.JSBundle(it.Content, rnxBundleInfo);
-            platformBundles.add(rnxJSBundle)
+            platformBundles.add(getRNXJSBundle(it))
         }
 
         val featureBundle = mReactOptions.JSBundles.last()
@@ -94,7 +96,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                 .application(initialActivity!!.get()!!.application)
                 .isDev(mReactOptions.DeveloperSettings.IsDevModeEnabled)
                 .jsMainModulePath(mReactOptions.DeveloperSettings.SourceBundleName?:"index")
-                .platformBundles(platformBundles)
+                .preloadBundles(platformBundles)
                 .nativeModulePackages(nativeModulePackages)
                 .onJSRuntimeInitialized {
                     // Log.i(LOG_TAG, "ReactIntegration.RootView.onJSRuntimeInitialized")
@@ -103,14 +105,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                     onBundleLoaded(bundleName)
                     // mReactOptions.OnInstanceCreated?.run();
                 }
-
-            if (featureBundle.Info?.Id != null)
-                builder.bundleName(featureBundle.Info?.Id)
-            else if (featureBundle.Info?.FileName != null)
-                builder.bundleFilePath(featureBundle.Info?.FileName!!)
-            else
-                throw RuntimeException("Feature bundle can't be dynamic")
-
+                .userBundle(getRNXJSBundle(featureBundle))
 
             this.mReactNativeHost = builder.build()
             val weakThis = WeakReference(this)

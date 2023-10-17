@@ -6,8 +6,8 @@
 #include <react/jni/JSLoader.h>
 #include "JJSBundle.h"
 
-#include "JOfficeExecutorObserver.h"
-#include "OfficeExecutorFactory.h"
+#include "JExecutorObserver.h"
+#include "WrapperJSExecutorFactory.h"
 
 #include <vector>
 
@@ -17,24 +17,17 @@ namespace react {
 class OfficeExecutorHolder
     : public jni::HybridClass<OfficeExecutorHolder, JavaScriptExecutorHolder> {
  public:
-  static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reactnative/host/OfficeExecutor;";
+  static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reactnative/host/WrapperJSExecutor;";
 
   static jni::local_ref<jhybriddata> initHybrid(
-      jni::alias_ref<jclass>
-      , jni::alias_ref<JAssetManager::javaobject> assetManager
-      , jni::alias_ref<JavaScriptExecutorHolder::javaobject> baseExecutorFactory
-      , jni::alias_ref<jni::JArrayClass<jni::JString>> prebundles
-      , jni::alias_ref<jni::JArrayClass<JJSBundle>> platformbundles
-      , jni::alias_ref<JOfficeExecutorObserver::javaobject> observer) {
+      jni::alias_ref<jclass>,
+              jni::alias_ref<JAssetManager::javaobject> assetManager,
+              jni::alias_ref<JavaScriptExecutorHolder::javaobject> baseExecutorFactory,
+              jni::alias_ref<jni::JArrayClass<JJSBundle>> platformbundles,
+              jni::alias_ref<JExecutorObserver::javaobject> observer) {
     auto baseFactory = baseExecutorFactory->cthis()->getExecutorFactory();
     
     std::vector<std::string> preBundlesVector;
-    if(prebundles) {
-        for (size_t i = 0; i < prebundles->size(); ++i) {
-            preBundlesVector.push_back(prebundles->getElement(i)->toStdString());
-        }
-    }
-
     std::vector<std::unique_ptr<IJSBundle>> platformBundlesVector;
     if(platformbundles){
         for (size_t i = 0; i < platformbundles->size(); ++i) {
@@ -42,12 +35,11 @@ class OfficeExecutorHolder
         }
     }
 
-    auto factory = std::make_unique<OfficeExecutorFactory>(
-      jni::make_weak<JAssetManager::javaobject>(assetManager.get())
-      , baseFactory
-      , std::move(preBundlesVector)
-      , std::move(platformBundlesVector)
-      , jni::make_weak<JOfficeExecutorObserver::javaobject>(observer.get()));
+    auto factory = std::make_unique<WrapperJSExecutorFactory>(
+      jni::make_weak<JAssetManager::javaobject>(assetManager.get()),
+              baseFactory,
+              std::move(platformBundlesVector),
+              jni::make_weak<JExecutorObserver::javaobject>(observer.get()));
     return makeCxxInstance(std::move(factory));
   }
 

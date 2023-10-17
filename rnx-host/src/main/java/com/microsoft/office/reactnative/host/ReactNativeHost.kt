@@ -8,6 +8,7 @@ import android.util.Log
 import com.facebook.hermes.reactexecutor.HermesExecutorFactory
 import com.facebook.react.ReactInstanceEventListener
 import com.facebook.react.ReactInstanceManager
+import com.facebook.react.ReactInstanceManagerBuilder
 import com.facebook.react.ReactPackage
 import com.facebook.react.ReactRootView
 import com.facebook.react.bridge.*
@@ -18,14 +19,11 @@ import com.facebook.react.shell.MainReactPackage
 import com.facebook.soloader.SoLoader
 
 class ReactNativeHost private constructor (
-
-    private val bundleName: String?,
-    private val bundleFilePath: String?,
+    private val userBundle: JSBundle,
+    private val preloadBundles: MutableList<JSBundle>?,
+    private val loadUsingRNBundleLoader: Boolean = false,
+    private val jsBundleFetcher: JSBundleFetcher?,
     private val jsMainModulePath: String?,
-    private val platformBundleNames: MutableList<String>?,
-    private val platformBundles: MutableList<JSBundle>?,
-    private val jsBundleLoaderProvider: JSBundleLoaderProvider?,
-    private val jsBundleNameProvider: JSBundleNameProvider?,
     private val beforeReactNativeInit: (() -> Unit)?,
     private val afterReactNativeInit: (() -> Unit)?,
     private val onJSRuntimeInitialized: (() -> Unit)?,
@@ -41,24 +39,15 @@ class ReactNativeHost private constructor (
     private val hostInitialActivity: Activity) : com.facebook.react.ReactNativeHost(hostApplication)
 {
     companion object {
-        val LOG_TAG = "ReactNativeHost"
-    }
-
-    interface JSBundleLoaderProvider {
-        fun getBundleLoader(bundleName: String, application: Application) : JSBundleLoader
-    }
-    interface JSBundleNameProvider {
-        val bundleName: String?
+        val LOG_TAG = "RNX.ReactNativeHost"
     }
 
     data class Builder(
-        private var bundleName: String? = null,
-        private var bundleFilePath: String? = null,
+        private var userBundle: JSBundle? = null, // Feature bundle
+        private var preloadBundles: MutableList<JSBundle>? = null, // Bundles to be loaded prior to loading feature bundle
+        private var loadUsingRNBundleLoader: Boolean = false,  // We use a custom wrapper JS executor by default. This setting forces using https://github.com/facebook/react-native/blob/main/packages/react-native/ReactAndroid/src/main/java/com/facebook/react/bridge/JSBundleLoader.java instead. This setting doesn't work when loading bundle from metro server.
+        private var jsBundleFetcher: JSBundleFetcher? = null,
         private var jsMainModulePath: String? = null,
-        private var platformBundleNames: MutableList<String>? = null,
-        private var platformBundles: MutableList<JSBundle>? = null,
-        private var jsBundleLoaderProvider: JSBundleLoaderProvider? = null,
-        private var jsBundleNameProvider: JSBundleNameProvider? = null,
         private var beforeReactNativeInit: (() -> Unit)? = null,
         private var afterReactNativeInit: (() -> Unit)? = null,
         private var onJSRuntimeInitialized: (() -> Unit)? = null,
@@ -73,38 +62,34 @@ class ReactNativeHost private constructor (
         private var useFabric: Boolean = false,
         private var hostApplication: Application? = null,
         private var hostInitialActivity: Activity? = null) {
-        fun bundleName(bundleName: String) = apply { this.bundleName = bundleName; return this }
-        fun bundleFilePath(bundleFilePath: String) = apply { this.bundleFilePath = bundleFilePath; return this }
-        fun jsMainModulePath(jsMainModulePath: String) = apply { this.jsMainModulePath = jsMainModulePath; return this }
-        fun platformBundleNames(platformBundleNames: MutableList<String>) = apply { this.platformBundleNames = platformBundleNames; return this }
-        fun platformBundles(platformBundles: MutableList<JSBundle>) = apply { this.platformBundles = platformBundles; return this }
-        fun jsBundleLoaderProvider(jsundleLoaderProvider: JSBundleLoaderProvider) = apply { this.jsBundleLoaderProvider = jsundleLoaderProvider; return this }
-        fun jsBundleNameProvider(jsBundleNameProvider: JSBundleNameProvider) = apply { this.jsBundleNameProvider = jsBundleNameProvider; return this }
-        fun beforeReactNativeInit(beforeReactNativeInit: (() -> Unit)) = apply { this.beforeReactNativeInit = beforeReactNativeInit; return this }
-        fun afterReactNativeInit(afterReactNativeInit: (() -> Unit)) = apply { this.afterReactNativeInit = afterReactNativeInit; return this }
-        fun onJSRuntimeInitialized(onJSRuntimeInitialized: (() -> Unit)) = apply { this.onJSRuntimeInitialized = onJSRuntimeInitialized; return this }
-        fun onJSBundleLoaded(onJSBundleLoaded: ((bundleName: String) -> Unit)) = apply { this.onJSBundleLoaded = onJSBundleLoaded; return this }
-        fun nativeModulePackages(nativeModulePackages: MutableList<ReactPackage>) = apply { this.nativeModulePackages = nativeModulePackages; return this }
-        fun shouldEagerInit(eagerInit: Boolean) = apply { this.eagerInit = eagerInit; return this }
-        fun javaScriptExecutorFactory(javaScriptExecutorFactory: JavaScriptExecutorFactory) = apply { this.javaScriptExecutorFactory = javaScriptExecutorFactory; return this }
-        fun customDevOptions(customDevOptions: MutableList<Pair<String, DevOptionHandler>>) = apply { this.customDevOptions = customDevOptions; return this }
-        fun useHermes(useHermes: Boolean) = apply { this.useHermes = useHermes; return this }
-        fun isDev(isDev: Boolean) = apply { this.isDev = isDev; return this }
-        fun enableFlipper(enableFlipper: Boolean) = apply { this.enableFlipper = enableFlipper; return this }
-        fun useFabric(useFabric: Boolean) = apply { this.useFabric = useFabric; return this }
-        fun application(hostApplication: Application) = apply { this.hostApplication = hostApplication; return this }
-        fun activity(hostInitialActivity: Activity) = apply { this.hostInitialActivity = hostInitialActivity; return this }
+        fun userBundle(_userBundle: JSBundle) = apply { this.userBundle = _userBundle; return this }
+        fun preloadBundles(_preloadBundles: MutableList<JSBundle>) = apply { this.preloadBundles = _preloadBundles; return this }
+        fun loadUsingRNBundleLoader(_loadUsingRNBundleLoader: Boolean) = apply { this.loadUsingRNBundleLoader = _loadUsingRNBundleLoader; return this }
+        fun jsBundleFetcher(_jsBundleFetcher: JSBundleFetcher) = apply { this.jsBundleFetcher = _jsBundleFetcher; return this }
+        fun jsMainModulePath(_jsMainModulePath: String) = apply { this.jsMainModulePath = _jsMainModulePath; return this }
+        fun beforeReactNativeInit(_beforeReactNativeInit: (() -> Unit)) = apply { this.beforeReactNativeInit = _beforeReactNativeInit; return this }
+        fun afterReactNativeInit(_afterReactNativeInit: (() -> Unit)) = apply { this.afterReactNativeInit = _afterReactNativeInit; return this }
+        fun onJSRuntimeInitialized(_onJSRuntimeInitialized: (() -> Unit)) = apply { this.onJSRuntimeInitialized = _onJSRuntimeInitialized; return this }
+        fun onJSBundleLoaded(_onJSBundleLoaded: ((bundleName: String) -> Unit)) = apply { this.onJSBundleLoaded = _onJSBundleLoaded; return this }
+        fun nativeModulePackages(_nativeModulePackages: MutableList<ReactPackage>) = apply { this.nativeModulePackages = _nativeModulePackages; return this }
+        fun shouldEagerInit(_eagerInit: Boolean) = apply { this.eagerInit = _eagerInit; return this }
+        fun javaScriptExecutorFactory(_javaScriptExecutorFactory: JavaScriptExecutorFactory) = apply { this.javaScriptExecutorFactory = _javaScriptExecutorFactory; return this }
+        fun customDevOptions(_customDevOptions: MutableList<Pair<String, DevOptionHandler>>) = apply { this.customDevOptions = _customDevOptions; return this }
+        fun useHermes(_useHermes: Boolean) = apply { this.useHermes = _useHermes; return this }
+        fun isDev(_isDev: Boolean) = apply { this.isDev = _isDev; return this }
+        fun enableFlipper(_enableFlipper: Boolean) = apply { this.enableFlipper = _enableFlipper; return this }
+        fun useFabric(_useFabric: Boolean) = apply { this.useFabric = _useFabric; return this }
+        fun application(_hostApplication: Application) = apply { this.hostApplication = _hostApplication; return this }
+        fun activity(_hostInitialActivity: Activity) = apply { this.hostInitialActivity = _hostInitialActivity; return this }
         fun build(): ReactNativeHost? = run {
             hostApplication!!
             hostInitialActivity!!
             return ReactNativeHost(
-                bundleName,
-                bundleFilePath,
+                userBundle!!,
+                preloadBundles,
+                loadUsingRNBundleLoader,
+                jsBundleFetcher,
                 jsMainModulePath,
-                platformBundleNames,
-                platformBundles,
-                jsBundleLoaderProvider,
-                jsBundleNameProvider,
                 beforeReactNativeInit,
                 afterReactNativeInit,
                 onJSRuntimeInitialized,
@@ -181,6 +166,76 @@ class ReactNativeHost private constructor (
         }
     }
 
+    private fun configureBundleSettingsUsingRNBundleLoader(builder: ReactInstanceManagerBuilder) {
+        builder.setJSBundleLoader(object : JSBundleLoader() {
+            override fun loadScript(jsBundleLoaderDelegate: JSBundleLoaderDelegate): String? {
+                var bundlesToLoad : MutableList<JSBundle> = ArrayList()
+                if (preloadBundles != null) {
+                    bundlesToLoad.addAll(preloadBundles)
+                }
+                bundlesToLoad.add(userBundle)
+
+                for (preloadBundle in bundlesToLoad) {
+                    jsBundleFetcher?.fetch(preloadBundle)
+                    if (preloadBundle.Info == null ||
+                        (preloadBundle.Info.Id == null && preloadBundle.Info.FileName == null)
+                    ) {
+                        throw IllegalArgumentException("Bundle should be either an Asset or a file name") // For now !
+                    }
+
+                    if (preloadBundle.Info.Id != null) {
+                        JSBundleLoader.createAssetLoader(
+                            application,
+                            preloadBundle.Info.Id,
+                            false
+                        ).loadScript(jsBundleLoaderDelegate)
+                    } else {
+                        JSBundleLoader.createFileLoader(preloadBundle.Info.FileName)
+                            .loadScript(jsBundleLoaderDelegate)
+                    }
+                }
+
+                return null
+            }
+        });
+    }
+
+    private fun configureUserBundleSettings(builder: ReactInstanceManagerBuilder) {
+        jsBundleFetcher?.fetch(userBundle)
+        if(userBundle.Info == null) {
+            throw IllegalArgumentException("User bundle should be either an Asset or a file name") // For now !
+        }
+
+        if(userBundle.Info.Id != null) {
+            builder.setBundleAssetName(userBundle.Info.Id)
+        } else if(userBundle.Info.FileName != null) {
+            builder.setJSBundleFile(userBundle.Info.FileName)
+        } else {
+            throw IllegalArgumentException("An Asset or file name of the user bundle must be specified. ")
+        }
+    }
+
+    private fun configureJSExecutor(builder: ReactInstanceManagerBuilder) {
+        SoLoader.init(application, false)
+        var baseExecutorFactory = javaScriptExecutorFactoryOverride ?: HermesExecutorFactory()
+        val wrappedExecutorFactory = WrapperJSExecutorFactory(
+            application.applicationContext,
+            baseExecutorFactory,
+            if (loadUsingRNBundleLoader || preloadBundles.isNullOrEmpty()) arrayOf<JSBundle> () else preloadBundles.toTypedArray(),
+            object :
+                ExecutorObserver {
+                override fun OnBundleLoaded(bundleUrl: String?) {
+                    onJSBundleLoaded?.invoke(bundleUrl!!)
+                }
+
+                override fun OnInitialized() {
+                    onJSRuntimeInitialized?.invoke()
+                }
+            }
+        )
+        builder.setJavaScriptExecutorFactory(wrappedExecutorFactory)
+    }
+
     override fun createReactInstanceManager(): ReactInstanceManager {
         val builder = ReactInstanceManager.builder()
             .setApplication(application)
@@ -194,52 +249,16 @@ class ReactNativeHost private constructor (
             builder.setCurrentActivity(hostInitialActivity)
         }
 
-        if(javaScriptExecutorFactoryOverride != null)
-            builder.setJavaScriptExecutorFactory(javaScriptExecutorFactoryOverride)
-        else {
-            SoLoader.init(application, false)
-            val baseExecutorFactory = HermesExecutorFactory()
-            val wrappedExecutorFactory = OfficeExecutorFactory(application.applicationContext, baseExecutorFactory, platformBundleNames?.toTypedArray()?: arrayOf<String>(), platformBundles?.toTypedArray(), object: OfficeExecutorObserver{
-                override fun OnBundleLoaded(bundleUrl: String?) {
-                    onJSBundleLoaded?.invoke(bundleUrl!!)
-                }
-
-                override fun OnInitialized() {
-                    onJSRuntimeInitialized?.invoke()
-                }
-            })
-            builder.setJavaScriptExecutorFactory(wrappedExecutorFactory)
+        if(loadUsingRNBundleLoader) {
+            configureBundleSettingsUsingRNBundleLoader(builder)
+        } else {
+            configureUserBundleSettings(builder)
         }
 
-        when {
-            jsBundleLoaderProvider != null -> {
-                builder.setJSBundleLoader(object : JSBundleLoader() {
-                    override fun loadScript(jsBundleLoaderDelegate: JSBundleLoaderDelegate): String? {
-                        if(platformBundleNames != null) {
-                            for (platformBundleName in platformBundleNames) {
-                                jsBundleLoaderProvider.getBundleLoader(
-                                    platformBundleName,
-                                    application
-                                ).loadScript(jsBundleLoaderDelegate)
-                            }
-                        }
-                        jsBundleLoaderProvider.getBundleLoader(bundleName!!, application)
-                            .loadScript(jsBundleLoaderDelegate)
-                        return null
-                    }
-                })
-            }
-            bundleFilePath != null -> {
-                builder.setJSBundleFile(bundleFilePath)
-            }
-            bundleName != null -> {
-                builder.setBundleAssetName(bundleName)
-            }
-        }
+        configureJSExecutor(builder)
 
         builder.addPackages(packages)
         builder.addPackage(MainReactPackage())
-
         return builder.build()
     }
 
@@ -284,24 +303,21 @@ class ReactNativeHost private constructor (
         return rootView
     }
 
+    // Note: ActivityLifecycleCallback to notify RN about the lifecycle transition of the host activity
+    // This pass on the transition of every activities in the host application
+    // TODO :: It is not clear whether this is the best strategy.
     inner class RNActivityLifecycleCallbacks () : Application.ActivityLifecycleCallbacks
     {
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
-
         override fun onActivityStarted(activity: Activity) {}
-
         override fun onActivityResumed(activity: Activity) {
             reactInstanceManager.onHostResume(activity, null /*DefaultHardwareBackBtnHandler*/)
         }
-
         override fun onActivityPaused(activity: Activity) {
             reactInstanceManager.onHostPause(activity)
         }
-
         override fun onActivityStopped(activity: Activity) {}
-
         override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-
         override fun onActivityDestroyed(activity: Activity) {
             reactInstanceManager.onHostDestroy(activity)
         }

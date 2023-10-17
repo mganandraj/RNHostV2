@@ -67,14 +67,13 @@ class ReactOptions {
     // RekaProviderFactory
     // Properties - Can be done in future if needed.
 
-
+    // JSExecutor assumes the Id to be the name of the packaged asset.
     fun AddRegisteredJSBundle(jsBundleId: String) {
-        AddJSBundle(JSBundle(null , JSBundleInfo(jsBundleId, null, null)))
+        AddJSBundle(JSBundle(null, JSBundleInfo(jsBundleId, null, null)))
     }
 
-    fun AddFileJSBundle(jsBundleId: String, fileName: String) {
-        AddJSBundle(JSBundle(
-            StandardCharsets.UTF_8.encode(File(fileName).readText()) , JSBundleInfo(jsBundleId, fileName, null)))
+    fun AddFileJSBundle(fileName: String) {
+        AddJSBundle(JSBundle(null, JSBundleInfo(fileName, null, 0)))
     }
 
     fun AddDynamicJSBundle(jsBundleId: String, jsBundleContent: String) {

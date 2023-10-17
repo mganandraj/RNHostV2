@@ -7,16 +7,14 @@ import com.facebook.react.bridge.JavaScriptExecutorFactory;
 
 import java.lang.ref.WeakReference;
 
-public class OfficeExecutorFactory implements JavaScriptExecutorFactory {
+public class WrapperJSExecutorFactory implements JavaScriptExecutorFactory {
   JavaScriptExecutorFactory m_baseExecutorFactory;
-  String[] m_preloadBundles;
   JSBundle[] m_platformBundles;
   WeakReference<Context> m_hostContext;
-  OfficeExecutorObserver m_officeExecutorObserver;
+  ExecutorObserver m_officeExecutorObserver;
 
-  public OfficeExecutorFactory(Context context, JavaScriptExecutorFactory baseExecutorFactory, String[] preloadBundles, JSBundle[] platformBundles, OfficeExecutorObserver officeExecutorObserver) {
+  public WrapperJSExecutorFactory(Context context, JavaScriptExecutorFactory baseExecutorFactory, JSBundle[] platformBundles, ExecutorObserver officeExecutorObserver) {
     this.m_baseExecutorFactory = baseExecutorFactory;
-    this.m_preloadBundles = preloadBundles;
     this.m_platformBundles = platformBundles;
     this.m_hostContext = new WeakReference<>(context);
     this.m_officeExecutorObserver = officeExecutorObserver;
@@ -30,7 +28,7 @@ public class OfficeExecutorFactory implements JavaScriptExecutorFactory {
     }
 
     JavaScriptExecutor baseExecutor = m_baseExecutorFactory.create();
-    return new OfficeExecutor(context.getAssets(), baseExecutor, m_preloadBundles, m_platformBundles, m_officeExecutorObserver);
+    return new WrapperJSExecutor(context.getAssets(), baseExecutor, m_platformBundles, m_officeExecutorObserver);
   }
 
   @Override
