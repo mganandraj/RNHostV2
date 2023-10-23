@@ -14,10 +14,12 @@ public class WrapperJSExecutor extends JavaScriptExecutor {
   }
 
   public static void loadLibrary() throws UnsatisfiedLinkError {
-    SoLoader.loadLibrary("rnx-host");
+    // SoLoader.loadLibrary("mso20android");
+    SoLoader.loadLibrary("reactnativejni");
+    SoLoader.loadLibrary("rnxreacthost");
   }
 
-  /* package */ WrapperJSExecutor(AssetManager assetManager, JavaScriptExecutor baseExecutor, JSBundle[] platformBundles, ExecutorObserver officeExecutorObserver) {
+  /* package */ WrapperJSExecutor(AssetManager assetManager, JavaScriptExecutor baseExecutor, JSBundle[] platformBundles, JSExecutorObserver officeExecutorObserver) {
     super(initHybrid(assetManager, baseExecutor, platformBundles, officeExecutorObserver));
   }
 
@@ -26,5 +28,5 @@ public class WrapperJSExecutor extends JavaScriptExecutor {
     return "OfficeExecutor";
   }
 
-  private static native HybridData initHybrid(AssetManager assetManager, JavaScriptExecutor baseExecutor, JSBundle[] platformBundles, ExecutorObserver officeExecutorObserver);
+  private static native HybridData initHybrid(AssetManager assetManager, JavaScriptExecutor baseExecutor, JSBundle[] platformBundles, JSExecutorObserver officeExecutorObserver);
 }

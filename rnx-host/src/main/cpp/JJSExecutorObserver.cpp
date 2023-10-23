@@ -1,20 +1,18 @@
-#include "JExecutorObserver.h"
+#include "JJSExecutorObserver.h"
 
 using namespace facebook;
 
-namespace facebook {
-namespace react {
+namespace facebook::react {
 
-void JExecutorObserver::OnLoaded(const std::string& bundleUrl)
+void JJSExecutorObserver::OnLoaded(const std::string& bundleUrl)
 {
   static const auto method = getClass()->getMethod<void(jstring)>("OnBundleLoaded");
   method(self(), jni::make_jstring(bundleUrl).get());
 }
 
-void JExecutorObserver::OnInitialized()
+void JJSExecutorObserver::OnInitialized()
 {
   static const auto method = getClass()->getMethod<void()>("OnInitialized");
   method(self());
 }
-
-}}
+} // namespace facebook::react

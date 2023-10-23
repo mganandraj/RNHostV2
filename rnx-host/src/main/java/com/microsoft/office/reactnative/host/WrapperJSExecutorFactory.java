@@ -11,9 +11,9 @@ public class WrapperJSExecutorFactory implements JavaScriptExecutorFactory {
   JavaScriptExecutorFactory m_baseExecutorFactory;
   JSBundle[] m_platformBundles;
   WeakReference<Context> m_hostContext;
-  ExecutorObserver m_officeExecutorObserver;
+  JSExecutorObserver m_officeExecutorObserver;
 
-  public WrapperJSExecutorFactory(Context context, JavaScriptExecutorFactory baseExecutorFactory, JSBundle[] platformBundles, ExecutorObserver officeExecutorObserver) {
+  public WrapperJSExecutorFactory(Context context, JavaScriptExecutorFactory baseExecutorFactory, JSBundle[] platformBundles, JSExecutorObserver officeExecutorObserver) {
     this.m_baseExecutorFactory = baseExecutorFactory;
     this.m_platformBundles = platformBundles;
     this.m_hostContext = new WeakReference<>(context);

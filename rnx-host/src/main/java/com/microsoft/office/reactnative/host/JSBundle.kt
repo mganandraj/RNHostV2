@@ -1,20 +1,21 @@
 package com.microsoft.office.reactnative.host
 
+import android.app.Application
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 
-// Implementation is responsible for ensuring that the bundle is ready for loading.
+// Implementation of JSBundleFetcher in is responsible for ensuring that the bundle is ready for loading.
 // For instance the implementation can download the bundle, or extract the bundle from archive.
 // The implementation should throw if the bundle can't be made available locally to be loaded.
 // --
-// Implementation can modify the "bundle: JSBundle" argument.
+// Implementation should return a new JSBundle which reflects the state of the bundle after the fetch
 // For e.g. a service delivery fetcher or Union AssetExtracter fetcher may populate
 // JSBundle.JSBundleInfo.FileName or JSBundle.Content and may reset the Id field.
 // --
 // fetch method should be synchronous as of now.
 interface JSBundleFetcher {
-    fun fetch(bundle: JSBundle);
+    fun fetch(bundle: JSBundle) : JSBundle;
 }
 
 data class JSBundleInfo (
@@ -38,11 +39,11 @@ fun JSBundleFromFileAssetId(assetId: String): JSBundle {
 }
 
 // TODO :: Verify that this works with Hermes bytecodes.
-fun JSBundleFromFilePath(filePath: String, url: String): JSBundle {
+fun JSBundleFromFilePath2(filePath: String, url: String): JSBundle {
     return JSBundle(
         StandardCharsets.UTF_8.encode(File(filePath).readText()) , JSBundleInfo(url, null, null));
 }
 
-fun JSBundleFromFilePath2(filePath: String): JSBundle {
+fun JSBundleFromFilePath(filePath: String): JSBundle {
     return JSBundle(null , JSBundleInfo(null, filePath, null));
 }

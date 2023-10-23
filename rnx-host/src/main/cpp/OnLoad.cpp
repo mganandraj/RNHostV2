@@ -6,16 +6,15 @@
 #include <react/jni/JSLoader.h>
 #include "JJSBundle.h"
 
-#include "JExecutorObserver.h"
+#include "JJSExecutorObserver.h"
 #include "WrapperJSExecutorFactory.h"
 
 #include <vector>
 
-namespace facebook {
-namespace react {
+namespace facebook::react {
 
-class OfficeExecutorHolder
-    : public jni::HybridClass<OfficeExecutorHolder, JavaScriptExecutorHolder> {
+class WrapperJSExecutorHolder
+    : public jni::HybridClass<WrapperJSExecutorHolder, JavaScriptExecutorHolder> {
  public:
   static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reactnative/host/WrapperJSExecutor;";
 
@@ -24,7 +23,7 @@ class OfficeExecutorHolder
               jni::alias_ref<JAssetManager::javaobject> assetManager,
               jni::alias_ref<JavaScriptExecutorHolder::javaobject> baseExecutorFactory,
               jni::alias_ref<jni::JArrayClass<JJSBundle>> platformbundles,
-              jni::alias_ref<JExecutorObserver::javaobject> observer) {
+              jni::alias_ref<JJSExecutorObserver::javaobject> observer) {
     auto baseFactory = baseExecutorFactory->cthis()->getExecutorFactory();
     
     std::vector<std::string> preBundlesVector;
@@ -39,13 +38,13 @@ class OfficeExecutorHolder
       jni::make_weak<JAssetManager::javaobject>(assetManager.get()),
               baseFactory,
               std::move(platformBundlesVector),
-              jni::make_weak<JExecutorObserver::javaobject>(observer.get()));
+              jni::make_weak<JJSExecutorObserver::javaobject>(observer.get()));
     return makeCxxInstance(std::move(factory));
   }
 
   static void registerNatives() {
     registerHybrid({
-      makeNativeMethod("initHybrid", OfficeExecutorHolder::initHybrid),
+      makeNativeMethod("initHybrid", WrapperJSExecutorHolder::initHybrid),
     });
   }
 
@@ -54,11 +53,10 @@ class OfficeExecutorHolder
   using HybridBase::HybridBase;
 };
 
-} // namespace react
-} // namespace facebook
+} // namespace facebook::react
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* /*reserved*/) {
   return facebook::jni::initialize(vm, [] {
-      facebook::react::OfficeExecutorHolder::registerNatives();
+      facebook::react::WrapperJSExecutorHolder::registerNatives();
   });
 }

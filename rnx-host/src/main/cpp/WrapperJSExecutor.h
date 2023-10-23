@@ -8,16 +8,15 @@
 #include <react/jni/JSLoader.h>
 #include "JSBundle.h"
 
-#include "JExecutorObserver.h"
+#include "JJSExecutorObserver.h"
 
-namespace facebook {
-namespace react {
+namespace facebook::react {
 
 struct WrapperJSExecutor : facebook::react::JSExecutor {
 	WrapperJSExecutor(jni::weak_ref<JAssetManager::javaobject> assetManager,
 					  std::unique_ptr<facebook::react::JSExecutor> &&baseExecutor,
 					  std::vector<std::unique_ptr<IJSBundle>> &&platformBundles,
-					  jni::weak_ref<JExecutorObserver::javaobject> observer) noexcept
+					  jni::weak_ref<JJSExecutorObserver::javaobject> observer) noexcept
 	    : m_assetManager(assetManager), m_baseExecutor{std::move(baseExecutor)}, m_platformBundles(std::move(platformBundles)), m_observer(observer)
 	{}
 
@@ -36,7 +35,7 @@ private:
 	std::unique_ptr<facebook::react::JSExecutor> m_baseExecutor;
 	std::vector<std::string> m_preloadBundles;
 	std::vector<std::unique_ptr<IJSBundle>> m_platformBundles;
-	jni::weak_ref<JExecutorObserver::javaobject> m_observer;
+	jni::weak_ref<JJSExecutorObserver::javaobject> m_observer;
 };
 
-}}
+} // namespace facebook::react

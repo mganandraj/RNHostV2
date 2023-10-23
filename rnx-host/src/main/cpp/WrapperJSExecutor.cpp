@@ -1,44 +1,29 @@
 #include "ReactNativeHeaders.h"
 
-#include "JExecutorObserver.h"
 #include "WrapperJSExecutor.h"
 
 #include <android/asset_manager_jni.h>
 #include <cxxreact/JSBigString.h>
 #include <react/jni/JSLoader.h>
 
-#include <android/log.h>
-
-#define LOG_TAG "RNX_HOST::WrapperJSExecutor"
-
-#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,    LOG_TAG, __VA_ARGS__)
-#define LOGW(...) __android_log_print(ANDROID_LOG_WARN,     LOG_TAG, __VA_ARGS__)
-#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,     LOG_TAG, __VA_ARGS__)
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,    LOG_TAG, __VA_ARGS__)
-
-
-namespace facebook {
-namespace react {
+namespace facebook::react {
 
 void WrapperJSExecutor::initializeRuntime() {
     m_baseExecutor->initializeRuntime();   
-    jni::local_ref<JExecutorObserver::javaobject> observer = m_observer.lockLocal();
+    jni::local_ref<JJSExecutorObserver::javaobject> observer = m_observer.lockLocal();
     if(observer) {
         observer->OnInitialized();
     }
 }
 
-static bool isFilePath(const std::string& path) {
-    return (path[0] == '/');
-}
-
 void WrapperJSExecutor::loadBundle(std::unique_ptr<const facebook::react::JSBigString> script, std::string sourceURL) {
-    jni::local_ref<JExecutorObserver::javaobject> observer = m_observer.lockLocal();
+    jni::local_ref<JJSExecutorObserver::javaobject> observer = m_observer.lockLocal();
     for (auto &platformBundle : m_platformBundles) {
         auto info = platformBundle->Info();
         auto content = platformBundle->Content();
         if(!content.empty()) {
             auto bundleBigString = std::make_unique<facebook::react::JSBigStdString>(std::string(content.data(), content.size()));
+            auto sourceUrl = !info.Id.empty() ? info.Id : std::string("<dynamic>");
             m_baseExecutor->loadBundle(std::move(bundleBigString), info.Id);
             if(observer) {
                 observer->OnLoaded(info.Id);
@@ -58,16 +43,11 @@ void WrapperJSExecutor::loadBundle(std::unique_ptr<const facebook::react::JSBigS
             auto bundleBigString = JSBigFileString::fromPath(info.FileName);
             m_baseExecutor->loadBundle(std::move(bundleBigString), info.FileName);
             if(observer) {
-                observer->OnLoaded(info.Id);
+                observer->OnLoaded(info.FileName);
             }
         }
-
-        // LOGE("script buffer: %s", platformBundle->Content().data());
     }
 
-    LOGE("sourceURL: %s", sourceURL.c_str());
-    LOGE("script: %s", script->c_str());
-   
     m_baseExecutor->loadBundle(std::move(script), sourceURL);
     if(observer) {
         observer->OnLoaded(sourceURL);
@@ -102,4 +82,4 @@ void* WrapperJSExecutor::getJavaScriptContext() {
     return m_baseExecutor->getJavaScriptContext();
 }
 
-}}
+} // namespace facebook::react

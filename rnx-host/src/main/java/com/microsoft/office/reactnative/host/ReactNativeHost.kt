@@ -11,7 +11,11 @@ import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactInstanceManagerBuilder
 import com.facebook.react.ReactPackage
 import com.facebook.react.ReactRootView
-import com.facebook.react.bridge.*
+import com.facebook.react.bridge.JSBundleLoader
+import com.facebook.react.bridge.JSBundleLoaderDelegate
+import com.facebook.react.bridge.JSIModulePackage
+import com.facebook.react.bridge.JavaScriptExecutorFactory
+import com.facebook.react.bridge.ReactContext
 import com.facebook.react.common.LifecycleState
 import com.facebook.react.devsupport.interfaces.DevOptionHandler
 import com.facebook.react.modules.systeminfo.ReactNativeVersion
@@ -39,7 +43,12 @@ class ReactNativeHost private constructor (
     private val hostInitialActivity: Activity) : com.facebook.react.ReactNativeHost(hostApplication)
 {
     companion object {
-        val LOG_TAG = "RNX.ReactNativeHost"
+        init {
+            try { 
+                SoLoader.loadLibrary("hermes")
+                SoLoader.loadLibrary("hermes_executor") 
+            } catch(ex: UnsatisfiedLinkError) {}
+        }
     }
 
     data class Builder(
@@ -169,28 +178,25 @@ class ReactNativeHost private constructor (
     private fun configureBundleSettingsUsingRNBundleLoader(builder: ReactInstanceManagerBuilder) {
         builder.setJSBundleLoader(object : JSBundleLoader() {
             override fun loadScript(jsBundleLoaderDelegate: JSBundleLoaderDelegate): String? {
-                var bundlesToLoad : MutableList<JSBundle> = ArrayList()
+                val bundlesToLoad : MutableList<JSBundle> = ArrayList()
                 if (preloadBundles != null) {
                     bundlesToLoad.addAll(preloadBundles)
                 }
                 bundlesToLoad.add(userBundle)
 
-                for (preloadBundle in bundlesToLoad) {
-                    jsBundleFetcher?.fetch(preloadBundle)
-                    if (preloadBundle.Info == null ||
-                        (preloadBundle.Info.Id == null && preloadBundle.Info.FileName == null)
-                    ) {
+                for (bundle in bundlesToLoad) {
+                    val fetchedBundle = jsBundleFetcher?.fetch(bundle) ?: bundle
+                    val bundleInfo = fetchedBundle.Info
+                    if (bundleInfo == null ||
+                        (bundleInfo.Id == null && bundleInfo.FileName == null)) {
                         throw IllegalArgumentException("Bundle should be either an Asset or a file name") // For now !
                     }
 
-                    if (preloadBundle.Info.Id != null) {
-                        JSBundleLoader.createAssetLoader(
-                            application,
-                            preloadBundle.Info.Id,
-                            false
-                        ).loadScript(jsBundleLoaderDelegate)
+                    if (bundleInfo.Id != null) {
+                        JSBundleLoader.createAssetLoader(application, bundleInfo.Id, false)
+                                .loadScript(jsBundleLoaderDelegate)
                     } else {
-                        JSBundleLoader.createFileLoader(preloadBundle.Info.FileName)
+                        JSBundleLoader.createFileLoader(bundleInfo.FileName)
                             .loadScript(jsBundleLoaderDelegate)
                     }
                 }
@@ -201,29 +207,27 @@ class ReactNativeHost private constructor (
     }
 
     private fun configureUserBundleSettings(builder: ReactInstanceManagerBuilder) {
-        jsBundleFetcher?.fetch(userBundle)
-        if(userBundle.Info == null) {
-            throw IllegalArgumentException("User bundle should be either an Asset or a file name") // For now !
-        }
+        val fetchedBundle = jsBundleFetcher?.fetch(userBundle) ?: userBundle
+        val bundleInfo = fetchedBundle.Info
+                ?: throw IllegalArgumentException("User bundle should be either an Asset or a file name") // For now !
 
-        if(userBundle.Info.Id != null) {
-            builder.setBundleAssetName(userBundle.Info.Id)
-        } else if(userBundle.Info.FileName != null) {
-            builder.setJSBundleFile(userBundle.Info.FileName)
+        if(bundleInfo.Id != null) {
+            builder.setBundleAssetName(bundleInfo.Id)
+        } else if(bundleInfo.FileName != null) {
+            builder.setJSBundleFile(bundleInfo.FileName)
         } else {
             throw IllegalArgumentException("An Asset or file name of the user bundle must be specified. ")
         }
     }
 
     private fun configureJSExecutor(builder: ReactInstanceManagerBuilder) {
-        SoLoader.init(application, false)
         var baseExecutorFactory = javaScriptExecutorFactoryOverride ?: HermesExecutorFactory()
         val wrappedExecutorFactory = WrapperJSExecutorFactory(
             application.applicationContext,
             baseExecutorFactory,
             if (loadUsingRNBundleLoader || preloadBundles.isNullOrEmpty()) arrayOf<JSBundle> () else preloadBundles.toTypedArray(),
             object :
-                ExecutorObserver {
+                JSExecutorObserver {
                 override fun OnBundleLoaded(bundleUrl: String?) {
                     onJSBundleLoaded?.invoke(bundleUrl!!)
                 }
