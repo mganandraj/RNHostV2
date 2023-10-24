@@ -13,13 +13,13 @@ namespace reactreka {
 
 struct ReactContextHolder : public facebook::jni::JavaClass<ReactContextHolder> {
     constexpr static auto kJavaDescriptor =
-            "Lcom/microsoft/office/reactreka/ReactContextHolder;";
+            "Lcom/microsoft/office/reactnative/reka/ReactContextHolder;";
 };
 
 class RekaNativeToJsBridge : public facebook::jni::HybridClass<RekaNativeToJsBridge> {
 public:
     static constexpr const char *const kJavaDescriptor =
-            "Lcom/microsoft/office/reactreka/RekaNativeToJsBridge;";
+            "Lcom/microsoft/office/reactnative/reka/RekaNativeToJsBridge;";
 
     static facebook::jni::local_ref<jhybriddata>
     initHybrid(facebook::jni::alias_ref<jhybridobject> jThis);
@@ -41,7 +41,7 @@ private:
 class RekaNativeModuleProxy : public facebook::jni::HybridClass<RekaNativeModuleProxy> {
 public:
     static constexpr const char *const kJavaDescriptor =
-            "Lcom/microsoft/office/reactreka/RekaNativeModule;";
+            "Lcom/microsoft/office/reactnative/reka/RekaNativeModule;";
 
     static facebook::jni::local_ref<jhybriddata> initHybrid(facebook::jni::alias_ref<jclass>,
                                                             facebook::jni::alias_ref<ReactContextHolder::javaobject>,

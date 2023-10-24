@@ -1,9 +1,8 @@
-package com.microsoft.office.reactreka;
+package com.microsoft.office.reactnative.reka;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import com.facebook.react.LazyReactPackage;
 import com.facebook.react.TurboReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;

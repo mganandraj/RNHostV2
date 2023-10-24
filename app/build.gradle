@@ -75,6 +75,7 @@ dependencies {
     implementation(project(":reacthost"))
     implementation(project(":reactreka"))
     implementation(project(":headless"))
+    implementation(project(":officeplat"))
 
     implementation(project(":reka"))
     implementation(project(":json"))

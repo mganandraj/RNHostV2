@@ -8,7 +8,7 @@
 namespace reactreka {
 
 struct JRekaBridgeOptions : facebook::jni::HybridClass<JRekaBridgeOptions> {
-    static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reactreka/RekaBridgeOptions;";
+    static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reactnative/reka/RekaBridgeOptions;";
 
     Mso::JSHost::RekaBridgeOptions rekaOptions_;
 

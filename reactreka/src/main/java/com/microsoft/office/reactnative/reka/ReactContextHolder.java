@@ -1,7 +1,6 @@
-package com.microsoft.office.reactreka;
+package com.microsoft.office.reactnative.reka;
 
 import com.facebook.react.bridge.ReactContext;
-
 import java.lang.ref.WeakReference;
 
 public class ReactContextHolder {

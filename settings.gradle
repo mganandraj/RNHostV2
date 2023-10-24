@@ -13,7 +13,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven {
             // url "/Users/anandrag/Microsoft.Office.ReactNative.Android.${RN_VERSION}-ndk25/maven"
-            url "D:/nugetcache/microsoft.office.reactnative.android.0.71.27-office-ndk25/maven"
+            url "D:/nugetcache/microsoft.office.reactnative.android.0.71.32-office-ndk25/maven"
         }
     }
 }
@@ -27,3 +27,4 @@ include ':headless'
 include ':json'
 include ':reka'
 include ':reactreka'
+include ':officeplat'

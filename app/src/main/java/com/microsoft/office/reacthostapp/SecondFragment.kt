@@ -12,7 +12,7 @@ import com.microsoft.office.reacthost.ReactHostStatics
 import com.microsoft.office.reacthostapp.databinding.FragmentSecondBinding
 import com.microsoft.office.reactnative.host.JSBundle
 import com.microsoft.office.reactnative.host.ReactNativeHost
-import com.microsoft.office.reactreka.RekaReactPackage
+import com.microsoft.office.reactnative.reka.RekaReactPackage
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.

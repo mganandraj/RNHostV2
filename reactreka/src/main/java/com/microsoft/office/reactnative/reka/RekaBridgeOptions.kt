@@ -1,4 +1,5 @@
-package com.microsoft.office.reactreka
+package com.microsoft.office.reactnative.reka;
+
 import com.facebook.jni.HybridData
 
 class RekaBridgeOptions {

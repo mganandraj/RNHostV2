@@ -1,4 +1,4 @@
-#include "precomp.h"
+#include <precomp.h>
 #include <jni.h>
 #include "RekaNativeModuleProxy.h"
 #include "JRekaBridgeOptions.h"

@@ -1,6 +1,4 @@
-package com.microsoft.office.reactreka;
-
-import android.util.Log;
+package com.microsoft.office.reactnative.reka;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -11,13 +9,13 @@ import com.facebook.react.bridge.ReadableNativeMap;
 import com.facebook.react.module.annotations.ReactModule;
 
 import com.facebook.soloader.SoLoader;
-//import com.microsoft.office.plat.logging.Trace;
-//import com.microsoft.office.plat.annotation.KeepClassAndMembers;
+import com.microsoft.office.plat.logging.Trace;
+import com.microsoft.office.plat.annotation.KeepClassAndMembers;
 
 import java.util.Map;
 
 @ReactModule(name = RekaNativeModule.NAME)
-//@KeepClassAndMembers
+@KeepClassAndMembers
 public class RekaNativeModule extends ReactContextBaseJavaModule
 {
     public static final String NAME = "RekaBridge";
@@ -32,7 +30,7 @@ public class RekaNativeModule extends ReactContextBaseJavaModule
             // SoLoader.loadLibrary("mso20android");
             SoLoader.loadLibrary("reactreka");
         } catch (Exception ex) {
-            Log.d("LOG_TAG", ex.getMessage());
+            Trace.d("LOG_TAG", ex.getMessage());
         }
     }
 

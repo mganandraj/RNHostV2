@@ -1,15 +1,15 @@
-package com.microsoft.office.reactreka;
+package com.microsoft.office.reactnative.reka;
+
+import android.util.Log;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableNativeMap;
-import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
-// import com.microsoft.office.plat.annotation.KeepClassAndMembers;
+import com.microsoft.office.plat.annotation.KeepClassAndMembers;
 
-// @KeepClassAndMembers
+ @KeepClassAndMembers
 public class RekaNativeToJsBridge {
 
     private static final String LOG_TAG = "RekaNativeToJsBridge";

@@ -11,8 +11,8 @@ import com.facebook.react.turbomodule.core.CallInvokerHolderImpl
 import com.facebook.react.turbomodule.core.interfaces.CallInvokerHolder
 import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
 import com.microsoft.office.reactnative.host.ReactNativeHost
-import com.microsoft.office.reactreka.RekaBridgeOptions
-import com.microsoft.office.reactreka.RekaReactPackage
+import com.microsoft.office.reactnative.reka.RekaBridgeOptions
+import com.microsoft.office.reactnative.reka .RekaReactPackage
 import java.lang.ref.WeakReference
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method

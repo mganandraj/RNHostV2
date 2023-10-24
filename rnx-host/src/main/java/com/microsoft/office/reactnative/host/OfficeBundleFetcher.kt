@@ -1,8 +1,8 @@
 package com.microsoft.office.reactnative.host
 
 import android.app.Application
-// import com.microsoft.office.plat.assets.OfficeAssetsManagerUtil
-// import com.microsoft.office.plat.FileUtils
+import com.microsoft.office.plat.assets.OfficeAssetsManagerUtil
+import com.microsoft.office.plat.FileUtils
 import java.io.IOException
 import java.util.Arrays
 
@@ -63,9 +63,6 @@ class OfficeBundleFetcher  constructor (
     }
 
     override fun fetch(bundle: JSBundle): JSBundle {
-
-        /*
-
         // Noop if the bundle already has data
         if (bundle.Content != null)
             return bundle;
@@ -77,7 +74,6 @@ class OfficeBundleFetcher  constructor (
             // Noop, if Info.Id is populated and a named asset is available
             if(assetExists(application, bundle.Info.Id))
                 return bundle;
-
 
             // Look for the bundle in the asset cache
             val bundleFullyQualifiedPath: String = OfficeAssetsManagerUtil.getAssetCacheDirectory() + "/" + bundle.Info.Id
@@ -95,7 +91,6 @@ class OfficeBundleFetcher  constructor (
         if (bundle.Info.FileName != null && FileUtils.fileExists(bundle.Info.FileName)) {
             return JSBundle(null , JSBundleInfo(null, bundle.Info.FileName, null));
         }
-*/
         throw RuntimeException("Unable to fetch the bundle: Info.Id: ${bundle.Info?.Id}  :  Info.FileName: ${bundle.Info?.FileName}")
     }
 }
