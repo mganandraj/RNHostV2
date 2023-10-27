@@ -9,17 +9,14 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.facebook.react.ReactPackage
 import com.microsoft.office.reacthost.ReactHostStatics
-import com.microsoft.office.reacthostapp.databinding.FragmentSecondBinding
+import com.microsoft.office.reacthostapp.databinding.FragmentRnxhosttestBinding
 import com.microsoft.office.reactnative.host.JSBundle
 import com.microsoft.office.reactnative.host.ReactNativeHost
 import com.microsoft.office.reactnative.reka.RekaReactPackage
 
-/**
- * A simple [Fragment] subclass as the second destination in the navigation.
- */
-class SecondFragment : Fragment() {
+class RNXHostTestFragment : Fragment() {
 
-    private var _binding: FragmentSecondBinding? = null
+    private var _binding: FragmentRnxhosttestBinding? = null
     private var mReactNativeHost: ReactNativeHost? = null
 
     // This property is only valid between onCreateView and
@@ -57,16 +54,16 @@ class SecondFragment : Fragment() {
 
         this.mReactNativeHost = builder.build()
 
-        _binding = FragmentSecondBinding.inflate(inflater, container, false)
+        _binding = FragmentRnxhosttestBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.reactViewHost.addView(mReactNativeHost!!.createRootView("AwesomeProject", Bundle(), activity as Activity))
-        binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+        binding.buttonDashboard.setOnClickListener {
+            findNavController().navigate(R.id.action_RNXHostTestFragment_to_DashboardFragment)
         }
     }
 

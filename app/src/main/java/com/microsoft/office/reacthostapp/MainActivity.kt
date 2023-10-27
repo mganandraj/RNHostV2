@@ -13,7 +13,7 @@ import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
 import java.lang.ref.WeakReference
 
 class MainActivity : AppCompatActivity() {
-    var mreactViewInstance: OfficeReactRootView? = null
+    var mreactViewInstance: BaseRootView? = null
     var mReactHost: ReactHost? = null
     var mReactViewHost: ReactViewHost? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        mreactViewInstance = OfficeReactRootView(this)
+        mreactViewInstance = BaseRootView(this)
 
         libletInit();
         runReactOnView(mreactViewInstance as java.lang.Object);

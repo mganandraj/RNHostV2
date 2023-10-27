@@ -42,7 +42,7 @@ class ReactViewHost {
 
     //! Attaches IReactViewInstance to the IReactViewHost.
     /*Mso::Future<void>*/
-    external fun AttachViewInstance(viewInstance: OfficeReactRootView?)
+    external fun AttachViewInstance(viewInstance: BaseRootView?)
 
     //! Detaches IReactViewInstance from the IReactViewHost.
     /*virtual */

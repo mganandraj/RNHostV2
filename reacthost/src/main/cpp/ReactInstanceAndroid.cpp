@@ -3,6 +3,7 @@
 #include <ReactNativeHost/JSBundle.h>
 #include <ReactNativeHost/React.h>
 #include <ReactNativeHost/React_Android.h>
+// #include "public/React_Android.h"
 
 // For ReactHostRegistry
 #include <ReactHost.h>
@@ -692,20 +693,20 @@ void JReactViewOptions::setInitialProps(std::string initialProps) {
 
 
 struct OfficeReactViewInstance;
-struct JOfficeReactRootView : facebook::jni::HybridClass<JOfficeReactRootView> {
-    static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/OfficeReactRootView;";
+struct JBaseRootView : facebook::jni::HybridClass<JBaseRootView> {
+    static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/BaseRootView;";
     static facebook::jni::local_ref<jhybriddata> initHybrid(facebook::jni::alias_ref<jhybridobject> jThis);
     static void registerNatives();
 
     Mso::Future<void> Reload(const Mso::CntPtr<Mso::React::IReactInstance>&& reactInstance, const Mso::React::ReactViewOptions&& viewOptions) noexcept;
     Mso::Future<void> Unload() noexcept;
 
-    JOfficeReactRootView(facebook::jni::alias_ref<jhybridobject> jThis);
+    JBaseRootView(facebook::jni::alias_ref<jhybridobject> jThis);
 
     OfficeReactViewInstance& ViewInstance() { return *m_ReactViewInstance; }
 
     Mso::CntPtr<OfficeReactViewInstance> m_ReactViewInstance;
-    facebook::jni::weak_ref<JOfficeReactRootView::jhybridobject> m_jThis;
+    facebook::jni::weak_ref<JBaseRootView::jhybridobject> m_jThis;
 };
 
 struct OfficeReactViewInstance : public Mso::UnknownObject<Mso::React::IReactViewInstance> {
@@ -713,31 +714,31 @@ struct OfficeReactViewInstance : public Mso::UnknownObject<Mso::React::IReactVie
                                      Mso::React::ReactViewOptions&& viewOptions) noexcept override;
     virtual Mso::Future<void> Unload() noexcept override;
 
-    OfficeReactViewInstance(facebook::jni::alias_ref<JOfficeReactRootView::jhybridobject> jThis)
+    OfficeReactViewInstance(facebook::jni::alias_ref<JBaseRootView::jhybridobject> jThis)
             :m_jThis(facebook::jni::make_weak(std::move(jThis))) {}
-    facebook::jni::weak_ref<JOfficeReactRootView::jhybridobject> m_jThis;
+    facebook::jni::weak_ref<JBaseRootView::jhybridobject> m_jThis;
 };
 
 
 
 
 
-void JOfficeReactRootView::registerNatives() {
+void JBaseRootView::registerNatives() {
     registerHybrid({
-                           makeNativeMethod("initHybrid", JOfficeReactRootView::initHybrid),
+                           makeNativeMethod("initHybrid", JBaseRootView::initHybrid),
                    });
 }
 
-/*static*/ local_ref<JOfficeReactRootView::jhybriddata> JOfficeReactRootView::initHybrid(alias_ref<jhybridobject> jThis){
+/*static*/ local_ref<JBaseRootView::jhybriddata> JBaseRootView::initHybrid(alias_ref<jhybridobject> jThis){
     return makeCxxInstance(std::move(jThis));
 }
 
-JOfficeReactRootView::JOfficeReactRootView(alias_ref<jhybridobject> jThis) {
+JBaseRootView::JBaseRootView(alias_ref<jhybridobject> jThis) {
     m_jThis = make_weak(std::move(jThis));
     m_ReactViewInstance = Mso::Make<OfficeReactViewInstance>(std::move(jThis));
 }
 
-Mso::Future<void> JOfficeReactRootView::Reload(const Mso::CntPtr<Mso::React::IReactInstance>&& reactInstance, const Mso::React::ReactViewOptions&& viewOptions) noexcept {
+Mso::Future<void> JBaseRootView::Reload(const Mso::CntPtr<Mso::React::IReactInstance>&& reactInstance, const Mso::React::ReactViewOptions&& viewOptions) noexcept {
     auto future = JMsoFuture::create();
     auto msoFuture = future->cthis()->getMsoFuture();
 
@@ -746,7 +747,7 @@ Mso::Future<void> JOfficeReactRootView::Reload(const Mso::CntPtr<Mso::React::IRe
     return msoFuture;
 }
 
-Mso::Future<void> JOfficeReactRootView::Unload() noexcept {
+Mso::Future<void> JBaseRootView::Unload() noexcept {
     auto future = JMsoFuture::create();
     auto msoFuture = future->cthis()->getMsoFuture();
 
@@ -795,7 +796,7 @@ Mso::Future<void> JOfficeReactRootView::Unload() noexcept {
 
     Mso::CntPtr<Mso::React::IReactViewHost> viewHost_;
 
-    void AttachViewInstance(facebook::jni::alias_ref<JOfficeReactRootView::jhybridobject> jView);
+    void AttachViewInstance(facebook::jni::alias_ref<JBaseRootView::jhybridobject> jView);
 };
 
 void JReactViewHost::registerNatives() {
@@ -804,7 +805,7 @@ void JReactViewHost::registerNatives() {
                    });
 }
 
-void JReactViewHost::AttachViewInstance(facebook::jni::alias_ref<JOfficeReactRootView::jhybridobject> jView) {
+void JReactViewHost::AttachViewInstance(facebook::jni::alias_ref<JBaseRootView::jhybridobject> jView) {
     viewHost_->AttachViewInstance(jView->cthis()->ViewInstance());
 }
 
@@ -1082,7 +1083,7 @@ facebook::react::RuntimeExecutor GetRuntimeExecutor2(Mso::React::IReactInstance 
 
 
 Mso::TCntPtr<Mso::React::IReactViewInstance> GetReactViewInstanceFromView(jobject view) {
-    facebook::jni::alias_ref<JOfficeReactRootView::jhybridobject> viewInstance = reinterpret_cast<JOfficeReactRootView::jhybridobject>(view);
+    facebook::jni::alias_ref<JBaseRootView::jhybridobject> viewInstance = reinterpret_cast<JBaseRootView::jhybridobject>(view);
     return viewInstance->cthis()->m_ReactViewInstance;
 }
 
@@ -1099,6 +1100,6 @@ extern "C" jint JNI_OnLoad(JavaVM* vm, void*) {
         JReactInstance::registerNatives();
         JReactViewHost::registerNatives();
         JMsoFuture::registerNatives();
-        JOfficeReactRootView::registerNatives();
+        JBaseRootView::registerNatives();
     });
 }
