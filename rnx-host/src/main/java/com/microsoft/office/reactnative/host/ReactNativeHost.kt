@@ -21,6 +21,7 @@ import com.facebook.react.devsupport.interfaces.DevOptionHandler
 import com.facebook.react.modules.systeminfo.ReactNativeVersion
 import com.facebook.react.shell.MainReactPackage
 import com.facebook.soloader.SoLoader
+import java.nio.file.Paths
 
 class ReactNativeHost private constructor (
     private val userBundle: JSBundle,
@@ -185,7 +186,7 @@ class ReactNativeHost private constructor (
                 bundlesToLoad.add(userBundle)
 
                 for (bundle in bundlesToLoad) {
-                    val fetchedBundle = jsBundleFetcher?.fetch(bundle) ?: bundle
+                    val fetchedBundle = jsBundleFetcher?.fetch(bundle, true) ?: bundle
                     val bundleInfo = fetchedBundle.Info
                     if (bundleInfo == null ||
                         (bundleInfo.Id == null && bundleInfo.FileName == null)) {
@@ -207,14 +208,15 @@ class ReactNativeHost private constructor (
     }
 
     private fun configureUserBundleSettings(builder: ReactInstanceManagerBuilder) {
-        val fetchedBundle = jsBundleFetcher?.fetch(userBundle) ?: userBundle
+        val fetchedBundle = if(!useDeveloperSupport ) jsBundleFetcher?.fetch(userBundle, false) ?: userBundle else userBundle
         val bundleInfo = fetchedBundle.Info
                 ?: throw IllegalArgumentException("User bundle should be either an Asset or a file name") // For now !
 
-        if(bundleInfo.Id != null) {
-            builder.setBundleAssetName(bundleInfo.Id)
-        } else if(bundleInfo.FileName != null) {
-            builder.setJSBundleFile(bundleInfo.FileName)
+        if(bundleInfo.FileName != null) {
+            if(Paths.get(bundleInfo.FileName).isAbsolute)
+                builder.setJSBundleFile(bundleInfo.FileName)
+            else
+                builder.setBundleAssetName(bundleInfo.FileName)
         } else {
             throw IllegalArgumentException("An Asset or file name of the user bundle must be specified. ")
         }
@@ -222,10 +224,12 @@ class ReactNativeHost private constructor (
 
     private fun configureJSExecutor(builder: ReactInstanceManagerBuilder) {
         var baseExecutorFactory = javaScriptExecutorFactoryOverride ?: HermesExecutorFactory()
+        var fetchedBundles = preloadBundles?.map { jsBundleFetcher?.fetch(it, true) ?: it }
+
         val wrappedExecutorFactory = WrapperJSExecutorFactory(
             application.applicationContext,
             baseExecutorFactory,
-            if (loadUsingRNBundleLoader || preloadBundles.isNullOrEmpty()) arrayOf<JSBundle> () else preloadBundles.toTypedArray(),
+            if (loadUsingRNBundleLoader || fetchedBundles.isNullOrEmpty()) arrayOf<JSBundle> () else fetchedBundles.toTypedArray(),
             object :
                 JSExecutorObserver {
                 override fun OnBundleLoaded(bundleUrl: String?) {

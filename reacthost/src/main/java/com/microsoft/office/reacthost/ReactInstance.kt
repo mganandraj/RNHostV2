@@ -2,27 +2,30 @@ package com.microsoft.office.reacthost
 
 import android.util.Log
 import com.facebook.jni.HybridData
-import com.facebook.react.ReactInstanceEventListener
 import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.RuntimeExecutor
 import com.facebook.react.turbomodule.core.CallInvokerHolderImpl
-import com.facebook.react.turbomodule.core.interfaces.CallInvokerHolder
+import com.facebook.soloader.SoLoader
 import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
+import com.microsoft.office.reactnative.host.OfficeBundleFetcher
 import com.microsoft.office.reactnative.host.ReactNativeHost
 import com.microsoft.office.reactnative.reka.RekaBridgeOptions
-import com.microsoft.office.reactnative.reka .RekaReactPackage
+// import com.microsoft.react.polyester.PolyesterReactPackage
 import java.lang.ref.WeakReference
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
+
 
 class ReactInstance internal constructor(reactOptions: ReactOptions) {
     companion object {
         val LOG_TAG = "ReactInstance"
 
         init {
-            System.loadLibrary("reacthost");
+            // System.loadLibrary("reacthost");
+            // SoLoader.loadLibrary("sdxruntime");
+            // SoLoader.loadLibrary("reactrekadroid")
         }
     }
 
@@ -74,7 +77,8 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
         var nativeModulePackages: MutableList< ReactPackage> = ArrayList< ReactPackage>();
 
         val rekaBridgeOptions = createRekaBridgeOptions()
-        nativeModulePackages.add(RekaReactPackage.GetReactPackage(rekaBridgeOptions))
+        nativeModulePackages.add(com.microsoft.office.reactnative.reka.RekaReactPackage.GetReactPackage(rekaBridgeOptions))
+        // nativeModulePackages.add(PolyesterReactPackage())
 
         javaModuleNames.forEach {
             val reactPackage = getReactPackageFromClassName(it)
@@ -92,6 +96,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
 
         ReactHostStatics.initialActivity?.get()?.runOnUiThread(Runnable {
             val builder = ReactNativeHost.Builder()
+                .shouldEagerInit(true)
                 .activity(initialActivity!!.get()!!)
                 .application(initialActivity!!.get()!!.application)
                 .isDev(mReactOptions.DeveloperSettings.IsDevModeEnabled)
@@ -106,6 +111,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                     // mReactOptions.OnInstanceCreated?.run();
                 }
                 .userBundle(getRNXJSBundle(featureBundle))
+                    .jsBundleFetcher(OfficeBundleFetcher(initialActivity!!.get()!!.application))
 
             this.mReactNativeHost = builder.build()
             val weakThis = WeakReference(this)

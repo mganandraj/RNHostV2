@@ -3,7 +3,6 @@
 #include <ReactNativeHost/JSBundle.h>
 #include <ReactNativeHost/React.h>
 #include <ReactNativeHost/React_Android.h>
-// #include "public/React_Android.h"
 
 // For ReactHostRegistry
 #include <ReactHost.h>
@@ -19,7 +18,6 @@
 
 #include <fbjni/fbjni.h>
 #include <fbjni/ByteBuffer.h>
-#include <smartPtr/cntPtr.h>
 
 #include <dlfcn.h>
 
@@ -28,7 +26,6 @@ using namespace facebook;
 using namespace facebook::jni;
 
 namespace {
-
 
 struct JMsoFuture : facebook::jni::HybridClass<JMsoFuture> {
     static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/MsoFuturePeer;";
@@ -99,7 +96,7 @@ struct JJSBundleInfo : facebook::jni::JavaClass<JJSBundleInfo> {
 struct JJSBundle : facebook::jni::JavaClass<JJSBundle> {
     static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/JSBundle;";
 
-    static Mso::CntPtr<Mso::React::IJSBundle> get(facebook::jni::alias_ref<JJSBundle> thizz);
+    static Mso::TCntPtr<Mso::React::IJSBundle> get(facebook::jni::alias_ref<JJSBundle> thizz);
 
     static facebook::jni::local_ref<JJSBundle> create(Mso::React::IJSBundle &bundle);
 };
@@ -174,7 +171,7 @@ struct JErrorCode : facebook::jni::HybridClass<JErrorCode> {
     Mso::ErrorCode errorCode_;
 };
 
-/*static*/ local_ref<JErrorCode::jhybriddata> JErrorCode::initHybrid(alias_ref<jhybridobject> jThis){
+/*static*/ local_ref<JErrorCode::jhybriddata> JErrorCode::initHybrid(alias_ref<jhybridobject> /*jThis*/){
     Mso::ErrorCode errorCode;
     return makeCxxInstance(std::move(errorCode));
 }
@@ -194,10 +191,10 @@ std::string JErrorCode::toString() {
                    });
 }
 
-struct JReactContextHolder : public facebook::jni::JavaClass<JReactContextHolder> {
-    constexpr static auto kJavaDescriptor =
-            "Lcom/microsoft/office/reacthost/ReactContextHolder;";
-};
+//struct JReactContextHolder : public facebook::jni::JavaClass<JReactContextHolder> {
+//    constexpr static auto kJavaDescriptor =
+//            "Lcom/microsoft/office/reacthost/ReactContextHolder;";
+//};
 
 struct JReactInstance  : facebook::jni::HybridClass<JReactInstance> {
     static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/ReactInstance;";
@@ -208,7 +205,7 @@ struct JReactInstance  : facebook::jni::HybridClass<JReactInstance> {
     static void onBundleLoaded(facebook::jni::alias_ref<jhybridobject> jThis, facebook::jni::alias_ref<JString> bundleName);
     static facebook::jni::local_ref<reactreka::JRekaBridgeOptions::jhybridobject> createRekaBridgeOptions(facebook::jni::alias_ref<jhybridobject> jThis);
 
-    static facebook::jni::local_ref<jhybridobject> create(facebook::jni::alias_ref<JReactOptions::jhybridobject>, Mso::CntPtr<ReactInstanceAndroid> nativeInstance);
+    static facebook::jni::local_ref<jhybridobject> create(facebook::jni::alias_ref<JReactOptions::jhybridobject>, Mso::TCntPtr<ReactInstanceAndroid> nativeInstance);
     static facebook::react::RuntimeExecutor GetRuntimeExecutor(facebook::jni::alias_ref<JReactInstance::javaobject>);
     static facebook::jsi::Runtime* GetJsiRuntime(facebook::jni::alias_ref<JReactInstance::javaobject> instance);
     static std::shared_ptr<facebook::react::CallInvoker> getJSCallInvokerHolder(facebook::jni::alias_ref<JReactInstance::javaobject> instance);
@@ -226,7 +223,7 @@ struct ReactInstanceAndroidInternal : public Mso::RefCountedObject<Mso::IRefCoun
 
     facebook::jni::global_ref<JReactOptions::jhybridobject> m_jOptions;
     facebook::jni::global_ref<JReactInstance::jhybridobject> m_jReactInstance;
-    facebook::jni::global_ref<JReactContextHolder> m_jReactContextHolder;
+    // facebook::jni::global_ref<JReactContextHolder> m_jReactContextHolder;
 };
 
 }
@@ -327,18 +324,18 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
     return m_info;
 }
 
-/*static */::Mso::CntPtr<::Mso::React::IJSBundle> JJSBundle::get(alias_ref<JJSBundle> thizz) {
+/*static */::Mso::TCntPtr<::Mso::React::IJSBundle> JJSBundle::get(alias_ref<JJSBundle> thizz) {
     const auto cls = javaClassStatic();
     const auto iFieldContent = cls->getField<JByteBuffer>("Content");
     local_ref<JByteBuffer> content = make_local(thizz->getFieldValue(iFieldContent));
     const auto iFieldInfo = cls->getField<JJSBundleInfo>("Info");
     local_ref<JJSBundleInfo> info = make_local(thizz->getFieldValue(iFieldInfo));
 
-    ::Mso::CntPtr<::Mso::React::IJSBundle>jsBundle;
+    ::Mso::TCntPtr<::Mso::React::IJSBundle>jsBundle;
     if(content) {
-        jsBundle = ::Mso::Make<ByteBufferJSBundle>( std::move(JJSBundleInfo::get(info)), content);
+        jsBundle = ::Mso::Make<ByteBufferJSBundle>( JJSBundleInfo::get(info), content);
     } else {
-        jsBundle = ::Mso::Make<InfoJSBundle>( std::move(JJSBundleInfo::get(info)));
+        jsBundle = ::Mso::Make<InfoJSBundle>( JJSBundleInfo::get(info));
     }
     return jsBundle;
 }
@@ -385,7 +382,7 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
         return newObjectCxxArgs(std::move(options));
     }
 
-/*static*/ local_ref<JReactOptions::jhybriddata> JReactOptions::initHybrid(alias_ref<jhybridobject> jThis){
+/*static*/ local_ref<JReactOptions::jhybriddata> JReactOptions::initHybrid(alias_ref<jhybridobject> /*jThis*/){
         Mso::React::ReactOptions options;
         return makeCxxInstance(std::move(options));
     }
@@ -456,7 +453,7 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
     }
 
     facebook::jni::alias_ref<JInstanceCreatedCallback> JReactOptions::getInstanceCreatedCallback() {
-
+        return nullptr;
     }
 
     void JReactOptions::setInstanceLoadedCallback(facebook::jni::alias_ref<JInstanceLoadedCallback> callback) {
@@ -469,7 +466,7 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
     }
 
     facebook::jni::alias_ref<JInstanceLoadedCallback> JReactOptions::getInstanceLoadedCallback() {
-
+        return nullptr;
     }
 
     const ReactOptions& JReactOptions::Options() const noexcept
@@ -532,7 +529,7 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
 }
 
 
-/*static */facebook::jni::local_ref<JReactInstance::jhybriddata> JReactInstance::initHybrid(facebook::jni::alias_ref<jhybridobject> jThis) {
+/*static */facebook::jni::local_ref<JReactInstance::jhybriddata> JReactInstance::initHybrid(facebook::jni::alias_ref<jhybridobject> /*jThis*/) {
         return makeCxxInstance();
     }
 
@@ -571,7 +568,7 @@ JSBundleInfo ByteBufferJSBundle::Info() noexcept  {
                        });
     }
 
-/*static*/ facebook::jni::local_ref<JReactInstance::jhybridobject> JReactInstance::create(facebook::jni::alias_ref<JReactOptions::jhybridobject> options, Mso::CntPtr<ReactInstanceAndroid> nativeInstance) {
+/*static*/ facebook::jni::local_ref<JReactInstance::jhybridobject> JReactInstance::create(facebook::jni::alias_ref<JReactOptions::jhybridobject> options, Mso::TCntPtr<ReactInstanceAndroid> nativeInstance) {
 
         // Create the java peer.
         auto jInstance = JReactInstance::newObjectJavaArgs(options);
@@ -653,7 +650,7 @@ local_ref<JReactViewOptions::jhybridobject> JReactViewOptions::create(const Mso:
     return newObjectCxxArgs(std::move(const_cast<Mso::React::ReactViewOptions&&>(options)));
 }
 
-/*static*/ local_ref<JReactViewOptions::jhybriddata> JReactViewOptions::initHybrid(alias_ref<jhybridobject> jThis){
+/*static*/ local_ref<JReactViewOptions::jhybriddata> JReactViewOptions::initHybrid(alias_ref<jhybridobject> /*jThis*/){
     Mso::React::ReactViewOptions options;
     return makeCxxInstance(std::move(options));
 }
@@ -698,19 +695,19 @@ struct JBaseRootView : facebook::jni::HybridClass<JBaseRootView> {
     static facebook::jni::local_ref<jhybriddata> initHybrid(facebook::jni::alias_ref<jhybridobject> jThis);
     static void registerNatives();
 
-    Mso::Future<void> Reload(const Mso::CntPtr<Mso::React::IReactInstance>&& reactInstance, const Mso::React::ReactViewOptions&& viewOptions) noexcept;
+    Mso::Future<void> Reload(const Mso::TCntPtr<Mso::React::IReactInstance>&& reactInstance, const Mso::React::ReactViewOptions&& viewOptions) noexcept;
     Mso::Future<void> Unload() noexcept;
 
     JBaseRootView(facebook::jni::alias_ref<jhybridobject> jThis);
 
     OfficeReactViewInstance& ViewInstance() { return *m_ReactViewInstance; }
 
-    Mso::CntPtr<OfficeReactViewInstance> m_ReactViewInstance;
+    Mso::TCntPtr<OfficeReactViewInstance> m_ReactViewInstance;
     facebook::jni::weak_ref<JBaseRootView::jhybridobject> m_jThis;
 };
 
 struct OfficeReactViewInstance : public Mso::UnknownObject<Mso::React::IReactViewInstance> {
-    virtual Mso::Future<void> Reload(Mso::CntPtr<Mso::React::IReactInstance>&& reactInstance,
+    virtual Mso::Future<void> Reload(Mso::TCntPtr<Mso::React::IReactInstance>&& reactInstance,
                                      Mso::React::ReactViewOptions&& viewOptions) noexcept override;
     virtual Mso::Future<void> Unload() noexcept override;
 
@@ -738,7 +735,7 @@ JBaseRootView::JBaseRootView(alias_ref<jhybridobject> jThis) {
     m_ReactViewInstance = Mso::Make<OfficeReactViewInstance>(std::move(jThis));
 }
 
-Mso::Future<void> JBaseRootView::Reload(const Mso::CntPtr<Mso::React::IReactInstance>&& reactInstance, const Mso::React::ReactViewOptions&& viewOptions) noexcept {
+Mso::Future<void> JBaseRootView::Reload(const Mso::TCntPtr<Mso::React::IReactInstance>&& reactInstance, const Mso::React::ReactViewOptions&& viewOptions) noexcept {
     auto future = JMsoFuture::create();
     auto msoFuture = future->cthis()->getMsoFuture();
 
@@ -756,7 +753,7 @@ Mso::Future<void> JBaseRootView::Unload() noexcept {
     return msoFuture;
 }
 
-/*virtual*/ Mso::Future<void> OfficeReactViewInstance::Reload(Mso::CntPtr<Mso::React::IReactInstance>&& reactInstance,
+/*virtual*/ Mso::Future<void> OfficeReactViewInstance::Reload(Mso::TCntPtr<Mso::React::IReactInstance>&& reactInstance,
                                                           Mso::React::ReactViewOptions&& viewOptions) noexcept {
 
     Mso::Future<void> result;
@@ -789,12 +786,12 @@ Mso::Future<void> JBaseRootView::Unload() noexcept {
     static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/ReactViewHost;";
     static void registerNatives();
 
-    static facebook::jni::local_ref<jhybridobject> create(Mso::CntPtr<Mso::React::IReactViewHost> viewHost);
+    static facebook::jni::local_ref<jhybridobject> create(Mso::TCntPtr<Mso::React::IReactViewHost> viewHost);
 
-    JReactViewHost(Mso::CntPtr<Mso::React::IReactViewHost> &&viewHost)
+    JReactViewHost(Mso::TCntPtr<Mso::React::IReactViewHost> &&viewHost)
             : viewHost_(std::move(viewHost)) {}
 
-    Mso::CntPtr<Mso::React::IReactViewHost> viewHost_;
+    Mso::TCntPtr<Mso::React::IReactViewHost> viewHost_;
 
     void AttachViewInstance(facebook::jni::alias_ref<JBaseRootView::jhybridobject> jView);
 };
@@ -809,7 +806,7 @@ void JReactViewHost::AttachViewInstance(facebook::jni::alias_ref<JBaseRootView::
     viewHost_->AttachViewInstance(jView->cthis()->ViewInstance());
 }
 
-/*static*/ facebook::jni::local_ref<JReactViewHost::jhybridobject> JReactViewHost::create(Mso::CntPtr<Mso::React::IReactViewHost> viewHost) {
+/*static*/ facebook::jni::local_ref<JReactViewHost::jhybridobject> JReactViewHost::create(Mso::TCntPtr<Mso::React::IReactViewHost> viewHost) {
     return newObjectCxxArgs(std::move(viewHost));
 }
 
@@ -818,9 +815,9 @@ struct JReactHost : facebook::jni::HybridClass<JReactHost> {
     // static facebook::jni::local_ref<jhybriddata> initHybrid(facebook::jni::alias_ref<jhybridobject> jThis);
     static void registerNatives();
 
-    static facebook::jni::local_ref<jhybridobject> create(Mso::CntPtr<Mso::React::IReactHost> host);
+    static facebook::jni::local_ref<jhybridobject> create(Mso::TCntPtr<Mso::React::IReactHost> host);
 
-    JReactHost(Mso::CntPtr<Mso::React::IReactHost> &&host)
+    JReactHost(Mso::TCntPtr<Mso::React::IReactHost> &&host)
             : host_(std::move(host)) {}
 
     ~JReactHost() {
@@ -832,7 +829,7 @@ struct JReactHost : facebook::jni::HybridClass<JReactHost> {
     void ReloadInstanceWithOptions(facebook::jni::alias_ref<JReactOptions::jhybridobject> jOptions);
     void UnloadInstance();
 
-    Mso::CntPtr<Mso::React::IReactHost> host_;
+    Mso::TCntPtr<Mso::React::IReactHost> host_;
 };
 
 
@@ -864,7 +861,7 @@ void JReactHost::UnloadInstance() {
     host_->UnloadInstance();
 }
 
-/*static*/ facebook::jni::local_ref<JReactHost::jhybridobject> JReactHost::create(Mso::CntPtr<Mso::React::IReactHost> host) {
+/*static*/ facebook::jni::local_ref<JReactHost::jhybridobject> JReactHost::create(Mso::TCntPtr<Mso::React::IReactHost> host) {
     return newObjectCxxArgs(std::move(host));
 }
 
@@ -882,7 +879,7 @@ struct JReactHostStatics : facebook::jni::JavaClass<JReactHostStatics>  {
 
 /*static*/ facebook::jni::alias_ref<JReactHost::jhybridobject> JReactHostStatics::makeJReactHost(alias_ref<jclass>, facebook::jni::alias_ref<JReactOptions::jhybridobject> jOptions) {
     auto options = jOptions->cthis()->Options();
-    Mso::CntPtr<IReactHost> reactHost = MakeReactHost(std::move(options));
+    Mso::TCntPtr<IReactHost> reactHost = MakeReactHost(std::move(options));
     return JReactHost::create(reactHost).release();
 }
 
@@ -903,7 +900,11 @@ struct JReactHostStatics : facebook::jni::JavaClass<JReactHostStatics>  {
 namespace Mso::React {
 
 ReactInstanceAndroid::ReactInstanceAndroid(IReactHost& reactHost, ReactOptions&& options) noexcept
+#ifdef USE_OPENSOUCE_MSO
         : Super{reactHost.NativeQueue()}
+#else
+        : Super{&reactHost.NativeQueue()}
+#endif
         , m_weakReactHost(&reactHost)
         , m_options(std::move(options))
 {
@@ -1058,7 +1059,13 @@ Mso::JSHost::RekaBridgeOptions ReactInstanceAndroid::createRekaBridgeOptions() n
 //    rekaOptions.JsExecutor = Mso::Make<reactreka::ReactNativeRekaBridge, Mso::JSHost::IRekaBridge>(
 //            reactreka::ReactContextHolder:: m_jReactContextHolder /*reinterpret_cast ??*/);
 
+
+#ifdef USE_OPENSOUCE_MSO
     rekaOptions.NativeQueue = Queue();
+#else
+    rekaOptions.NativeQueue = &Queue();
+#endif
+
     return rekaOptions;
 }
 
@@ -1085,6 +1092,10 @@ facebook::react::RuntimeExecutor GetRuntimeExecutor2(Mso::React::IReactInstance 
 Mso::TCntPtr<Mso::React::IReactViewInstance> GetReactViewInstanceFromView(jobject view) {
     facebook::jni::alias_ref<JBaseRootView::jhybridobject> viewInstance = reinterpret_cast<JBaseRootView::jhybridobject>(view);
     return viewInstance->cthis()->m_ReactViewInstance;
+}
+
+JReactOptions_::javaobject ToJReactOptions(ReactOptions&& options) {
+    return reinterpret_cast<JReactOptions_::javaobject>(JReactOptions::create(std::move(options)).release());
 }
 
 }; // namespace Mso::React

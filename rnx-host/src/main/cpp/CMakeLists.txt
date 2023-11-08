@@ -19,6 +19,7 @@ add_library(rnxreacthost
 )
 
 target_compile_definitions(rnxreacthost PRIVATE MS_TARGET_ANDROID)
+target_compile_definitions(rnxreacthost PRIVATE USE_OPENSOUCE_MSO)
 
 find_package(ReactAndroid REQUIRED CONFIG)
 target_link_libraries(rnxreacthost ReactAndroid::fabricjni)

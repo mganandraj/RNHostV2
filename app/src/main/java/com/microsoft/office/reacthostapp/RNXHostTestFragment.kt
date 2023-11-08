@@ -50,7 +50,7 @@ class RNXHostTestFragment : Fragment() {
         // preloadBundles.add(com.microsoft.office.reactnative.host.JSBundleFromFileAssetId( "foundation.android.bundle"))
         // preloadBundles.add(com.microsoft.office.reactnative.host.JSBundleFromFileAssetId( "ui.android.bundle"))
         builder.preloadBundles(preloadBundles)
-        builder.userBundle(com.microsoft.office.reactnative.host.JSBundleFromFileAssetId( "index.android.bundle"))
+        builder.userBundle(com.microsoft.office.reactnative.host.JSBundleFromAssetId( "index.android.bundle"))
 
         this.mReactNativeHost = builder.build()
 

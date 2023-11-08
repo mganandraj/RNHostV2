@@ -15,6 +15,15 @@
             app:destination="@id/dashboardFragment" />
     </fragment>
     <fragment
+        android:id="@+id/ORNHostTestKtNativeOptionsFragment"
+        android:name="com.microsoft.office.reacthostapp.ORNHostKtNativeOptionsFragment"
+        android:label="Office RNHost Kotlin Native Fragment"
+        tools:layout="@layout/fragment_ornhost_kt_native_options">
+        <action
+            android:id="@+id/action_ORNHostTestKtNativeOptionsFragment_to_DashboardFragment"
+            app:destination="@id/dashboardFragment" />
+    </fragment>
+    <fragment
         android:id="@+id/RNXHostTestFragment"
         android:name="com.microsoft.office.reacthostapp.RNXHostTestFragment"
         android:label="RNXHost Test"
@@ -33,5 +42,8 @@
         <action
             android:id="@+id/action_DashboardFragment_to_ORNHostTestKt1Fragment"
             app:destination="@id/ORNHostTestKt1Fragment" />
+        <action
+            android:id="@+id/action_DashboardFragment_to_ORNHostTestKtNativeOptionsFragment"
+            app:destination="@id/ORNHostTestKtNativeOptionsFragment" />
     </fragment>
 </navigation>

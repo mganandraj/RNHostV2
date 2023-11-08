@@ -6,6 +6,8 @@
 #include <cxxreact/JSBigString.h>
 #include <react/jni/JSLoader.h>
 
+#include <filesystem>
+
 namespace facebook::react {
 
 void WrapperJSExecutor::initializeRuntime() {
@@ -14,6 +16,11 @@ void WrapperJSExecutor::initializeRuntime() {
     if(observer) {
         observer->OnInitialized();
     }
+}
+
+bool isFileSystemPath(const std::string& path) {
+    const std::filesystem::path bundlePath{path};
+    return std::filesystem::exists(bundlePath);
 }
 
 void WrapperJSExecutor::loadBundle(std::unique_ptr<const facebook::react::JSBigString> script, std::string sourceURL) {
@@ -28,23 +35,26 @@ void WrapperJSExecutor::loadBundle(std::unique_ptr<const facebook::react::JSBigS
             if(observer) {
                 observer->OnLoaded(info.Id);
             }
-        } else if (!info.Id.empty()){
-            // Assuming assets with name as url
-            jni::local_ref<JAssetManager::javaobject> jAssetManager = m_assetManager.lockLocal();
-            if(jAssetManager) {
-                AAssetManager *assetManager = extractAssetManager(jAssetManager);
-                auto bundleBigString = loadScriptFromAssets(assetManager, info.Id);
-                m_baseExecutor->loadBundle(std::move(bundleBigString), info.Id);
+        } else if (!info.FileName.empty()) {
+            if (isFileSystemPath(info.FileName)) {
+                auto bundleBigString = JSBigFileString::fromPath(info.FileName);
+                m_baseExecutor->loadBundle(std::move(bundleBigString), info.FileName);
                 if(observer) {
-                    observer->OnLoaded(info.Id);
+                    observer->OnLoaded(info.FileName);
+                }
+            } else {
+                jni::local_ref<JAssetManager::javaobject> jAssetManager = m_assetManager.lockLocal();
+                if (jAssetManager) {
+                    AAssetManager *assetManager = extractAssetManager(jAssetManager);
+                    auto bundleBigString = loadScriptFromAssets(assetManager, info.Id);
+                    m_baseExecutor->loadBundle(std::move(bundleBigString), info.Id);
+                    if (observer) {
+                        observer->OnLoaded(info.FileName);
+                    }
                 }
             }
-        } else if (!info.FileName.empty()) {
-            auto bundleBigString = JSBigFileString::fromPath(info.FileName);
-            m_baseExecutor->loadBundle(std::move(bundleBigString), info.FileName);
-            if(observer) {
-                observer->OnLoaded(info.FileName);
-            }
+        } else {
+            throw std::runtime_error{"Trying to evaluate an unresolvable JSBundle."};
         }
     }
 

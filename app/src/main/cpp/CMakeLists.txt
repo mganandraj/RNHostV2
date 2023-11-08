@@ -17,12 +17,14 @@ add_library(reacthostapp
         AwesomeRekaService.cpp
         MainActivity.cpp
         OnLoad.cpp
+        ORNHostKtNativeOptionsFragment.cpp
 )
 
 # TODO:: Why is this necessary ?
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(mso REQUIRED CONFIG)
+target_compile_definitions(reacthostapp PRIVATE USE_OPENSOUCE_MSO)
 target_compile_definitions(reacthostapp PRIVATE MS_TARGET_ANDROID)
 target_compile_definitions(reacthostapp PRIVATE MS_TARGET_POSIX)
 target_link_libraries(reacthostapp mso::activeObject)

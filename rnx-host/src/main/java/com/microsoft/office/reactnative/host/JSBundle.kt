@@ -6,22 +6,22 @@ import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 
 // Implementation of JSBundleFetcher in is responsible for ensuring that the bundle is ready for loading.
-// For instance the implementation can download the bundle, or extract the bundle from archive.
+// For instance the implementation could use the "Id" to resolve and can download the bundle, or extract the bundle from an archive.
 // The implementation should throw if the bundle can't be made available locally to be loaded.
 // --
 // Implementation should return a new JSBundle which reflects the state of the bundle after the fetch
 // For e.g. a service delivery fetcher or Union AssetExtracter fetcher may populate
-// JSBundle.JSBundleInfo.FileName or JSBundle.Content and may reset the Id field.
+// JSBundle.JSBundleInfo.FileName or JSBundle.Content.
 // --
 // fetch method should be synchronous as of now.
 interface JSBundleFetcher {
-    fun fetch(bundle: JSBundle) : JSBundle;
+    fun fetch(bundle: JSBundle, checked: Boolean) : JSBundle;
 }
 
 data class JSBundleInfo (
-    val Id: String?, // If not null, assumed to be the asset name, either packaged with the app as an Asset. or JSBundleFetcher can understand.
-    val FileName: String?, // Used only if Id is not set.
-    val Version: Long? // Currently unused.
+    val Id: String?, // If not null, JSBundleFetcher can use it to resolve and override the FileName.
+    val FileName: String?, // It can be a filesystem path or the name of an APK asset.
+    val Version: Long?
 )
 
 data class JSBundle (
@@ -34,8 +34,13 @@ fun JSBundleFromString(str: String, url: String): JSBundle {
     return JSBundle(ByteBuffer.allocateDirect(utf8Buffer.capacity()).put(utf8Buffer), JSBundleInfo(url, null, null));
 }
 
-fun JSBundleFromFileAssetId(assetId: String): JSBundle {
-    return JSBundle(null , JSBundleInfo(assetId, null, null));
+// Use a template bundle resolvable by a custom JSBundleFetcher.
+fun JSBundleFromId(id: String): JSBundle {
+    return JSBundle(null , JSBundleInfo(id, null, null));
+}
+
+fun JSBundleFromAssetId(assetId: String): JSBundle {
+    return JSBundle(null , JSBundleInfo(assetId, assetId, null));
 }
 
 // TODO :: Verify that this works with Hermes bytecodes.
@@ -45,5 +50,5 @@ fun JSBundleFromFilePath2(filePath: String, url: String): JSBundle {
 }
 
 fun JSBundleFromFilePath(filePath: String): JSBundle {
-    return JSBundle(null , JSBundleInfo(null, filePath, null));
+    return JSBundle(null , JSBundleInfo(filePath, filePath, null));
 }

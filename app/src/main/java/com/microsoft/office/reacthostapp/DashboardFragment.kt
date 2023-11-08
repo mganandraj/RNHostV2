@@ -37,6 +37,10 @@ class DashboardFragment : Fragment() {
         binding.buttonOrnhosttestKt1.setOnClickListener {
             findNavController().navigate(R.id.action_DashboardFragment_to_ORNHostTestKt1Fragment)
         }
+
+        binding.buttonOrnhosttestKtNativeoptions.setOnClickListener {
+            findNavController().navigate(R.id.action_DashboardFragment_to_ORNHostTestKtNativeOptionsFragment)
+        }
     }
 
     override fun onDestroyView() {

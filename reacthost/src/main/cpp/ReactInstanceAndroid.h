@@ -1,10 +1,21 @@
 #ifndef ornhost_REACTINSTANCEANDROID_H
 #define ornhost_REACTINSTANCEANDROID_H
 
-#include "ReactNativeHost/React.h"
+#include <ReactNativeHost/React.h>
 #include "IReactInstanceInternal.h"
-#include "activeObject/activeObject.h"
+
+#ifdef USE_OPENSOUCE_MSO
+#include <activeObject/activeObject.h>
 #include <object/refCountedObject.h>
+#include <smartPtr/cntPtr.h>
+#endif
+
+#ifdef USE_OPENSOUCE_MSO
+namespace Mso {
+    template<typename T>
+    using TCntPtr = CntPtr<T>;
+}
+#endif
 
 namespace Mso::React {
 

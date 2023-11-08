@@ -19,4 +19,11 @@
         android:layout_height="wrap_content"
         android:text="ORNHost Kotlin 1" />
 
+    <Button
+        android:id="@+id/button_ornhosttest_kt_nativeoptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ORNHost Kotlin Native Options" />
+
+
 </LinearLayout>

@@ -62,7 +62,7 @@ class OfficeBundleFetcher  constructor (
         return ret
     }
 
-    override fun fetch(bundle: JSBundle): JSBundle {
+    override fun fetch(bundle: JSBundle, checked: Boolean): JSBundle {
         // Noop if the bundle already has data
         if (bundle.Content != null)
             return bundle;
@@ -70,27 +70,31 @@ class OfficeBundleFetcher  constructor (
         if (bundle.Info == null)
             throw IllegalArgumentException("JSBundle.Info must be available")
 
-        if (bundle.Info.Id != null) {
+        if (bundle.Info.FileName != null && FileUtils.fileExists(bundle.Info.FileName)) {
+            return JSBundle(null, JSBundleInfo(bundle.Info.Id, bundle.Info.FileName, null));
+        }
+
+        if (bundle.Info.FileName != null) {
             // Noop, if Info.Id is populated and a named asset is available
-            if(assetExists(application, bundle.Info.Id))
+            if (assetExists(application, bundle.Info.FileName))
                 return bundle;
 
             // Look for the bundle in the asset cache
-            val bundleFullyQualifiedPath: String = OfficeAssetsManagerUtil.getAssetCacheDirectory() + "/" + bundle.Info.Id
+            val bundleFullyQualifiedPath: String = OfficeAssetsManagerUtil.getAssetCacheDirectory() + "/" + bundle.Info.FileName
             if (FileUtils.fileExists(bundleFullyQualifiedPath)) {
-                return JSBundle(null , JSBundleInfo(null, bundleFullyQualifiedPath, null));
+                return JSBundle(null, JSBundleInfo(bundle.Info.Id, bundleFullyQualifiedPath, null));
             }
 
-            // Try to extract the bundle to asset cache
-            OfficeAssetsManagerUtil.extractAssetFromAsset(bundle.Info.Id)
-            if (FileUtils.fileExists(bundleFullyQualifiedPath)) {
-                return JSBundle(null , JSBundleInfo(null, bundleFullyQualifiedPath, null));
-            }
+            try {
+                // Try to extract the bundle to asset cache
+                OfficeAssetsManagerUtil.extractAssetFromAsset(bundle.Info.FileName)
+                if (FileUtils.fileExists(bundleFullyQualifiedPath)) {
+                    return JSBundle(null, JSBundleInfo(bundle.Info.Id, bundleFullyQualifiedPath, null));
+                }
+            } catch (ex: IOException) { }
         }
-
-        if (bundle.Info.FileName != null && FileUtils.fileExists(bundle.Info.FileName)) {
-            return JSBundle(null , JSBundleInfo(null, bundle.Info.FileName, null));
-        }
-        throw RuntimeException("Unable to fetch the bundle: Info.Id: ${bundle.Info?.Id}  :  Info.FileName: ${bundle.Info?.FileName}")
+        if (checked)
+            throw RuntimeException("Unable to fetch the bundle: Info.Id: ${bundle.Info.Id}  :  Info.FileName: ${bundle.Info.FileName}")
+        return bundle
     }
 }
