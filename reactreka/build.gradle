@@ -17,7 +17,7 @@ android {
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_STL=c++_shared"
-                cppFlags ""
+                cppFlags "-fshort-wchar"
             }
         }
     }
@@ -46,7 +46,7 @@ android {
         prefabPublishing true
     }
     prefab {
-        reactreka {
+        reactrekadroid {
             headers "src/main/cpp/"
         }
     }

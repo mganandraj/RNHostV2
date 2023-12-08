@@ -1,7 +1,6 @@
 #pragma once
 
-// #include <msoFolly/MsoFolly.h>
-#include "MsoFolly.h"
+#include <msoFolly/MsoFolly.h>
 
 #pragma warning(push)
 

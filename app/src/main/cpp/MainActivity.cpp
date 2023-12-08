@@ -96,9 +96,9 @@ Mso::JSHost::DataServiceRegistration<AwesomeRekaService> registration;
     static auto viewHost = reactHost->MakeViewHost(std::move(viewOptions));
 
     // JOfficeReactRootView* viewInstanceNative =  viewInstance->cthis();
-    auto viewInstanceNative = Mso::React::GetReactViewInstanceFromView(viewInstance);
+    // auto viewInstanceNative = Mso::React::GetReactViewInstanceFromView(viewInstance);
     // viewHost->AttachViewInstance(*viewInstanceNative->m_ReactViewInstance);
-    viewHost->AttachViewInstance(*viewInstanceNative);
+    /// viewHost->AttachViewInstance(*viewInstanceNative);
 
     // auto unloadMethod = viewInstance->javaClassStatic()->getMethod<void()>("Unload");
     // unloadMethod(viewInstance);

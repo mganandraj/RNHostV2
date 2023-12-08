@@ -1,10 +1,12 @@
 package com.microsoft.office.reacthost
 
 import com.facebook.jni.HybridData
+import com.microsoft.office.plat.annotation.KeepClassAndMembers
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 
+@KeepClassAndMembers
 class ReactOptions {
     private external fun initHybrid(): HybridData
     private val mHybridData: HybridData
@@ -67,13 +69,12 @@ class ReactOptions {
     // RekaProviderFactory
     // Properties - Can be done in future if needed.
 
-    // JSExecutor assumes the Id to be the name of the packaged asset.
     fun AddRegisteredJSBundle(jsBundleId: String) {
-        AddJSBundle(JSBundle(null, JSBundleInfo(jsBundleId, null, null)))
+        AddJSBundle(JSBundle(null, JSBundleInfo(jsBundleId, jsBundleId, null)))
     }
 
     fun AddFileJSBundle(fileName: String) {
-        AddJSBundle(JSBundle(null, JSBundleInfo(fileName, null, 0)))
+        AddJSBundle(JSBundle(null, JSBundleInfo(fileName, fileName, 0)))
     }
 
     fun AddDynamicJSBundle(jsBundleId: String, jsBundleContent: String) {
@@ -82,17 +83,16 @@ class ReactOptions {
     }
 
     var instanceCreatedCallback: IInstanceCreatedCallback
-        public external get
-        public external set
+        external get
+        external set
 
     var instanceLoadedCallback: IInstanceLoadedCallback
-        public external get
-        public external set
+        external get
+        external set
 
     companion object {
         init {
-            System.loadLibrary("fbjni")
-            System.loadLibrary("reacthost")
+            ReactHostStatics.loadLibs()
         }
     }
 }

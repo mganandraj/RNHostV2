@@ -30,9 +30,9 @@
 
 #include <compileradapters/compilerwarnings.h>
 
-//#ifdef MS_TARGET_ANDROID
-//#include "wc16_wstring.h"
-//#endif
+#ifdef MS_TARGET_ANDROID
+#include <wchar16/wc16_wstring.h>
+#endif
 
 // BEGIN_DISABLE_WARNING_DEPRECATED_FUNCTION();
 #include <string>
@@ -46,14 +46,13 @@ struct char_traits
 	using type = std::char_traits<TChar>;
 };
 
-// GAMMA : Removing wc16 customizations
-//#if defined(MS_TARGET_ANDROID) || defined(MS_TARGET_APPLE)
-//template<>
-//struct char_traits<wchar_t>
-//{
-//	using type = ::wc16::wchar16_traits;
-//};
-//#endif
+#if defined(MS_TARGET_ANDROID) || defined(MS_TARGET_APPLE)
+template<>
+struct char_traits<wchar_t>
+{
+	using type = ::wc16::wchar16_traits;
+};
+#endif
 
 template<typename TChar>
 using char_traits_t = typename char_traits<TChar>::type;

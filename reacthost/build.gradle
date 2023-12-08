@@ -17,7 +17,7 @@ android {
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_STL=c++_shared"
-                cppFlags ""
+                cppFlags "-fshort-wchar"
             }
         }
     }
@@ -77,5 +77,6 @@ dependencies {
     implementation(project(":fbjni"))
     implementation(project(":reka"))
     implementation(project(":json"))
+    implementation(project(":officeplat"))
     implementation(project(":reactreka"))
 }

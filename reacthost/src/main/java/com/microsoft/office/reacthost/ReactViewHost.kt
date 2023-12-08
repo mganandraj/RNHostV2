@@ -1,43 +1,44 @@
 package com.microsoft.office.reacthost
 
 import com.facebook.jni.HybridData
+import com.microsoft.office.plat.annotation.KeepClassAndMembers
 import com.microsoft.office.reacthost.ReactViewOptions
 import com.microsoft.office.reacthost.ReactHost
 import java.lang.ref.WeakReference
 
+@KeepClassAndMembers
 class ReactViewHost {
-
     private val mHybridData: HybridData
     internal constructor(hybridData: HybridData) {
         mHybridData = hybridData
     }
 
     //! Returns a copy of current react view options.
-    public fun Options(): ReactViewOptions? {
+    fun Options(): ReactViewOptions? {
         return null
     }
 
     //! Returns IReactHost associated with this IReactViewHost.
-    public fun ReactHost(): WeakReference<ReactHost>? {
+    fun ReactHost(): WeakReference<ReactHost>? {
         return null
     }
 
     //! Reloads the IReactViewInstance if it is attached.
     /* Mso::Future<void>*/
-    public fun ReloadViewInstance() {
-
+    fun ReloadViewInstance() {
+        throw NotImplementedError()
     }
 
     //! Reloads IReactViewInstance if it is attached with a new set of options.
     /* Mso::Future<void>*/
-    public fun ReloadViewInstanceWithOptions(options: ReactViewOptions?) {
-
+    fun ReloadViewInstanceWithOptions(@Suppress("UNUSED_PARAMETER") options: ReactViewOptions?) {
+        throw NotImplementedError()
     }
 
     //! Unloads the attached IReactViewInstance.
     /*Mso::Future<void>*/
-    public fun UnloadViewInstance() {
-
+    fun UnloadViewInstance() {
+        throw NotImplementedError()
     }
 
     //! Attaches IReactViewInstance to the IReactViewHost.

@@ -6,6 +6,7 @@ import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;
 import com.facebook.react.bridge.JavaScriptExecutor;
 import com.facebook.soloader.SoLoader;
+import com.microsoft.office.plat.logging.Trace;
 
 @DoNotStrip
 public class WrapperJSExecutor extends JavaScriptExecutor {
@@ -14,7 +15,11 @@ public class WrapperJSExecutor extends JavaScriptExecutor {
   }
 
   public static void loadLibrary() throws UnsatisfiedLinkError {
-    // SoLoader.loadLibrary("mso20android");
+    try {
+      SoLoader.loadLibrary("mso20android");
+    } catch(UnsatisfiedLinkError ex) {
+      Trace.d("LOG_TAG", ex.getMessage());
+    }
     SoLoader.loadLibrary("reactnativejni");
     SoLoader.loadLibrary("rnxreacthost");
   }

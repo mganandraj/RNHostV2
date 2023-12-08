@@ -356,11 +356,14 @@ Mso::Future<std::vector<Mso::CntPtr<IReactViewHost>>> ReactHost::GetViewHostList
 
 Mso::Future<void> ReactHost::LoadInQueue(ReactOptions&& options) noexcept
 {
+// VSO8520324 : ReactNativeHostLiblet::Init() and ReactNativeHostLiblet::Uninit() are not wired up on Android.
+#ifndef MS_TARGET_ANDROID	
 	// If the ReactHost is already closed then we cancel loading ReactInstance.
 	if (IsClosed())
 	{
 		return Mso::MakeCanceledFuture();
 	}
+#endif
 
 	// Make sure that we set new options even if we do not load due to the pending unload.
 	m_options.Exchange(Mso::Copy(options));
@@ -372,7 +375,7 @@ Mso::Future<void> ReactHost::LoadInQueue(ReactOptions&& options) noexcept
 	}
 
 	Mso::Promise<void> onLoaded;
-	m_reactInstance.Exchange(MakeReactInstance(*this, std::move(options)/*, *m_rekaContextProxy*/, Mso::Copy(onLoaded)));
+	m_reactInstance.Exchange(MakeReactInstance(*this, std::move(options), *m_rekaContextProxy, Mso::Copy(onLoaded)));
 
 	// After the instance is loaded, we load the view instances.
 	// It is safe to capture 'this' because the Load action keeps a strong reference to ReactHost.
@@ -637,11 +640,14 @@ Mso::Future<void> ReactViewHost::LoadViewInstanceInQueue() noexcept
 		return Mso::MakeSucceededFuture();
 	}
 
-	// Cancel if the ReactHost is already closed.
+// VSO8520324 : ReactNativeHostLiblet::Init() and ReactNativeHostLiblet::Uninit() are not wired up on Android.
+#ifndef MS_TARGET_ANDROID
+    // Cancel if the ReactHost is already closed.
 	if (m_reactHost->IsClosed())
 	{
 		return Mso::MakeCanceledFuture();
 	}
+#endif
 
 	// If there is a pending unload action, then we cancel loading ReactViewInstance.
 	if (m_reactHost->PendingUnloadActionId() || m_pendingUnloadActionId.Load())

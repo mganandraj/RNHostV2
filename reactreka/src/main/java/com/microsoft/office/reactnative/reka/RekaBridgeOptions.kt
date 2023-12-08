@@ -1,6 +1,7 @@
 package com.microsoft.office.reactnative.reka;
 
 import com.facebook.jni.HybridData
+import com.facebook.soloader.SoLoader
 
 class RekaBridgeOptions {
     private val mHybridData: HybridData
@@ -10,8 +11,8 @@ class RekaBridgeOptions {
 
     companion object {
         init {
-            System.loadLibrary("fbjni")
-            System.loadLibrary("reactreka")
+            SoLoader.loadLibrary("fbjni")
+            SoLoader.loadLibrary("reactrekadroid")
         }
     }
 

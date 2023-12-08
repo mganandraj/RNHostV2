@@ -17,7 +17,7 @@ android {
         externalNativeBuild {
             cmake {
                 arguments "-DANDROID_STL=c++_shared"
-                cppFlags ""
+                cppFlags "-fshort-wchar"
             }
         }
     }
@@ -64,4 +64,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation(project(":mso"))
+    implementation(project(":officeplat"))
 }

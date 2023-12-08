@@ -12,7 +12,7 @@ project("reacthost")
 
 add_library(reacthost
         SHARED
-        ReactInstanceAndroid.cpp
+        OfficeAssetApi.cpp
         AssetJSBundle_Android.cpp
         BundleServerJSBundle.cpp
         InstanceFactory_Android.cpp
@@ -21,10 +21,15 @@ add_library(reacthost
         MsoUtils.cpp
         ReactHost.cpp
         PlatformJSBundles_android.cpp
+        ReactInstanceAndroid.cpp
+        ReactInstanceAndroidDeferred.cpp
 )
 
 # TODO:: Why is this necessary ?
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+find_package(officeplat REQUIRED CONFIG)
+target_link_libraries(reacthost officeplat::plat)
 
 find_package(ReactAndroid REQUIRED CONFIG)
 target_link_libraries(reacthost ReactAndroid::fabricjni)
@@ -97,4 +102,4 @@ find_package(reka REQUIRED CONFIG)
 target_link_libraries(reacthost reka::reka)
 
 find_package(reactreka REQUIRED CONFIG)
-target_link_libraries(reacthost reactreka::reactreka)
+target_link_libraries(reacthost reactreka::reactrekadroid)

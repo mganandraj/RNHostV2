@@ -1,7 +1,9 @@
 package com.microsoft.office.reacthost
 
 import com.facebook.jni.HybridData
+import com.microsoft.office.plat.annotation.KeepClassAndMembers
 
+@KeepClassAndMembers
 class ReactDevOptions {
     private val mHybridData: HybridData
     internal constructor(hybridData: HybridData) {
@@ -11,11 +13,17 @@ class ReactDevOptions {
         external get
         external set
 
+    var UseDirectDebugger: Boolean
+        external get
+        external set
+
+    var DebuggerRuntimeName: String
+        external get
+        external set   
+
     // The following settings are not respected on Android. Hence not projecting to Kotlin/Java.
-    // UseDirectDebugger - Always enabled on devmode and controlled by metro bundler.
     // DebuggerBreakOnNextLine
     // DebuggerPort
-    // DebuggerRuntimeName
     //
     // UseLiveReload - Always enabled in dev mode
     // UseFastRefresh - Always enabled in dev mode
@@ -24,7 +32,7 @@ class ReactDevOptions {
     // SourceBundleHost - default to localhost
     // SourceBundlePort - default to 8081
 
-    var SourceBundleName: String
+    var SourceBundleName: String?
         external get
         external set
 

@@ -41,7 +41,7 @@ class LaunchActivity : AppCompatActivity() {
             NativeLoader.init(SystemDelegate())
         }
         SoLoader.init(this.applicationContext, false)
-        ReactHostStatics.libletInit();
+        // ReactHostStatics.libletInit();
 
 
         binding = ActivityLaunchBinding.inflate(layoutInflater)

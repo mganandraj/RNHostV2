@@ -14,8 +14,13 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_library(headless SHARED headless.cpp JSHeadlessRuntimeImpl.cpp)
 
+target_compile_definitions(headless PRIVATE MS_TARGET_ANDROID)
+
 find_library(log-lib log)
 target_link_libraries(headless ${log-lib})
+
+find_package(officeplat REQUIRED CONFIG)
+target_link_libraries(headless officeplat::plat)
 
 find_package(mso REQUIRED CONFIG)
 target_compile_definitions(headless PRIVATE MS_TARGET_ANDROID)

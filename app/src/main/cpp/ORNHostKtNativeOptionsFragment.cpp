@@ -10,7 +10,6 @@
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO,     LOG_TAG, __VA_ARGS__)
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,    LOG_TAG, __VA_ARGS__)
 
-
 void ORNHostKtNativeOptionsFragment::registerNatives() {
     javaClassStatic()->registerNatives({
                                                makeNativeMethod("getReactOptions", ORNHostKtNativeOptionsFragment::getReactOptions),
@@ -18,6 +17,7 @@ void ORNHostKtNativeOptionsFragment::registerNatives() {
 }
 
 /*static*/ facebook::jni::local_ref<Mso::React::JReactOptions_::javaobject> ORNHostKtNativeOptionsFragment::getReactOptions(facebook::jni::alias_ref<ORNHostKtNativeOptionsFragment> thiz) {
+
     Mso::React::ReactOptions options;
     options.Identity = "V2App";
     options.DeveloperSettings.IsDevModeEnabled = true;

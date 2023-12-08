@@ -27,7 +27,7 @@ fun fromJson(jsonStr: String?): Bundle {
     }
 }
 
-fun processValue(key: String?, value: Any, sink: ArrayList<Any>) {
+fun processValue(key: String?, value: Any?, sink: ArrayList<Any?>) {
     when (value) {
         null, is Boolean, is String -> {
             sink.add(value)
@@ -50,7 +50,7 @@ fun processValue(key: String?, value: Any, sink: ArrayList<Any>) {
     }
 }
 
-fun processValue(key: String?, value: Any, sink: Bundle) {
+fun processValue(key: String?, value: Any?, sink: Bundle) {
     when (value) {
         null ->
                 sink.putString(key, null)
@@ -74,13 +74,13 @@ fun processValue(key: String?, value: Any, sink: Bundle) {
 fun fromJson(jsonObject: JSONObject) : Bundle {
     val childBundle = Bundle()
     jsonObject.keys().forEach {
-        processValue(it, jsonObject.get(it) as Object, childBundle)
+        processValue(it, jsonObject.get(it) as Any, childBundle)
     }
     return childBundle
 }
 
-fun fromJson(jsonArray: JSONArray): ArrayList<Any> {
-    val childList = ArrayList<Any>()
+fun fromJson(jsonArray: JSONArray): ArrayList<Any?> {
+    val childList = ArrayList<Any?>()
     for (i in 0 until jsonArray.length()) {
         val obj = jsonArray.get(i)
         processValue(null, obj as Any, childList)

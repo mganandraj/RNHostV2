@@ -33,7 +33,7 @@ void CleanupExpiredInstances() noexcept;
 Mso::CntPtr<IReactInstanceInternal> MakeReactInstance(
 	IReactHost& reactHost,
 	ReactOptions&& options,
-	// Mso::JSHost::IRekaContextProxy& rekaContextProxy,
+	Mso::JSHost::IRekaContextProxy& rekaContextProxy,
 	Mso::Promise<void>&& whenLoaded) noexcept;
 
 }} // namespace Mso::React

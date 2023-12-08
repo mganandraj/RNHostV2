@@ -5,7 +5,7 @@
 #include "InstanceFactory.h"
 #include <future/future.h>
 
-#include "ReactInstanceAndroid.h"
+#include "ReactInstanceAndroidDeferred.h"
 
 #include "ReactHost.h"
 
@@ -26,10 +26,11 @@ LIBLET_PUBLICAPI Mso::CntPtr<IReactHost> MakeReactHost(
 Mso::CntPtr<IReactInstanceInternal> MakeReactInstance(
 	IReactHost& reactHost,
 	ReactOptions&& options,
-	/*Mso::JSHost::IRekaContextProxy& rekaContextProxy*/
-	Mso::Promise<void>&& /*whenLoaded*/) noexcept
+	Mso::JSHost::IRekaContextProxy& rekaContextProxy,
+	Mso::Promise<void>&& whenLoaded) noexcept
 {
-	return Mso::Make<ReactInstanceAndroid, IReactInstanceInternal>(reactHost, std::move(options));
+	return Deferred::MakeReactInstance(reactHost, std::move(options), rekaContextProxy, std::move(whenLoaded));
+
 }
 
 }} // namespace Mso::React

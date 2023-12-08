@@ -36,9 +36,7 @@ RekaNativeModuleProxy::RekaNativeModuleProxy(
                             dataServiceProviderName.c_str(), context);
                 };
 
-        basicRekaBridgeOptions.OnInitialized = [](Mso::JSHost::IRekaContext &) noexcept {
-
-        };
+        basicRekaBridgeOptions.OnInitialized = [](Mso::JSHost::IRekaContext &) noexcept {};
 
         basicRekaBridgeOptions.JsExecutor = Mso::Make<ReactNativeRekaBridge, Mso::JSHost::IRekaBridge>(
                 reactContextHolder);

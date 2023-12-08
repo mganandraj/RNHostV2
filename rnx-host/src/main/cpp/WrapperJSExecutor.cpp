@@ -32,25 +32,25 @@ void WrapperJSExecutor::loadBundle(std::unique_ptr<const facebook::react::JSBigS
             auto bundleBigString = std::make_unique<facebook::react::JSBigStdString>(std::string(content.data(), content.size()));
             auto sourceUrl = !info.Id.empty() ? info.Id : std::string("<dynamic>");
             m_baseExecutor->loadBundle(std::move(bundleBigString), info.Id);
-            if(observer) {
-                observer->OnLoaded(info.Id);
-            }
+            //if(observer) {
+            //    observer->OnLoaded(info.Id);
+            //}
         } else if (!info.FileName.empty()) {
             if (isFileSystemPath(info.FileName)) {
                 auto bundleBigString = JSBigFileString::fromPath(info.FileName);
                 m_baseExecutor->loadBundle(std::move(bundleBigString), info.FileName);
-                if(observer) {
-                    observer->OnLoaded(info.FileName);
-                }
+                //if(observer) {
+                //    observer->OnLoaded(info.FileName);
+                //}
             } else {
                 jni::local_ref<JAssetManager::javaobject> jAssetManager = m_assetManager.lockLocal();
                 if (jAssetManager) {
                     AAssetManager *assetManager = extractAssetManager(jAssetManager);
-                    auto bundleBigString = loadScriptFromAssets(assetManager, info.Id);
-                    m_baseExecutor->loadBundle(std::move(bundleBigString), info.Id);
-                    if (observer) {
-                        observer->OnLoaded(info.FileName);
-                    }
+                    auto bundleBigString = loadScriptFromAssets(assetManager, info.FileName);
+                    m_baseExecutor->loadBundle(std::move(bundleBigString), info.FileName);
+                    //if (observer) {
+                    //    observer->OnLoaded(info.FileName);
+                    //}
                 }
             }
         } else {

@@ -36,6 +36,8 @@ class ReactNativeHost private constructor (
     private val nativeModulePackages: MutableList<ReactPackage>,
     private val javaScriptExecutorFactoryOverride: JavaScriptExecutorFactory?,
     private val customDevOptions: MutableList<Pair<String, DevOptionHandler>>? = null,
+    private val enableDebugger: Boolean = true,
+    private val debuggerName: String?,
     private val eagerInit: Boolean = true,
     private val isDev: Boolean = false,
     private val enableFlipper: Boolean = false,
@@ -65,7 +67,8 @@ class ReactNativeHost private constructor (
         private var nativeModulePackages: MutableList<ReactPackage> = mutableListOf(),
         private var javaScriptExecutorFactory: JavaScriptExecutorFactory? = null,
         private var customDevOptions: MutableList<Pair<String, DevOptionHandler>>? = null,
-        private var useHermes: Boolean = false,
+        private var enableDebugger: Boolean = false, // Currently implemented only with Hermes executor
+        private var debuggerName: String? = null, // Currently implemented only with Hermes executor
         private var eagerInit: Boolean = true,
         private var isDev: Boolean = false,
         private var enableFlipper: Boolean = false,
@@ -85,7 +88,8 @@ class ReactNativeHost private constructor (
         fun shouldEagerInit(_eagerInit: Boolean) = apply { this.eagerInit = _eagerInit; return this }
         fun javaScriptExecutorFactory(_javaScriptExecutorFactory: JavaScriptExecutorFactory) = apply { this.javaScriptExecutorFactory = _javaScriptExecutorFactory; return this }
         fun customDevOptions(_customDevOptions: MutableList<Pair<String, DevOptionHandler>>) = apply { this.customDevOptions = _customDevOptions; return this }
-        fun useHermes(_useHermes: Boolean) = apply { this.useHermes = _useHermes; return this }
+        fun enableDebugger(_enableDebugger: Boolean) = apply { this.enableDebugger = _enableDebugger; return this }
+        fun debuggerName(_debuggerName: String) = apply { this.debuggerName = _debuggerName; return this }
         fun isDev(_isDev: Boolean) = apply { this.isDev = _isDev; return this }
         fun enableFlipper(_enableFlipper: Boolean) = apply { this.enableFlipper = _enableFlipper; return this }
         fun useFabric(_useFabric: Boolean) = apply { this.useFabric = _useFabric; return this }
@@ -107,6 +111,8 @@ class ReactNativeHost private constructor (
                 nativeModulePackages,
                 javaScriptExecutorFactory,
                 customDevOptions,
+                enableDebugger,
+                debuggerName,
                 eagerInit,
                 isDev,
                 enableFlipper,
@@ -176,6 +182,14 @@ class ReactNativeHost private constructor (
         }
     }
 
+    private fun fileExists(filePath: String): Boolean {
+        return (java.io.File(filePath).exists())
+    }
+
+    private fun getAssetUrl(bundleName: String): String? {
+        return "assets://$bundleName"
+    }
+
     private fun configureBundleSettingsUsingRNBundleLoader(builder: ReactInstanceManagerBuilder) {
         builder.setJSBundleLoader(object : JSBundleLoader() {
             override fun loadScript(jsBundleLoaderDelegate: JSBundleLoaderDelegate): String? {
@@ -188,17 +202,16 @@ class ReactNativeHost private constructor (
                 for (bundle in bundlesToLoad) {
                     val fetchedBundle = jsBundleFetcher?.fetch(bundle, true) ?: bundle
                     val bundleInfo = fetchedBundle.Info
-                    if (bundleInfo == null ||
-                        (bundleInfo.Id == null && bundleInfo.FileName == null)) {
+                    if (bundleInfo?.FileName == null) {
                         throw IllegalArgumentException("Bundle should be either an Asset or a file name") // For now !
                     }
 
-                    if (bundleInfo.Id != null) {
-                        JSBundleLoader.createAssetLoader(application, bundleInfo.Id, false)
+                    if(fileExists(bundleInfo.FileName!!)) {
+                        JSBundleLoader.createFileLoader(bundleInfo.FileName)
                                 .loadScript(jsBundleLoaderDelegate)
                     } else {
-                        JSBundleLoader.createFileLoader(bundleInfo.FileName)
-                            .loadScript(jsBundleLoaderDelegate)
+                        JSBundleLoader.createAssetLoader(application, getAssetUrl(bundleInfo.FileName), false)
+                                .loadScript(jsBundleLoaderDelegate)
                     }
                 }
 
@@ -224,6 +237,13 @@ class ReactNativeHost private constructor (
 
     private fun configureJSExecutor(builder: ReactInstanceManagerBuilder) {
         var baseExecutorFactory = javaScriptExecutorFactoryOverride ?: HermesExecutorFactory()
+
+        if(baseExecutorFactory is HermesExecutorFactory) {
+            baseExecutorFactory.setEnableDebugger(enableDebugger)
+            if (!debuggerName.isNullOrEmpty())
+                baseExecutorFactory.setDebuggerName(debuggerName)
+        }
+
         var fetchedBundles = preloadBundles?.map { jsBundleFetcher?.fetch(it, true) ?: it }
 
         val wrappedExecutorFactory = WrapperJSExecutorFactory(

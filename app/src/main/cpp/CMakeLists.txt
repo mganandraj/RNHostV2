@@ -23,6 +23,10 @@ add_library(reacthostapp
 # TODO:: Why is this necessary ?
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+find_package(officeplat REQUIRED CONFIG)
+target_link_libraries(reacthostapp officeplat::plat)
+
+
 find_package(mso REQUIRED CONFIG)
 target_compile_definitions(reacthostapp PRIVATE USE_OPENSOUCE_MSO)
 target_compile_definitions(reacthostapp PRIVATE MS_TARGET_ANDROID)

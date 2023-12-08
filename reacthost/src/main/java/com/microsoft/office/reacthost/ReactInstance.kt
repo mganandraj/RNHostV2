@@ -8,6 +8,7 @@ import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.RuntimeExecutor
 import com.facebook.react.turbomodule.core.CallInvokerHolderImpl
 import com.facebook.soloader.SoLoader
+import com.microsoft.office.plat.annotation.KeepClassAndMembers
 import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
 import com.microsoft.office.reactnative.host.OfficeBundleFetcher
 import com.microsoft.office.reactnative.host.ReactNativeHost
@@ -17,15 +18,13 @@ import java.lang.ref.WeakReference
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
-
+@KeepClassAndMembers
 class ReactInstance internal constructor(reactOptions: ReactOptions) {
     companion object {
         val LOG_TAG = "ReactInstance"
 
         init {
-            // System.loadLibrary("reacthost");
-            // SoLoader.loadLibrary("sdxruntime");
-            // SoLoader.loadLibrary("reactrekadroid")
+            ReactHostStatics.loadLibs()
         }
     }
 
@@ -43,6 +42,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
         mReactOptions = reactOptions
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun onReactContextInitialized(reactContext: ReactContext?) {
         onInitialized(/*ReactContextHolder(reactContext!!)*/)
     }
@@ -72,7 +72,6 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
     // TODO :: Pending any error case handling ..
     // Note :: This is called from native
     fun initialize() {
-        var identity = mReactOptions.identity
         var javaModuleNames = mReactOptions.JavaModuleNames
         var nativeModulePackages: MutableList< ReactPackage> = ArrayList< ReactPackage>();
 
@@ -99,7 +98,9 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                 .shouldEagerInit(true)
                 .activity(initialActivity!!.get()!!)
                 .application(initialActivity!!.get()!!.application)
-                .isDev(mReactOptions.DeveloperSettings.IsDevModeEnabled)
+                .isDev(mReactOptions.DeveloperSettings.IsDevModeEnabled?:false)
+                .debuggerName(mReactOptions.DeveloperSettings.DebuggerRuntimeName)
+                .enableDebugger(mReactOptions.DeveloperSettings.UseDirectDebugger)
                 .jsMainModulePath(mReactOptions.DeveloperSettings.SourceBundleName?:"index")
                 .preloadBundles(platformBundles)
                 .nativeModulePackages(nativeModulePackages)

@@ -34,6 +34,9 @@ add_library(reka STATIC
 find_library(log-lib log)
 target_link_libraries(reka ${log-lib})
 
+find_package(officeplat REQUIRED CONFIG)
+target_link_libraries(reka officeplat::plat)
+
 find_package(mso REQUIRED CONFIG)
 target_compile_definitions(reka PRIVATE MS_TARGET_ANDROID)
 target_compile_definitions(reka PRIVATE MS_TARGET_POSIX)

@@ -1,0 +1,30 @@
+LIBLETNAME = rnxreacthost
+LIBLET_SHARED_PRECOMP = 1
+PUBLICAPI_VERSION = 2
+PUBLICAPI_USE_SYMLINKS = 1
+PUBLICAPI_NO_EXPORTS = 1
+LIBLET_DYNLINK = 1
+
+!include $(WAREHOUSEIMPORTDIR)\libletmake\x-none\nmake\make.inc
+!include $(OTOOLS)\inc\nuget\microsoft.office.reactnative.inc
+
+SOURCES = JJSExecutorObserver.cpp \
+	JJSBundle.cpp \
+	OnLoad.cpp \
+	WrapperJSExecutor.cpp \
+	WrapperJSExecutorFactory.cpp
+
+HEADERS =  $(HEADERS) $(REACT_NATIVE_ANDROID_HEADERS)
+
+LOCAL_LDLIBS = \
+	$(STL_LIBS) \
+# Adding dependency on libmso20android to work around this error: fatal error U1050: liblet.inc should only be included in builds that pass liblet libs/lobs to the linker;
+	$(MSODLL_20TARGETDIR)\libmso20android.so \
+	$(OPENSOURCE_REACTNATIVETARGETDIR)\libfbjni.so \
+	$(OPENSOURCE_REACTNATIVETARGETDIR)\libreactnativejni.so \
+
+# Use version script to control exported symbols
+# Version script guide here - \otools\android\build\tools\VersionExpmap\README.txt
+USE_VERSION_SCRIPT = 1
+
+7ZIP_COMPRESS_DSO = 1

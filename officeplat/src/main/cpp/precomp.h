@@ -1,18 +1,5 @@
-//
-// Created by anandrag on 9/20/2023.
-//
-
 #ifndef ORNHOST_PRECOMP_H
 #define ORNHOST_PRECOMP_H
-
-#include <smartPtr/cntPtr.h>
-
-namespace Mso{
-    template<typename T> using TCntPtr = Mso::CntPtr<T>;
-}
-
-
-
 
 #include <vector>
 #include <stack>
@@ -26,9 +13,15 @@ namespace Mso{
 
 #include <sal.h>
 
-typedef int64_t __int64;
+#include <stlextensions/string_adapter.h>
 
-// #define MS_TARGET_ANDROID
+#include <smartPtr/cntPtr.h>
+namespace Mso {
+    template <typename T>
+    using TCntPtr = CntPtr<T>;
+}
+
+typedef int64_t __int64;
 
 #define __max(a,b)  (((a) > (b)) ? (a) : (b))
 #define __min(a,b)  (((a) < (b)) ? (a) : (b))
@@ -174,6 +167,7 @@ BOOL SystemTimeToFileTime(const SYSTEMTIME* pst, FILETIME* pft);
 BOOL FileTimeToSystemTime(const FILETIME* pft, SYSTEMTIME* pst);
 void GetSystemTime(SYSTEMTIME *ioTime);
 
+
 typedef union _LARGE_INTEGER {
     struct {
         ULONG LowPart;
@@ -285,10 +279,7 @@ struct IMsoMemHeap
 #endif // DEBUG
 };
 
-//TASKLIBTECHDEBT_(HRESULT) HrMsoAllocHost(size_t cbAlloc, void **ppvRes, IMsoMemHeap* pmmh) noexcept
-//{
-//    std::abort();
-//}
+TASKLIBTECHDEBT_(HRESULT) HrMsoAllocHost(size_t cbAlloc, void **ppvRes, IMsoMemHeap* pmmh) noexcept;
 
 typedef unsigned char UCHAR;
 #define MakeWordFirstSecond(b1, b2) ((WORD)(b1) << 8 | (WORD)(UCHAR)(b2))
