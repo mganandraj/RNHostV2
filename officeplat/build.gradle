@@ -3,6 +3,38 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+task aggregateMsoHeaders(type: Copy) {
+    from 'src/main/cpp'
+    from "../mso/src/main/cpp/libs/activeObject/include"
+    from "../mso/src/main/cpp/libs/activeObject/include"
+    from "../mso/src/main/cpp/libs/compilerAdapters/include"
+    from "../mso/src/main/cpp/libs/comUtil/include"
+    from "../mso/src/main/cpp/libs/cppExtensions/include"
+    from "../mso/src/main/cpp/libs/crash/include"
+    from "../mso/src/main/cpp/libs/debugAssertApi/include"
+    from "../mso/src/main/cpp/libs/dispatchQueue/include"
+    from "../mso/src/main/cpp/libs/errorCode/include"
+    from "../mso/src/main/cpp/libs/eventWaitHandle/include"
+    from "../mso/src/main/cpp/libs/functional/include"
+    from "../mso/src/main/cpp/libs/future/include"
+    from "../mso/src/main/cpp/libs/guid/include"
+    from "../mso/src/main/cpp/libs/memoryApi/include"
+    from "../mso/src/main/cpp/libs/motifCpp/include"
+    from "../mso/src/main/cpp/libs/oacr/include"
+    from "../mso/src/main/cpp/libs/oacr_posix/include"
+    from "../mso/src/main/cpp/libs/object/include"
+    from "../mso/src/main/cpp/libs/platformAdapters/include"
+    from "../mso/src/main/cpp/libs/platform_posix/include"
+    from "../mso/src/main/cpp/libs/smartPtr/include"
+    from "../mso/src/main/cpp/libs/span/include"
+    from "../mso/src/main/cpp/libs/tagUtils/include"
+    from "../mso/src/main/cpp/libs/typeTraits/include"
+    into 'build/tmp/mso20android_headers'
+    exclude "CMakeLists.txt"
+}
+
+preBuild.dependsOn aggregateMsoHeaders
+
 android {
     namespace 'com.microsoft.office.plat'
     compileSdk 34
@@ -49,6 +81,9 @@ android {
     }
 
     prefab {
+        mso20android {
+            headers "build/tmp/mso20android_headers"
+        }
         plat {
             headers "src/main/cpp/"
         }

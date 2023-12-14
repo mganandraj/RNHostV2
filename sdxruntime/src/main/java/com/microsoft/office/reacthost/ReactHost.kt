@@ -11,14 +11,11 @@ class ReactHost {
         mHybridData = hybridData
     }
 
-    fun Options(): ReactOptions? {
-        return null
-    }
+	//! Returns a copy of react options.
+    external fun Options(): ReactOptions?
 
     //! Returns current ReactInstance. The result can be null if instance is unloaded.
-    fun Instance() : ReactInstance? {
-        return null
-    }
+    external fun Instance() : ReactInstance?
 
     // Note :: We can project ReactContext to Kotline in future if needed.
     //! Gets Reka context proxy to queue up and run Reka proxies that call JavaScript services or JavaScript event handlers.

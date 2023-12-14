@@ -12,16 +12,23 @@ object ReactHostStatics {
 
     external fun makeReactHost(reactOptions: ReactOptions): ReactHost
 
-    // This is not required when within Office.
-    external fun libletInit();
+    fun ensureInitialized(): Boolean {
+        if(initialActivity?.get() == null)
+            return false;
 
-    fun loadLibs() {
+        try {
+            loadLibs();
+        } catch (ex: UnsatisfiedLinkError) {
+            return false
+        }
+
+        return true
+    }
+
+    private fun loadLibs() {
         SoLoader.loadLibrary("reactnativejni");
         SoLoader.loadLibrary("reactrekadroid");
-        try {
-            SoLoader.loadLibrary("sdxruntime");
-        } catch(ex: UnsatisfiedLinkError) {
-            Trace.d("LOG_TAG", ex.message);
-        }
+        SoLoader.loadLibrary("sdxruntime");
+        SoLoader.loadLibrary("officereacthost");
     }
 }

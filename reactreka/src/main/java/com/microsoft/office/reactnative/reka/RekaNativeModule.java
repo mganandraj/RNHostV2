@@ -26,11 +26,7 @@ public class RekaNativeModule extends ReactContextBaseJavaModule
     private RekaBridgeOptions m_rekaBridgeOptions;
 
     static {
-        try {
-            SoLoader.loadLibrary("mso20android");
-        } catch(UnsatisfiedLinkError ex) {
-            Trace.d("LOG_TAG", ex.getMessage());
-        }
+        SoLoader.loadLibrary("mso20android");
         SoLoader.loadLibrary("reactrekadroid");
     }
 

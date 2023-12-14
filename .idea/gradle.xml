@@ -17,10 +17,10 @@
             <option value="$PROJECT_DIR$/json" />
             <option value="$PROJECT_DIR$/mso" />
             <option value="$PROJECT_DIR$/officeplat" />
-            <option value="$PROJECT_DIR$/reacthost" />
             <option value="$PROJECT_DIR$/reactreka" />
             <option value="$PROJECT_DIR$/reka" />
             <option value="$PROJECT_DIR$/rnx-host" />
+            <option value="$PROJECT_DIR$/sdxruntime" />
           </set>
         </option>
       </GradleProjectSettings>

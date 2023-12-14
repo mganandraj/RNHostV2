@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import androidx.annotation.Keep
 import com.facebook.hermes.reactexecutor.HermesExecutorFactory
 import com.facebook.react.ReactInstanceEventListener
 import com.facebook.react.ReactInstanceManager
@@ -252,10 +253,12 @@ class ReactNativeHost private constructor (
             if (loadUsingRNBundleLoader || fetchedBundles.isNullOrEmpty()) arrayOf<JSBundle> () else fetchedBundles.toTypedArray(),
             object :
                 JSExecutorObserver {
+                @Keep
                 override fun OnBundleLoaded(bundleUrl: String?) {
                     onJSBundleLoaded?.invoke(bundleUrl!!)
                 }
 
+                @Keep
                 override fun OnInitialized() {
                     onJSRuntimeInitialized?.invoke()
                 }

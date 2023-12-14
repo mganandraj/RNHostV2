@@ -92,7 +92,8 @@ class ReactOptions {
 
     companion object {
         init {
-            ReactHostStatics.loadLibs()
+            if(!ReactHostStatics.ensureInitialized())
+                throw RuntimeException("ReactHost is not initialized")
         }
     }
 }

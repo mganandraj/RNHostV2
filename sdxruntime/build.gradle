@@ -46,9 +46,10 @@ android {
         prefabPublishing true
     }
     prefab {
-        reacthost {
+        sdxruntime {
             headers "src/main/cpp/"
         }
+        officereacthost
     }
 }
 

@@ -15,13 +15,17 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 add_library(headless SHARED headless.cpp JSHeadlessRuntimeImpl.cpp)
 
 target_compile_definitions(headless PRIVATE MS_TARGET_ANDROID)
+target_compile_definitions(headless PRIVATE MS_TARGET_POSIX)
+target_compile_definitions(headless PRIVATE USE_OPENSOUCE_MSO)
 
 find_library(log-lib log)
 target_link_libraries(headless ${log-lib})
 
 find_package(officeplat REQUIRED CONFIG)
 target_link_libraries(headless officeplat::plat)
+target_link_libraries(headless officeplat::mso20android)
 
+#[[
 find_package(mso REQUIRED CONFIG)
 target_compile_definitions(headless PRIVATE MS_TARGET_ANDROID)
 target_compile_definitions(headless PRIVATE MS_TARGET_POSIX)
@@ -48,8 +52,7 @@ target_link_libraries(headless mso::platform_posix)
 target_link_libraries(headless mso::smartPtr)
 target_link_libraries(headless mso::span)
 target_link_libraries(headless mso::tagUtils)
-target_link_libraries(headless mso::typeTraits)
-
+target_link_libraries(headless mso::typeTraits)]]
 
 find_package(ReactAndroid REQUIRED CONFIG)
 target_link_libraries(headless ReactAndroid::fabricjni)
@@ -84,8 +87,8 @@ target_link_libraries(headless ReactAndroid::yoga)
 find_package(fbjni REQUIRED CONFIG)
 target_link_libraries(headless fbjni::fbjni)
 
-find_package(reacthost REQUIRED CONFIG)
-target_link_libraries(headless reacthost::reacthost)
+find_package(sdxruntime REQUIRED CONFIG)
+target_link_libraries(headless sdxruntime::sdxruntime)
 
 find_package(json REQUIRED CONFIG)
 target_link_libraries(headless json::json)

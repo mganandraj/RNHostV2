@@ -11,7 +11,7 @@ initReka();
 
 // NativeModules.MyNativeModule.hello();
 
-import {NativeServices} from "./reka/AwesomeRekaDefs.g"
-NativeServices.NativeService.tryCall("hello from JS through Reka", 9999);
+// import {NativeServices} from "./reka/AwesomeRekaDefs.g"
+// NativeServices.NativeService.tryCall("hello from JS through Reka", 9999);
 
 AppRegistry.registerComponent(appName, () => App);

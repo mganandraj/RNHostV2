@@ -72,7 +72,7 @@ dependencies {
     implementation(project(":mso"))
     implementation(project(":rnx-host"))
     implementation(project(":fbjni"))
-    implementation(project(":reacthost"))
+    implementation implementation(project(':sdxruntime',))
     implementation(project(":reactreka"))
     implementation(project(":headless"))
     implementation(project(":officeplat"))

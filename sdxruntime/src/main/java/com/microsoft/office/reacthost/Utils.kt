@@ -1,6 +1,9 @@
 package com.microsoft.office.reacthost
 
 import android.os.Bundle
+import android.os.Parcel
+import android.util.Base64
+import com.microsoft.office.plat.logging.Trace
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -86,4 +89,20 @@ fun fromJson(jsonArray: JSONArray): ArrayList<Any?> {
         processValue(null, obj as Any, childList)
     }
     return childList
+}
+
+fun serializeBundle(bundle: Bundle): String {
+    val parcel = Parcel.obtain()
+    bundle.writeToParcel(parcel, 0)
+    return Base64.encodeToString(parcel.marshall(), 0)
+}
+
+fun deSerializeBundle(str: String): Bundle {
+    val bytes = Base64.decode(str, 0)
+    val parcel = Parcel.obtain()
+    parcel.unmarshall(bytes, 0, bytes.size)
+    parcel.setDataPosition(0);
+    var bundle = Bundle()
+    bundle.readFromParcel(parcel)
+    return bundle
 }

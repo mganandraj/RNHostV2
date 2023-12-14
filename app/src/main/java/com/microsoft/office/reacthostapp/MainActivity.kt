@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         init {
-            System.loadLibrary("reacthost")
+            System.loadLibrary("sdxruntime")
             System.loadLibrary("reacthostapp")
         }
     }

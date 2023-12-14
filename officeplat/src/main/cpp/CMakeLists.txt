@@ -13,15 +13,9 @@ project("officeplat")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-add_library(plat STATIC
-        stub.cpp 
+add_library(plat SHARED
+        OfficeAssetApi.cpp
         wstring_inst.cpp
-        stringcore/localeSupport_android.cpp
-        stringcore/stringComparison.cpp
-        stringcore/stringParsing.cpp
-        stringcore/stringConversion.cpp
-        stringcore/stringTraits.cpp
-        stringcore/stringUtils.cpp
 )
 
 target_compile_definitions(plat PRIVATE MS_TARGET_ANDROID)
@@ -31,16 +25,56 @@ target_compile_definitions(plat PRIVATE USE_OPENSOUCE_MSO)
 find_library(log-lib log)
 target_link_libraries(plat ${log-lib})
 
+add_library( mso20android SHARED
+        stub.cpp
+        stringcore/localeSupport_android.cpp
+        stringcore/stringComparison.cpp
+        stringcore/stringParsing.cpp
+        stringcore/stringConversion.cpp
+        stringcore/stringTraits.cpp
+        stringcore/stringUtils.cpp
+)
+
 find_package(mso REQUIRED CONFIG)
-target_link_libraries(plat mso::compilerAdapters)
-target_link_libraries(plat mso::guid)
-target_link_libraries(plat mso::memoryApi)
-target_link_libraries(plat mso::oacr)
-target_link_libraries(plat mso::oacr_posix)
-target_link_libraries(plat mso::platformAdapters)
-target_link_libraries(plat mso::platform_posix)
-target_link_libraries(plat mso::crash)
-target_link_libraries(plat mso::debugAssertApi)
-target_link_libraries(plat mso::smartPtr)
-target_link_libraries(plat mso::tagUtils)
-target_link_libraries(plat mso::typeTraits)
+target_link_libraries( mso20android -Wl,--whole-archive mso::activeObject -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::compilerAdapters -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::comUtil -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::cppExtensions -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::crash -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::debugAssertApi -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::dispatchQueue -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::errorCode -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::eventWaitHandle -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::functional -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::future -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::guid -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::memoryApi -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::motifCpp -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::oacr -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::oacr_posix -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::object -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::platformAdapters -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::platform_posix -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::smartPtr -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::span -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::tagUtils -Wl,--no-whole-archive)
+target_link_libraries( mso20android -Wl,--whole-archive mso::typeTraits -Wl,--no-whole-archive)
+
+target_compile_definitions( mso20android PRIVATE MS_TARGET_ANDROID)
+target_compile_definitions( mso20android PRIVATE MS_TARGET_POSIX)
+target_compile_definitions( mso20android PRIVATE USE_OPENSOUCE_MSO)
+
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+target_link_libraries( mso20android GTest::gtest_main)
+
+# include(GoogleTest)
+# gtest_discover_tests(hello_test)

@@ -10,6 +10,7 @@ class Direction:
     RNH_TO_OMR = 2
 
 direction = Direction.OMR_TO_RNH
+# direction = Direction.RNH_TO_OMR
 
 # List of entries organized as [OMR Path, RNH Path, [list of exclusions]]
 DIR_ENTRIES = [
@@ -21,7 +22,6 @@ DIR_ENTRIES = [
 ]
 
 FILE_ENTRIES = [
-    ["reactnative\\androidhost\\cpp\\ReactInstanceAndroid.cpp", "reacthost\\src\\main\\cpp\\ReactInstanceAndroid.cpp"],
     ["reactnative\\androidhost\\cpp\\ReactInstanceAndroid.cpp", "reacthost\\src\\main\\cpp\\ReactInstanceAndroid.cpp"],
     ["reactnativehost\\ReactInstanceAndroidDeferred.cpp", "reacthost\\src\\main\\cpp\\ReactInstanceAndroidDeferred.cpp"],
     ["reactnativehost\\ReactInstanceAndroidDeferred.h", "reacthost\\src\\main\\cpp\\ReactInstanceAndroidDeferred.h"],

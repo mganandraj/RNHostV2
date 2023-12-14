@@ -9,7 +9,7 @@ import com.facebook.react.bridge.ReadableNativeMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.microsoft.office.plat.annotation.KeepClassAndMembers;
 
- @KeepClassAndMembers
+@KeepClassAndMembers
 public class RekaNativeToJsBridge {
 
     private static final String LOG_TAG = "RekaNativeToJsBridge";

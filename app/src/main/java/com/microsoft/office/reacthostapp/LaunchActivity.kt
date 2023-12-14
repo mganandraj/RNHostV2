@@ -3,8 +3,9 @@ package com.microsoft.office.reacthostapp
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcel
 import android.provider.Settings
-import com.google.android.material.snackbar.Snackbar
+import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -13,19 +14,23 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.facebook.soloader.SoLoader
 import com.facebook.soloader.nativeloader.NativeLoader
 import com.facebook.soloader.nativeloader.SystemDelegate
+import com.google.android.material.snackbar.Snackbar
 import com.microsoft.office.reacthost.ReactHostStatics
 import com.microsoft.office.reacthostapp.databinding.ActivityLaunchBinding
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import java.lang.ref.WeakReference
+
 
 class LaunchActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityLaunchBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
 
         ReactHostStatics.initialActivity = WeakReference(this@LaunchActivity)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -67,7 +72,7 @@ class LaunchActivity : AppCompatActivity() {
 
     companion object {
         init {
-            System.loadLibrary("reacthost")
+            System.loadLibrary("sdxruntime")
             System.loadLibrary("reacthostapp")
         }
     }

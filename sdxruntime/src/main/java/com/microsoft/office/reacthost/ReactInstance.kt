@@ -2,6 +2,7 @@ package com.microsoft.office.reacthost
 
 import android.util.Log
 import com.facebook.jni.HybridData
+import com.facebook.react.ReactInstanceEventListener
 import com.facebook.react.ReactInstanceManager
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.ReactContext
@@ -13,7 +14,6 @@ import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
 import com.microsoft.office.reactnative.host.OfficeBundleFetcher
 import com.microsoft.office.reactnative.host.ReactNativeHost
 import com.microsoft.office.reactnative.reka.RekaBridgeOptions
-// import com.microsoft.react.polyester.PolyesterReactPackage
 import java.lang.ref.WeakReference
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -24,7 +24,8 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
         val LOG_TAG = "ReactInstance"
 
         init {
-            ReactHostStatics.loadLibs()
+            if(!ReactHostStatics.ensureInitialized())
+                throw RuntimeException("ReactHost is not initialized")
         }
     }
 
@@ -122,8 +123,20 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
         })
     }
 
-    fun getReactInstanceManager() : ReactInstanceManager {
-       return mReactNativeHost?.reactInstanceManager!!
+    fun getReactOptions(): ReactOptions {
+        return mReactOptions
+    }
+
+    fun enqueueTaskOnReactContextInitialized(task: ReactInstanceEventListener) {
+        this.mReactNativeHost?.addReactInstanceEventListener(task)
+    }
+
+    fun getCurrentReactContext(): ReactContext? {
+        return mReactNativeHost?.reactInstanceManager!!.currentReactContext
+    }
+
+    fun getReactInstanceManager() : ReactInstanceManager? {
+       return mReactNativeHost?.reactInstanceManager
     }
 
     fun getRuntimeExecutor() : RuntimeExecutor? {
