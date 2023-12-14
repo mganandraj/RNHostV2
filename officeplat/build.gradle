@@ -81,9 +81,6 @@ android {
     }
 
     prefab {
-        mso20android {
-            headers "build/tmp/mso20android_headers"
-        }
         plat {
             headers "src/main/cpp/"
         }

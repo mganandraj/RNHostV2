@@ -14,11 +14,11 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/fbjni" />
             <option value="$PROJECT_DIR$/headless" />
-            <option value="$PROJECT_DIR$/json" />
             <option value="$PROJECT_DIR$/mso" />
+            <option value="$PROJECT_DIR$/mso20android" />
             <option value="$PROJECT_DIR$/officeplat" />
+            <option value="$PROJECT_DIR$/precomp" />
             <option value="$PROJECT_DIR$/reactreka" />
-            <option value="$PROJECT_DIR$/reka" />
             <option value="$PROJECT_DIR$/rnx-host" />
             <option value="$PROJECT_DIR$/sdxruntime" />
           </set>

@@ -26,7 +26,15 @@ target_compile_definitions(reacthostapp PRIVATE USE_OPENSOUCE_MSO)
 
 find_package(officeplat REQUIRED CONFIG)
 target_link_libraries(reacthostapp officeplat::plat)
-target_link_libraries(reacthostapp officeplat::mso20android)
+
+find_package(mso20android REQUIRED CONFIG)
+target_link_libraries(reacthostapp mso20android::mso20android)
+
+find_package(mso20android REQUIRED CONFIG)
+target_link_libraries(reacthostapp mso20android::mso20android)
+
+find_package(precomp REQUIRED CONFIG)
+target_link_libraries(reacthostapp precomp::precomp)
 
 find_package(ReactAndroid REQUIRED CONFIG)
 target_link_libraries(reacthostapp ReactAndroid::jsi)
@@ -45,9 +53,3 @@ target_link_libraries(reacthostapp headless::headless)
 
 find_library(log-lib log)
 target_link_libraries(reacthostapp ${log-lib})
-
-find_package(json REQUIRED CONFIG)
-target_link_libraries(reacthostapp json::json)
-
-find_package(reka REQUIRED CONFIG)
-target_link_libraries(reacthostapp reka::reka)

@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "type_traits": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "random": "cpp"
     }
 }

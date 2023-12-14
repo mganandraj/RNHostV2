@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Parcel
 import android.util.AttributeSet
 import android.util.Base64
+import android.util.Log
 import android.view.View
 import com.facebook.jni.HybridData
 import com.facebook.react.ReactInstanceEventListener
@@ -51,6 +52,7 @@ open class BaseRootView : ReactRootView {
 
     @Suppress("FunctionName")
     fun  Reload(reactInstance: ReactInstance?, viewOptions: ReactViewOptions?, msoFuturePeer: MsoFuturePeer) {
+        Log.w("", "")
         reactInstance?.enqueueTaskOnReactContextInitialized {
             reactContext ->
             run {

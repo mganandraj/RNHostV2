@@ -30,7 +30,9 @@ target_compile_definitions(sdxruntime PRIVATE USE_OPENSOUCE_MSO)
 
 find_package(officeplat REQUIRED CONFIG)
 target_link_libraries(sdxruntime officeplat::plat)
-target_link_libraries(sdxruntime officeplat::mso20android)
+
+find_package(mso20android REQUIRED CONFIG)
+target_link_libraries(sdxruntime mso20android::mso20android)
 
 # Header only dependency
 find_package(fbjni REQUIRED CONFIG)
@@ -39,11 +41,8 @@ target_link_libraries(sdxruntime fbjni::fbjni)
 find_library(log-lib log)
 target_link_libraries(sdxruntime ${log-lib})
 
-find_package(json REQUIRED CONFIG)
-target_link_libraries(sdxruntime json::json)
-
-find_package(reka REQUIRED CONFIG)
-target_link_libraries(sdxruntime reka::reka)
+find_package(precomp REQUIRED CONFIG)
+target_link_libraries(sdxruntime precomp::precomp)
 
 add_library(officereacthost
         SHARED
@@ -56,7 +55,9 @@ target_compile_definitions(officereacthost PRIVATE USE_OPENSOUCE_MSO)
 
 find_package(officeplat REQUIRED CONFIG)
 target_link_libraries(officereacthost officeplat::plat)
-target_link_libraries(officereacthost officeplat::mso20android)
+
+find_package(mso20android REQUIRED CONFIG)
+target_link_libraries(officereacthost mso20android::mso20android)
 
 # Depends on RN only for headers
 find_package(ReactAndroid REQUIRED CONFIG)
@@ -71,8 +72,5 @@ target_link_libraries(officereacthost fbjni::fbjni)
 find_library(log-lib log)
 target_link_libraries(officereacthost ${log-lib})
 
-find_package(json REQUIRED CONFIG)
-target_link_libraries(officereacthost json::json)
-
-find_package(reka REQUIRED CONFIG)
-target_link_libraries(officereacthost reka::reka)
+find_package(precomp REQUIRED CONFIG)
+target_link_libraries(officereacthost precomp::precomp)

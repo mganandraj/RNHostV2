@@ -72,11 +72,10 @@ dependencies {
     implementation(project(":mso"))
     implementation(project(":rnx-host"))
     implementation(project(":fbjni"))
-    implementation implementation(project(':sdxruntime',))
+    implementation(project(':sdxruntime'))
+    implementation(project(':mso20android'))
     implementation(project(":reactreka"))
     implementation(project(":headless"))
     implementation(project(":officeplat"))
-
-    implementation(project(":reka"))
-    implementation(project(":json"))
+    implementation(project(":precomp"))
 }

@@ -70,4 +70,5 @@ dependencies {
 
     implementation(project(":fbjni"))
     implementation(project(":officeplat"))
+    implementation(project(":precomp"))
 }

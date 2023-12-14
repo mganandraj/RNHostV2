@@ -64,7 +64,7 @@ dependencies {
     implementation(project(":mso"))
     implementation(project(":rnx-host"))
     implementation(project(":fbjni"))
-    implementation implementation(project(':sdxruntime',))
+    implementation(project(':sdxruntime'))
 
     implementation ("com.facebook.react:react-android:${RN_VERSION}") {
         exclude group:'com.facebook.fbjni', module:'fbjni'
@@ -74,7 +74,7 @@ dependencies {
         exclude group:'com.facebook.fbjni', module:'fbjni'
     }
 
-    implementation(project(":reka"))
-    implementation(project(":json"))
     implementation(project(":officeplat"))
+    implementation(project(":mso20android"))
+    implementation(project(":precomp"))
 }

@@ -27,7 +27,12 @@ target_link_libraries(reactrekadroid ${log-lib})
 
 find_package(officeplat REQUIRED CONFIG)
 target_link_libraries(reactrekadroid officeplat::plat)
-target_link_libraries(reactrekadroid officeplat::mso20android)
+
+find_package(mso20android REQUIRED CONFIG)
+target_link_libraries(reactrekadroid mso20android::mso20android)
+
+find_package(precomp REQUIRED CONFIG)
+target_link_libraries(reactrekadroid precomp::precomp)
 
 find_package(ReactAndroid REQUIRED CONFIG)
 target_link_libraries(reactrekadroid ReactAndroid::fabricjni)
@@ -62,8 +67,3 @@ target_link_libraries(reactrekadroid ReactAndroid::yoga)
 find_package(fbjni REQUIRED CONFIG)
 target_link_libraries(reactrekadroid fbjni::fbjni)
 
-find_package(reka REQUIRED CONFIG)
-target_link_libraries(reactrekadroid reka::reka)
-
-find_package(json REQUIRED CONFIG)
-target_link_libraries(reactrekadroid json::json)

@@ -76,8 +76,8 @@ dependencies {
     implementation(project(":mso"))
     implementation(project(":rnx-host"))
     implementation(project(":fbjni"))
-    implementation(project(":reka"))
-    implementation(project(":json"))
+    implementation(project(":mso20android"))
     implementation(project(":officeplat"))
     implementation(project(":reactreka"))
+    implementation(project(":precomp"))
 }

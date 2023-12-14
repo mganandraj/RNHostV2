@@ -1,10 +1,10 @@
 #pragma once
 
 #include <jsi/jsi.h>
-#include "../../../../../mso/build/intermediates/prefab_package_configuration/debug/prefab/modules/functional/include/functional/functor.h"
-#include "../../../../../mso/build/intermediates/prefab_package_configuration/debug/prefab/modules/errorCode/include/errorCode/errorCode.h"
-#include "../../../../../mso/build/intermediates/prefab_package_configuration/debug/prefab/modules/object/include/object/refCounted.h"
-#include "../../../../../reka/build/intermediates/prefab_package_configuration/debug/prefab/modules/reka/include/reka/RekaApi.h"
+#include <functional/functor.h>
+#include <errorCode/errorCode.h>
+#include <object/refCounted.h>
+#include <reka/RekaApi.h>
 
 namespace Mso::JSHost::Headless
 {
