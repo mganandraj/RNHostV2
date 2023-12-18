@@ -45,5 +45,17 @@
         <action
             android:id="@+id/action_DashboardFragment_to_ORNHostTestKtNativeOptionsFragment"
             app:destination="@id/ORNHostTestKtNativeOptionsFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_ORNHostHeadlessFragment"
+            app:destination="@id/ORNHostHeadlessFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ORNHostHeadlessFragment"
+        android:name="com.microsoft.office.reacthostapp.ORNHostHeadlessFragment"
+        android:label="fragment_ornhost_headless"
+        tools:layout="@layout/fragment_ornhost_headless" >
+        <action
+            android:id="@+id/action_ORNHostHeadlessFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment" />
     </fragment>
 </navigation>

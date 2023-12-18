@@ -25,5 +25,10 @@
         android:layout_height="wrap_content"
         android:text="ORNHost Kotlin Native Options" />
 
+    <Button
+        android:id="@+id/button_ornhosttest_headless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ORNHost Headless" />
 
 </LinearLayout>

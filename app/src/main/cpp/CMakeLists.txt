@@ -18,6 +18,7 @@ add_library(reacthostapp
         MainActivity.cpp
         OnLoad.cpp
         ORNHostKtNativeOptionsFragment.cpp
+        ORNHostHeadlessFragment.cpp
 )
 
 target_compile_definitions(reacthostapp PRIVATE MS_TARGET_ANDROID)

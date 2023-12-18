@@ -52,7 +52,7 @@ open class BaseRootView : ReactRootView {
 
     @Suppress("FunctionName")
     fun  Reload(reactInstance: ReactInstance?, viewOptions: ReactViewOptions?, msoFuturePeer: MsoFuturePeer) {
-        Log.w("", "")
+
         reactInstance?.enqueueTaskOnReactContextInitialized {
             reactContext ->
             run {
@@ -66,7 +66,6 @@ open class BaseRootView : ReactRootView {
                     msoFuturePeer.Set()
                 })
             }
-
         }
     }
 

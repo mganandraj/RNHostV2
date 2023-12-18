@@ -9,60 +9,49 @@
 #include <Reka/RekaServiceRegistration.h>
 #include <ReactNativeHost/React.h>
 
-//#include <osfclient/osfreacthelper.h>
-//#include <osfclient/hostintegrationmanager.h>
-//#include <jshostrichapids/IRichApiProxyDataService.h>
+// #include <osfclient/osfreacthelper.h>
+// #include <osfclient/hostintegrationmanager.h>
+// #include <jshostrichapids/IRichApiProxyDataService.h>
 
-//#include <ExecutionContext/ExecutionContext.h>
-//#include <synchronization/simpleEvent.h>
+// #include <ExecutionContext/ExecutionContext.h>
+// #include <osfclient/IOsfControlContainerExecutionContext.h>
 
 namespace Mso::JSHost::Headless {
 
 // static constexpr const Mso::JSHost::NamedProperty<IOsfControlContainer> ControlContainerProperty {"ControlContainer"};
 static constexpr const Mso::JSHost::NamedProperty<uint64_t> DocCookieProperty{ "DocCookie" };
 
-JSRuntime::~JSRuntime() {}
+JSRuntime::~JSRuntime() noexcept {}
+JSHeadlessRuntime::~JSHeadlessRuntime() noexcept {}
 
-void JSHeadlessRuntime::OnJSLoaded(facebook::jsi::Runtime &runtime)
+void JSHeadlessRuntime::PrimeRuntime() noexcept
 {
-    AssertTag(m_runtime == nullptr, 0x1e4d52c2 /* tag_4tvlc */);
-    m_runtime = &runtime;
-
-    m_initialized = true;
-    if(m_pendingFuncs.size() > 0){
-        for (auto &func : m_pendingFuncs) {
-            Post(std::move(func)); // TODO:: We can run inline as we are in JS thread here.
+    const std::lock_guard<std::mutex> lock(g_pendingFuncs_mutex);
+    m_jsRuntimeInitialized = true;
+    if(m_pendingFuncs.size() > 0)
+    {
+        for (auto &func : m_pendingFuncs)
+        {
+            PostInternal(std::move(func)); // TODO:: We can run inline as we are in JS thread here.
         }
         m_pendingFuncs.clear();
     }
 }
 
-void JSHeadlessRuntime::CreateReactInstance()
+Mso::React::ReactOptions JSHeadlessRuntime::CreateReactOptions() noexcept 
 {
-#ifdef USE_OLD_RNHOST
-    EnsureSDXRegisteration();
-    m_spReactInstance = Mso::React::GetOrCreateReactInstance( m_options.Identity.c_str(), nullptr ).Detach();
-    VerifyElseCrashTag(m_spReactInstance != nullptr, 0x1e4d52c1 /* tag_4tvlb */);
-#else
-    m_spReactInstance = Mso::React::MakeReactHost(CreateReactOptions());
-#endif
-}
-
-Mso::React::ReactOptions JSHeadlessRuntime::CreateReactOptions() {
     Mso::React::ReactOptions reactOptions{};
-
-    // TODO
-    // reactOptions.JSBundles = Mso::React::GetJSBundles( { Mso::React::JSBundles::SDXFoundation, Mso::React::JSBundles::SDXUI } );
+    reactOptions.JSBundles = Mso::React::GetJSBundles( { Mso::React::JSBundles::SDXFoundation, Mso::React::JSBundles::SDXUI } );
 
     reactOptions.Identity = m_options.Identity;
     reactOptions.DataServiceProviderName = m_options.RekaProviderName;
 
-#if DEBUG
-    reactOptions.DeveloperSettings.SourceBundleName = "index";
-    reactOptions.DeveloperSettings.IsDevModeEnabled = true;
-    reactOptions.DeveloperSettings.UseDirectDebugger = true;
-    reactOptions.DeveloperSettings.UseFastRefresh = true;
-#endif
+    reactOptions.DeveloperSettings.IsDevModeEnabled = m_options.DeveloperSettings.IsDevModeEnabled;
+    reactOptions.DeveloperSettings.SourceBundleName = m_options.DeveloperSettings.SourceBundleName;
+    reactOptions.DeveloperSettings.UseDirectDebugger = m_options.DeveloperSettings.UseDirectDebugger;
+    reactOptions.DeveloperSettings.DebuggerBreakOnNextLine = m_options.DeveloperSettings.DebuggerBreakOnNextLine;
+    reactOptions.DeveloperSettings.DebuggerRuntimeName = m_options.DeveloperSettings.DebuggerRuntimeName;
+    reactOptions.DeveloperSettings.UseFastRefresh = m_options.DeveloperSettings.IsDevModeEnabled;
 
 //    if(m_options.EnableOfficeJS)
 //    {
@@ -74,20 +63,30 @@ Mso::React::ReactOptions JSHeadlessRuntime::CreateReactOptions() {
 //        reactOptions.JSBundles.push_back(spHostSpecificOfficeJsBundle);
 //    }
 
-#ifndef USE_OLD_RNHOST
-    // MakeReactHost API requires the feature bundle to be explicitly added to the bundle list.
-    // Note that we are adding the disk file path overlooking the Metro bundler running on the developer machine.   
-    // const std::string bundlePath = "TODODODO"; // GetBundlePath(m_options.Identity.c_str());
-    // reactOptions.AddFileJSBundle(m_options.Identity.c_str(), bundlePath);
+#ifdef MS_TARGET_APPLE    
+    const std::string bundlePath = GetBundlePath(m_options.Identity.c_str());
+    reactOptions.AddFileJSBundle(m_options.Identity.c_str(), bundlePath);
+#elif MS_TARGET_ANDROID
+    if(!m_options.JSBundlePath.empty())
+    {
+        reactOptions.AddFileJSBundle(m_options.Identity.c_str(), m_options.JSBundlePath);
+    }
+    else
+    {
+        // On Android this gets mapped to the packaged asset bundle.
+        reactOptions.AddFileJSBundle(m_options.Identity.c_str(), m_options.Identity.c_str());
+    }
 #endif
 
-//    reactOptions.OnInitialized =
+    // Mso::JSHost::RichApiExecutionContextHolderPtr richApiExecutionContextHolder = std::make_shared< Mso::JSHost::RichApiExecutionContextHolder >(Mso::ApplicationModel::GetCurrentExecutionContext());
+    reactOptions.OnInitialized = [spWeakThis = Mso::WeakPtr(this)/*, richApiExecutionContextHolder*/](Mso::JSHost::IRekaContext& rekaContext)
+    {
+        auto spStrongThis = spWeakThis.GetStrongPtr();
+        if(!spStrongThis)
+            return;
 
-//    Mso::JSHost::RichApiExecutionContextHolderPtr richApiExecutionContextHolder = std::make_shared< Mso::JSHost::RichApiExecutionContextHolder >(Mso::ApplicationModel::GetCurrentExecutionContext());
-//    reactOptions.OnInitialized = [spThis = Mso::TCntPtr(this), richApiExecutionContextHolder](Mso::JSHost::IRekaContext& rekaContext)
-//    {
-//        rekaContext.Properties().Set( Mso::JSHost::RichApiExecContextProperty, richApiExecutionContextHolder );
-//
+        // rekaContext.Properties().Set( Mso::JSHost::RichApiExecContextProperty, richApiExecutionContextHolder );
+
 //        DWORD_PTR docCookie{};
 //        VerifySucceededElseCrashTag(OsfHostGetCurrentDocCookie(&docCookie), 0x1e4d52a2 /* tag_4tvk8 */);
 //        rekaContext.Properties().Set(DocCookieProperty, docCookie);
@@ -96,124 +95,110 @@ Mso::React::ReactOptions JSHeadlessRuntime::CreateReactOptions() {
 //        VerifySucceededElseCrashTag(Osf::React::CreateExternalSdxControlContainer(docCookie, 0, /* out */ spControlContainer), 0x1e4d52a1 /* tag_4tvk7 */);
 //        rekaContext.Properties().Set(ControlContainerProperty, spControlContainer);
 //
+//        Mso::TCntPtr<IOsfControlContainerExecutionContext> spControlContainerExecutionContext = qi_cast<IOsfControlContainerExecutionContext>(spControlContainer);
+//        if (spControlContainerExecutionContext != nullptr)
+//        {
+//            spControlContainerExecutionContext->SetExecutionContext(richApiExecutionContextHolder->GetExecutionContext().Get());
+//        }
+//
 //        Osf::React::RichApiReactConnectionOptions richApiConnectionOptions = {};
 //        richApiConnectionOptions.DocCookie = docCookie;
 //        richApiConnectionOptions.SubDocCookie = 0;
 //        richApiConnectionOptions.Readonly = false;
 //        richApiConnectionOptions.OsfControlContainer = spControlContainer;
 //        Osf::React::SetupRichApiReactConnection(rekaContext, std::move(richApiConnectionOptions));
-//
-//        if(spThis->Options().OnRekaInitialized){
-//            spThis->Options().OnRekaInitialized(*spThis, rekaContext);
-//        }
-//    };
 
-//    reactOptions.OnDestroyed = [spThis = Mso::TCntPtr(this)](Mso::JSHost::IRekaContext& rekaContext)
-//    {
+        if(spStrongThis->Options().OnRekaInitialized){
+            spStrongThis->Options().OnRekaInitialized(*spStrongThis, rekaContext);
+        }
+    };
+
+    reactOptions.OnDestroyed = [spWeakThis = Mso::WeakPtr(this)](Mso::JSHost::IRekaContext& rekaContext)
+    {
 //        Mso::TCntPtr<IOsfControlContainer> spControlContainer = rekaContext.Properties().Get(ControlContainerProperty);
 //        if (spControlContainer != nullptr)
 //        {
 //            Osf::React::DeleteExternalSdxControlContainer(spControlContainer.Get());
 //        }
-//
-//        if(spThis->Options().OnRekaDestroyed) {
-//            spThis->Options().OnRekaDestroyed(*spThis, rekaContext);
-//        }
-//    };
-//
-    // The following callbacks are not called with legacy RNHost.
-    reactOptions.OnInstanceLoaded = [spThis = Mso::CntPtr(this)](Mso::React::IReactInstance&, const Mso::ErrorCode& errorCode)
+
+        auto spStrongThis = spWeakThis.GetStrongPtr();
+        if(!spStrongThis)
+            return;
+
+        spStrongThis->MarkAsDestroyed();
+        if(spStrongThis->Options().OnRekaDestroyed) {
+            spStrongThis->Options().OnRekaDestroyed(*spStrongThis, rekaContext);
+        }
+    };
+ 
+    reactOptions.OnInstanceLoaded = [spWeakThis = Mso::WeakPtr(this)](Mso::React::IReactInstance&, const Mso::ErrorCode& /*errorCode*/)
     {
-        auto executor = spThis->GetRuntimeExecutor();
-        executor([spThis](facebook::jsi::Runtime &runtime)
+        auto spStrongThis = spWeakThis.GetStrongPtr();
+        if(!spStrongThis)
+            return;
+
+        if(spStrongThis->Options().OnLoaded){
+            spStrongThis->PostInternal([spStrongThis](facebook::jsi::Runtime &runtime)
             {
-                spThis->OnJSLoaded(runtime);
+                spStrongThis->Options().OnLoaded(*spStrongThis, runtime);
             });
+        }
 
-        if(spThis->Options().OnLoaded){
-            spThis->Options().OnLoaded(*spThis, errorCode);
+        // Ready to execute user posted tasks.
+        spStrongThis->PrimeRuntime();
+    };
+
+    reactOptions.OnInstanceCreated = [spWeakThis = Mso::WeakPtr(this)](Mso::React::IReactInstance&)
+    {
+        auto spStrongThis = spWeakThis.GetStrongPtr();
+        if(!spStrongThis)
+            return;
+
+        if(spStrongThis->Options().OnCreated){
+            spStrongThis->Options().OnCreated(*spStrongThis);
         }
     };
 
-    reactOptions.OnInstanceCreated = [spThis = Mso::CntPtr(this)](Mso::React::IReactInstance&)
+    reactOptions.OnInstanceDestroyed = [spWeakThis = Mso::WeakPtr(this)](Mso::React::IReactInstance&)
     {
-        if(spThis->Options().OnCreated){
-            spThis->Options().OnCreated(*spThis);
-        }
-    };
+        auto spStrongThis = spWeakThis.GetStrongPtr();
+        if(!spStrongThis)
+            return;
 
-    reactOptions.OnInstanceDestroyed = [spThis = Mso::CntPtr(this)](Mso::React::IReactInstance&)
-    {
-        if(spThis->Options().OnDestroyed){
-            spThis->Options().OnDestroyed(*spThis);
+        if(spStrongThis->Options().OnDestroyed){
+            spStrongThis->Options().OnDestroyed(*spStrongThis);
         }
     };
 
     return reactOptions;
 }
 
-void JSHeadlessRuntime::EnsureSDXRegisteration()
-{
-//    static std::once_flag once;
-//    std::call_once(once, [this](){
-//        Mso::Synchronization::SimpleEvent event;
-//
-//        // OSF initialization requires app thread.
-//        Mso::Async::InvokeElsePost( Mso::ApplicationModel::GetCurrentExecutionContext()->UseAppContext(), [&event, this]() noexcept {
-//            Mso::React::ReactOptions descriptor(CreateReactOptions());
-//            Mso::React::RegisterSDX( std::move( descriptor ) );
-//            event.Set();
-//        });
-//        event.Wait();
-//    });
+void JSHeadlessRuntime::PostInternal(std::function<void(facebook::jsi::Runtime& runtime)>&&callback) noexcept {
+    AssertTag(!m_jsRuntimeDestroyed, 0x1e45208f /* tag_4rscp */);
+    auto runtimeExecutor = Mso::React::GetRuntimeExecutor2(*(m_spReactHost->Instance()));
+    VerifyElseCrashTag(runtimeExecutor, 0x1e446096 /* tag_4rgcw */);
+    runtimeExecutor(std::move(callback));
 }
 
-void JSHeadlessRuntime::Initialize()
-// void JSHeadlessRuntime::Initialize(Mso::TCntPtr<Mso::ApplicationModel::IExecutionContext>)
-{
-    CreateReactInstance();
-#ifdef USE_OLD_RNHOST
-    auto executor = GetRuntimeExecutor();
-    executor([&](facebook::jsi::Runtime &runtime)
-        {
-            m_spJsiNativeImpl = std::make_shared<JsiNativeImpl>(runtime, *this);
-            m_spJsiNativeImpl->Register();
-        });
-#endif
-}
+JSHeadlessRuntime::JSHeadlessRuntime(JSRuntimeOptions&& options) noexcept
+    : m_options(std::move(options)),
+        m_spReactHost(Mso::React::MakeReactHost(CreateReactOptions())) {}
 
-facebook::react::RuntimeExecutor JSHeadlessRuntime::GetRuntimeExecutor() 
+void JSHeadlessRuntime::Post(std::function<void(facebook::jsi::Runtime& runtime)>&&callback) noexcept
 {
-#ifdef USE_OLD_RNHOST
-    return Mso::React::GetRuntimeExecutor(*m_spReactInstance);
-#else
-    return Mso::React::GetRuntimeExecutor2(*(m_spReactInstance->Instance()));
-#endif
-}
-
-facebook::jsi::Runtime& JSHeadlessRuntime::GetJsiRuntime() const noexcept
-{
-    VerifyElseCrashSzTag(m_runtime, "Trying to access the JSI Runtime before the JSHeadlessRuntime finished loading", 0x1e4d52a0 /* tag_4tvk6 */);
-    return *m_runtime;
-}
-
-JSHeadlessRuntime::JSHeadlessRuntime(JSRuntimeOptions&& options) 
-    : m_options(std::move(options))
-{  
-    Initialize(); 
-}
-
-void JSHeadlessRuntime::Post(std::function<void(facebook::jsi::Runtime& runtime)>&&callback) 
-{
-    if(m_initialized) {
-        GetRuntimeExecutor()(std::move(callback));
-    }
-    else {
+    const std::lock_guard<std::mutex> lock(g_pendingFuncs_mutex);
+    if(m_jsRuntimeInitialized) 
+    {
+        AssertTag(m_pendingFuncs.empty(), 0x1e45208e /* tag_4rsco */);
+        PostInternal(std::move(callback));
+    } 
+    else 
+    {
         m_pendingFuncs.push_back(std::move(callback));
     }
 }
 
-Mso::CntPtr<JSRuntime> CreateJSRuntime(JSRuntimeOptions&& options)
+Mso::TCntPtr<JSRuntime> CreateJSRuntime(JSRuntimeOptions&& options) noexcept
 {
     return Mso::Make<JSHeadlessRuntime>(std::move(options));
 }
