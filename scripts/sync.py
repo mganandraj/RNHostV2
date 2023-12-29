@@ -15,8 +15,8 @@ direction = Direction.OMR_TO_RNH
 # List of entries organized as [OMR Path, RNH Path, [list of exclusions]]
 DIR_ENTRIES = [
     ["reactnativehost\\androidjava\\src\\com\\microsoft\\office\\reacthost", "reacthost\\src\\main\\java\\com\\microsoft\\office\\reacthost", [""]],
-    ["reactnative\\android\\host\\java\\src\\com\\microsoft\\office\\reactnative\\host", "rnx-host\\src\\main\\java\\com\\microsoft\\office\\reactnative\\host", [""]],
-    ["reactnative\\android\\host\\cpp", "rnx-host\\src\\main\\cpp", ["souces", "version.expmap", "precomp.h"]],
+    ["reactnative\\android\\host\\java\\src\\com\\microsoft\\office\\reactnative\\host", "rnxreacthost\\src\\main\\java\\com\\microsoft\\office\\reactnative\\host", [""]],
+    ["reactnative\\android\\host\\cpp", "rnxreacthost\\src\\main\\cpp", ["souces", "version.expmap", "precomp.h"]],
     ["reactnative\\android\\reka\\java\\src\\com\\microsoft\\office\\reactnative\\reka", "reactreka\\src\\main\\java\\com\\microsoft\\office\\reactnative\\reka", [""]],
     ["reactnative\\android\\reka\\cpp", "reactreka\\src\\main\\cpp", ["souces", "version.expmap", "msoFolly", "precomp.h"]],
 ]
@@ -29,7 +29,7 @@ FILE_ENTRIES = [
 
 # List of RN binaries to copy
 RN_BINARY_SOURCE_DIR = "D:\\nugetcache\\microsoft.office.reactnative.android.0.72.11-office-ndk25\\lib\\debug\\droidx86"
-RN_BINARY_TARGET_DIR = "D:\\github\\RNHostv2\\rnx-host\\src\\main\\jniLibs\\x86"
+RN_BINARY_TARGET_DIR = "D:\\github\\RNHostv2\\rnxreacthost\\src\\main\\jniLibs\\x86"
 RN_BINARIES = ['libfb.so', 'libglog_init.so', 'liblogger.so', 'libmapbufferjni.so', 'libreactnativeblob.so', 'libreactperfloggerjni.so', 'libreact_config.so', 'libreact_render_attributedstring.so', 'libreact_render_leakchecker.so', 'libreact_render_runtimescheduler.so', 'libreact_render_telemetry.so', 'libreact_render_templateprocessor.so', 'libreact_render_textlayoutmanager.so', 'libreact_utils.so', 'librrc_scrollview.so', 'librrc_text.so', 'librrc_textinput.so', 'librrc_unimplementedview.so']
 
 def main():

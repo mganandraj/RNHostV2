@@ -56,7 +56,7 @@ open class BaseRootView : ReactRootView {
         reactInstance?.enqueueTaskOnReactContextInitialized {
             reactContext ->
             run {
-                mViewListener?.onBeforeStartApplication(reactInstance)
+                // mViewListener?.onBeforeStartApplication(reactInstance)
                 ReactHostStatics.initialActivity?.get()?.runOnUiThread(Runnable {
                     this.startReactApplication(
                         reactInstance?.getReactInstanceManager(),

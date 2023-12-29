@@ -29,6 +29,8 @@ using TCntPtr = CntPtr<T>;
 #include <dlfcn.h>
 #include "../../../../officeplat/src/main/cpp/OfficeAssetApi.h"
 
+#include <rnx-host/JJsiRuntimeRef.h>
+
 #include "IReactInstanceInternal.h"
 
 using namespace Mso::React;
@@ -66,6 +68,7 @@ public: // IReactInstanceInternal
 	void onInitialized() noexcept;
 	void onBundleLoaded(std::string &&bundleName) noexcept;
 	Mso::JSHost::RekaBridgeOptions createRekaBridgeOptions() noexcept;
+    void onDoRuntimeInstall(jsi::Runtime& runtime) noexcept;
 
 private:
 	friend MakePolicy;
@@ -234,6 +237,9 @@ struct JReactInstance : jni::HybridClass<JReactInstance> {
 	static void onInitialized(jni::alias_ref<jhybridobject> jThis /*, jni::alias_ref<JReactContextHolder> contextHolder*/);
 	static void onBundleLoaded(jni::alias_ref<jhybridobject> jThis,
 	                           jni::alias_ref<JString> bundleName);
+
+    static void onDoRuntimeInstall(jni::alias_ref<jhybridobject> jThis,
+                               jni::alias_ref<react::JJsiRuntimeRef::jhybridobject> runtimeRef);
 
 	static jni::local_ref<JRekaBridgeOptions::jhybridobject> createRekaBridgeOptions(jni::alias_ref<jhybridobject> jThis);
 	static jni::local_ref<jhybridobject> create(jni::alias_ref<JReactOptions::jhybridobject>, Mso::TCntPtr<ReactInstanceAndroid> nativeInstance);
@@ -617,6 +623,14 @@ void JReactInstance::onBundleLoaded(jni::alias_ref<jhybridobject> jThis,
 	}
 }
 
+void JReactInstance::onDoRuntimeInstall(jni::alias_ref<jhybridobject> jThis,
+							   jni::alias_ref<react::JJsiRuntimeRef::jhybridobject> runtimeRef) {
+	auto nativeInstance = jThis->cthis()->m_wNativeInstance.GetStrongPtr();
+	if (nativeInstance) {
+		nativeInstance->onDoRuntimeInstall(runtimeRef->cthis()->get());
+	}
+}
+
 jni::local_ref<JRekaBridgeOptions::jhybridobject>
 JReactInstance::createRekaBridgeOptions(jni::alias_ref<jhybridobject> jThis) {
 	static const WCHAR c_wzReactRekaLibNickName[] = L"reactrekadroid";
@@ -633,6 +647,7 @@ void JReactInstance::registerNatives() {
 	    makeNativeMethod("initHybrid", JReactInstance::initHybrid),
 	    makeNativeMethod("onInitialized", JReactInstance::onInitialized),
 	    makeNativeMethod("onBundleLoaded", JReactInstance::onBundleLoaded),
+		makeNativeMethod("onDoRuntimeInstall", JReactInstance::onDoRuntimeInstall),
 	    makeNativeMethod("createRekaBridgeOptions", JReactInstance::createRekaBridgeOptions),
 	});
 }
@@ -1015,6 +1030,10 @@ void ReactInstanceAndroid::onInitialized(/*jni::alias_ref<JReactContextHolder> c
 void ReactInstanceAndroid::onBundleLoaded(std::string && /*bundleName*/) noexcept {
 	if (Options().OnInstanceLoaded)
 		Options().OnInstanceLoaded(*this, Mso::HResultErrorProvider().MakeErrorCode(S_OK));
+}
+
+void ReactInstanceAndroid::onDoRuntimeInstall(jsi::Runtime& runtime) noexcept {
+
 }
 
 void ReactInstanceAndroidInternal::Initialize(ReactOptions optionsCopy,

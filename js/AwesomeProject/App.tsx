@@ -5,6 +5,8 @@
  * @format
  */
 
+console.log("Hello World!");
+
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {

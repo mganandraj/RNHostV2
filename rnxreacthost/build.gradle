@@ -18,6 +18,7 @@ android {
             cmake {
                 arguments "-DANDROID_STL=c++_shared"
                 cppFlags "-fshort-wchar"
+                targets "rnxreacthost", "rnxreacthost_public"
             }
         }
     }
@@ -43,13 +44,16 @@ android {
     }
     buildFeatures {
         prefab true
-        // prefabPublishing true
+        prefabPublishing true
     }
-//    prefab {
-//        rnx-host {
-//            headers "src/main/cpp/"
-//        }
-//    }
+    prefab {
+        rnxreacthost {
+             headers "src/main/cpp/"
+        }
+        rnxreacthost_public {
+            headers "src/main/cpp/"
+        }
+    }
 }
 
 dependencies {

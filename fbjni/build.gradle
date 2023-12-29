@@ -71,7 +71,7 @@ dependencies {
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'com.facebook.soloader:nativeloader:0.10.5'
 
-    implementation "com.facebook.react:react-android:${RN_VERSION}"
-    implementation "com.facebook.react:hermes-android:${RN_VERSION}"
+    // implementation "com.facebook.react:react-android:${RN_VERSION}"
+    // implementation "com.facebook.react:hermes-android:${RN_VERSION}"
 
 }

@@ -11,6 +11,7 @@ import com.facebook.react.turbomodule.core.CallInvokerHolderImpl
 import com.facebook.soloader.SoLoader
 import com.microsoft.office.plat.annotation.KeepClassAndMembers
 import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
+import com.microsoft.office.reactnative.host.JsiRuntimeRef
 import com.microsoft.office.reactnative.host.OfficeBundleFetcher
 import com.microsoft.office.reactnative.host.ReactNativeHost
 import com.microsoft.office.reactnative.reka.RekaBridgeOptions
@@ -37,6 +38,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
     private external fun onInitialized(/*contextHolder: ReactContextHolder*/)
     private external fun onBundleLoaded(bundleName: String)
     private external fun createRekaBridgeOptions() : RekaBridgeOptions
+    private external fun onDoRuntimeInstall(runtimeRef: JsiRuntimeRef)
 
     init {
         mHybridData = initHybrid()
@@ -113,7 +115,12 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                     // mReactOptions.OnInstanceCreated?.run();
                 }
                 .userBundle(getRNXJSBundle(featureBundle))
-                    .jsBundleFetcher(OfficeBundleFetcher(initialActivity!!.get()!!.application))
+                .jsBundleFetcher(OfficeBundleFetcher(initialActivity!!.get()!!.application))
+                .javaScriptRuntimeInstaller(object: com.microsoft.office.reactnative.host.RuntimeInstaller {
+                    override fun DoInstall(runtimeRef: JsiRuntimeRef?) {
+                        onDoRuntimeInstall(runtimeRef!!);
+                    }
+                })
 
             this.mReactNativeHost = builder.build()
             val weakThis = WeakReference(this)

@@ -1,13 +1,14 @@
 #include "ReactNativeHeaders.h"
 
 #include <fbjni/fbjni.h>
-#include <react/jni/JavaScriptExecutorHolder.h>
 #include <react/jni/ReadableNativeMap.h>
 #include <react/jni/JSLoader.h>
 #include "JJSBundle.h"
 
 #include "JJSExecutorObserver.h"
 #include "WrapperJSExecutorFactory.h"
+
+#include "HermesExecutorOverride.h"
 
 #include <vector>
 
@@ -58,5 +59,6 @@ class WrapperJSExecutorHolder
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* /*reserved*/) {
   return facebook::jni::initialize(vm, [] {
       facebook::react::WrapperJSExecutorHolder::registerNatives();
+      facebook::react::HermesExecutorOverride::registerNatives();
   });
 }

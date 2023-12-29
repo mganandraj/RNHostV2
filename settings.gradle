@@ -13,13 +13,13 @@ dependencyResolutionManagement {
         mavenCentral()
         maven {
             // url "/Users/anandrag/Microsoft.Office.ReactNative.Android.${RN_VERSION}-ndk25/maven"
-            url "D:/nugetcache/microsoft.office.reactnative.android.0.72.11-office-ndk25/maven"
+            url "D:/nugetcache/microsoft.office.reactnative.android.0.72.14-office-ndk25/maven"
         }
     }
 }
 rootProject.name = "ornhost"
 include ':app'
-include ':rnx-host'
+include ':rnxreacthost'
 include ':fbjni'
 include ':mso'
 include ':mso20android'

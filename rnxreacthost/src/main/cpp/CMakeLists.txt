@@ -10,13 +10,19 @@ set(CMAKE_CXX_STANDARD 20)
 
 project("rnxreacthost")
 
+# CMake/Prefab doesn't seem to support INTERFACE targets ..
+add_library(rnxreacthost_public STATIC publics.cpp)
+
 add_library(rnxreacthost
         SHARED
         JJSBundle.cpp
         WrapperJSExecutorFactory.cpp
         WrapperJSExecutor.cpp
         JJSExecutorObserver.cpp
+        JRuntimeInstaller.cpp
         OnLoad.cpp
+        HermesExecutorOverride.cpp
+        JJsiRuntimeRef.cpp
 )
 
 target_compile_definitions(rnxreacthost PRIVATE MS_TARGET_ANDROID)
@@ -28,6 +34,7 @@ target_link_libraries(rnxreacthost ReactAndroid::folly_runtime)
 target_link_libraries(rnxreacthost ReactAndroid::glog)
 target_link_libraries(rnxreacthost ReactAndroid::hermes_executor)
 #target_link_libraries(rnxreacthost ReactAndroid::jscexecutor)
+target_link_libraries(rnxreacthost ReactAndroid::jsireact)
 target_link_libraries(rnxreacthost ReactAndroid::jsi)
 target_link_libraries(rnxreacthost ReactAndroid::jsinspector)
 target_link_libraries(rnxreacthost ReactAndroid::react_codegen_rncore)

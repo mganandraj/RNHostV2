@@ -74,3 +74,6 @@ target_link_libraries(officereacthost ${log-lib})
 
 find_package(precomp REQUIRED CONFIG)
 target_link_libraries(officereacthost precomp::precomp)
+
+find_package(rnxreacthost REQUIRED CONFIG)
+target_link_libraries(officereacthost rnxreacthost::rnxreacthost_public)

@@ -36,6 +36,7 @@ class ReactNativeHost private constructor (
     private val onJSBundleLoaded: ((bundleName: String) -> Unit)?,
     private val nativeModulePackages: MutableList<ReactPackage>,
     private val javaScriptExecutorFactoryOverride: JavaScriptExecutorFactory?,
+    private val javaScriptRuntimeInstaller: RuntimeInstaller?,
     private val customDevOptions: MutableList<Pair<String, DevOptionHandler>>? = null,
     private val enableDebugger: Boolean = true,
     private val debuggerName: String?,
@@ -50,7 +51,8 @@ class ReactNativeHost private constructor (
         init {
             try { 
                 SoLoader.loadLibrary("hermes")
-                SoLoader.loadLibrary("hermes_executor") 
+                SoLoader.loadLibrary("hermes_executor")
+                SoLoader.loadLibrary("rnxreacthost")
             } catch(ex: UnsatisfiedLinkError) {}
         }
     }
@@ -67,6 +69,7 @@ class ReactNativeHost private constructor (
         private var onJSBundleLoaded: ((bundleName: String) -> Unit)? = null,
         private var nativeModulePackages: MutableList<ReactPackage> = mutableListOf(),
         private var javaScriptExecutorFactory: JavaScriptExecutorFactory? = null,
+        private var javaScriptRuntimeInstaller: RuntimeInstaller? = null,
         private var customDevOptions: MutableList<Pair<String, DevOptionHandler>>? = null,
         private var enableDebugger: Boolean = false, // Currently implemented only with Hermes executor
         private var debuggerName: String? = null, // Currently implemented only with Hermes executor
@@ -88,6 +91,7 @@ class ReactNativeHost private constructor (
         fun nativeModulePackages(_nativeModulePackages: MutableList<ReactPackage>) = apply { this.nativeModulePackages = _nativeModulePackages; return this }
         fun shouldEagerInit(_eagerInit: Boolean) = apply { this.eagerInit = _eagerInit; return this }
         fun javaScriptExecutorFactory(_javaScriptExecutorFactory: JavaScriptExecutorFactory) = apply { this.javaScriptExecutorFactory = _javaScriptExecutorFactory; return this }
+        fun javaScriptRuntimeInstaller(_javaScriptRuntimeInstaller: RuntimeInstaller) = apply {this.javaScriptRuntimeInstaller = _javaScriptRuntimeInstaller; return this }
         fun customDevOptions(_customDevOptions: MutableList<Pair<String, DevOptionHandler>>) = apply { this.customDevOptions = _customDevOptions; return this }
         fun enableDebugger(_enableDebugger: Boolean) = apply { this.enableDebugger = _enableDebugger; return this }
         fun debuggerName(_debuggerName: String) = apply { this.debuggerName = _debuggerName; return this }
@@ -111,6 +115,7 @@ class ReactNativeHost private constructor (
                 onJSBundleLoaded,
                 nativeModulePackages,
                 javaScriptExecutorFactory,
+                javaScriptRuntimeInstaller,
                 customDevOptions,
                 enableDebugger,
                 debuggerName,
@@ -135,7 +140,8 @@ class ReactNativeHost private constructor (
             }
         }
         reactInstanceManager.addReactInstanceEventListener(reactInstanceListener)
-        reactInstanceManager.addReactInstanceEventListener { reactContext -> onReactContextInitialized(reactContext) }
+        reactInstanceManager.addReactInstanceEventListener { reactContext ->
+            onReactContextInitialized(reactContext) }
         beforeReactNativeInit?.invoke()
 
         if(this.eagerInit) {
@@ -236,13 +242,28 @@ class ReactNativeHost private constructor (
         }
     }
 
-    private fun configureJSExecutor(builder: ReactInstanceManagerBuilder) {
-        var baseExecutorFactory = javaScriptExecutorFactoryOverride ?: HermesExecutorFactory()
+    private var mlogHandler: HermesExecutorOverride.LogHandler? = null;
 
-        if(baseExecutorFactory is HermesExecutorFactory) {
+    private fun configureJSExecutor(builder: ReactInstanceManagerBuilder) {
+        var baseExecutorFactory = javaScriptExecutorFactoryOverride ?: HermesExecutorFactoryOverride()
+
+        mlogHandler = object : HermesExecutorOverride.LogHandler {
+            override fun onLog(message: String, level: Int) {
+                Log.i("RNXHost", message)
+            }
+
+            override fun onError(message: String) {
+                Log.e("RNXHost", message)
+            }
+        }
+
+        if(baseExecutorFactory is HermesExecutorFactoryOverride) {
             baseExecutorFactory.setEnableDebugger(enableDebugger)
             if (!debuggerName.isNullOrEmpty())
                 baseExecutorFactory.setDebuggerName(debuggerName)
+
+            baseExecutorFactory.setLoggHandler(mlogHandler)
+            baseExecutorFactory.setRuntimeInstaller(javaScriptRuntimeInstaller)
         }
 
         var fetchedBundles = preloadBundles?.map { jsBundleFetcher?.fetch(it, true) ?: it }
