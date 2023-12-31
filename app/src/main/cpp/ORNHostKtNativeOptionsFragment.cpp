@@ -3,6 +3,8 @@
 
 #include <android/log.h>
 
+#include <jsi/jsi.h>
+
 #define LOG_TAG "ORNHostKtNativeOptionsFragment"
 
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,    LOG_TAG, __VA_ARGS__)
@@ -30,6 +32,12 @@ void ORNHostKtNativeOptionsFragment::registerNatives() {
     options.OnInstanceLoaded = [](Mso::React::IReactInstance& instance, const Mso::ErrorCode&) {
         LOGE("ORNHostKtNativeOptionsFragment::OnInstanceCreated");
     };
+
+    Mso::React::RuntimeInstallerHolder runtimeInstallerHolder;
+    runtimeInstallerHolder.runtimeInstaller = [](facebook::jsi::Runtime &runtime){
+        runtime.global().setProperty(runtime, "Home", "Marangattu" );
+    };
+    options.Properties.Set(Mso::React::RuntimeInstallerProperty, runtimeInstallerHolder);
 
     options.JavaModuleNames.push_back("com.microsoft.office.reacthostapp.MyReactPackage");
     // On Android, FileJSBundle is mapped to AssetJSBundle

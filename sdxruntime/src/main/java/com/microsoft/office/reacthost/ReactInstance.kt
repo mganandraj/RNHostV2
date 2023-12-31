@@ -12,9 +12,11 @@ import com.facebook.soloader.SoLoader
 import com.microsoft.office.plat.annotation.KeepClassAndMembers
 import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
 import com.microsoft.office.reactnative.host.JsiRuntimeRef
+import com.microsoft.office.reactnative.host.RuntimeInstaller
 import com.microsoft.office.reactnative.host.OfficeBundleFetcher
 import com.microsoft.office.reactnative.host.ReactNativeHost
 import com.microsoft.office.reactnative.reka.RekaBridgeOptions
+import kotlinx.coroutines.InternalCoroutinesApi
 import java.lang.ref.WeakReference
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -45,9 +47,29 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
         mReactOptions = reactOptions
     }
 
+    private val reactInstanceEventListenerList: MutableList<ReactInstanceEventListener> = ArrayList()
+    private var isInitialized = false;
+    val reactInstanceEventLock = Any()
+
+    @OptIn(InternalCoroutinesApi::class)
+    fun enqueueTaskOnReactContextInitialized(task: ReactInstanceEventListener) {
+        kotlinx.coroutines.internal.synchronized(reactInstanceEventLock) {
+            if(isInitialized) {
+                this.mReactNativeHost!!.addReactInstanceEventListener(task)
+            } else {
+                reactInstanceEventListenerList.add(task)
+            }
+        }
+    }
+
+    @OptIn(InternalCoroutinesApi::class)
     @Suppress("UNUSED_PARAMETER")
     fun onReactContextInitialized(reactContext: ReactContext?) {
-        onInitialized(/*ReactContextHolder(reactContext!!)*/)
+        kotlinx.coroutines.internal.synchronized(reactInstanceEventLock) {
+            onInitialized(/*ReactContextHolder(reactContext!!)*/)
+            reactInstanceEventListenerList.forEach { initialActivity?.get()?.runOnUiThread{ it.onReactContextInitialized(reactContext) } }
+            isInitialized = true;
+        }
     }
 
     private fun getReactPackageFromClassName(className: String): ReactPackage? {
@@ -116,7 +138,7 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                 }
                 .userBundle(getRNXJSBundle(featureBundle))
                 .jsBundleFetcher(OfficeBundleFetcher(initialActivity!!.get()!!.application))
-                .javaScriptRuntimeInstaller(object: com.microsoft.office.reactnative.host.RuntimeInstaller {
+                .javaScriptRuntimeInstaller(object: RuntimeInstaller {
                     override fun DoInstall(runtimeRef: JsiRuntimeRef?) {
                         onDoRuntimeInstall(runtimeRef!!);
                     }
@@ -132,10 +154,6 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
 
     fun getReactOptions(): ReactOptions {
         return mReactOptions
-    }
-
-    fun enqueueTaskOnReactContextInitialized(task: ReactInstanceEventListener) {
-        this.mReactNativeHost?.addReactInstanceEventListener(task)
     }
 
     fun getCurrentReactContext(): ReactContext? {

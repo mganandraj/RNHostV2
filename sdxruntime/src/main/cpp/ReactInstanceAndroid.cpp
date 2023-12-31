@@ -837,7 +837,7 @@ JBaseRootView::Reload(const Mso::TCntPtr<Mso::React::IReactInstance> &&reactInst
 	auto msoFuture = future->cthis()->getMsoFuture();
 
 	auto reloadMethod = javaClassLocal()->getMethod<void(JReactInstance::jhybridobject, JReactViewOptions::jhybridobject, JMsoFuture::jhybridobject)>("Reload");
-	reloadMethod(m_jThis.lockLocal(),
+	reloadMethod(m_jThis.lockLocal().release(),
 	             static_cast<ReactInstanceAndroid *>(reactInstance.Get())->InternalState().JInstance().get(),
 	             JReactViewOptions::create(std::move(viewOptions)).release(), future.release());
 	return msoFuture;
@@ -848,7 +848,7 @@ Mso::Future<void> JBaseRootView::Unload() noexcept {
 	auto msoFuture = future->cthis()->getMsoFuture();
 
 	auto unloadMethod = javaClassLocal()->getMethod<void(JMsoFuture::jhybridobject)>("Unload");
-	unloadMethod(m_jThis.lockLocal(), future.release());
+	unloadMethod(m_jThis.lockLocal().release(), future.release());
 	return msoFuture;
 }
 
@@ -1033,7 +1033,11 @@ void ReactInstanceAndroid::onBundleLoaded(std::string && /*bundleName*/) noexcep
 }
 
 void ReactInstanceAndroid::onDoRuntimeInstall(jsi::Runtime& runtime) noexcept {
-
+    auto runtimeInstallerProp = Options().Properties.Get(Mso::React::RuntimeInstallerProperty);
+    if(runtimeInstallerProp) {
+		RuntimeInstallerHolder runtimeInstallerHolder = runtimeInstallerProp.value();
+		runtimeInstallerHolder.runtimeInstaller(runtime);
+    }
 }
 
 void ReactInstanceAndroidInternal::Initialize(ReactOptions optionsCopy,

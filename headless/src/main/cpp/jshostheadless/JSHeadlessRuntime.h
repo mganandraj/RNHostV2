@@ -30,7 +30,7 @@ enum class LogLevel : int32_t
 using OnErrorCallback = Mso::Functor<void(const Mso::ErrorCode&)>;
 using OnLoggingCallback = Mso::Functor<void(LogLevel logLevel, const char* message)>;
 
-using OnCreatedCallback = Mso::Functor<void(JSRuntime&)>;
+using OnCreatedCallback = Mso::Functor<void(JSRuntime&, facebook::jsi::Runtime&)>;
 using OnLoadedCallback = Mso::Functor<void(JSRuntime&, facebook::jsi::Runtime&)>;
 using OnDestroyedCallback = Mso::Functor<void(JSRuntime&)>;
 

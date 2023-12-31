@@ -22,6 +22,8 @@ import com.facebook.react.devsupport.interfaces.DevOptionHandler
 import com.facebook.react.modules.systeminfo.ReactNativeVersion
 import com.facebook.react.shell.MainReactPackage
 import com.facebook.soloader.SoLoader
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.internal.synchronized
 import java.nio.file.Paths
 
 class ReactNativeHost private constructor (
@@ -315,12 +317,29 @@ class ReactNativeHost private constructor (
     }
 
     private val reactInstanceEventListenerList: MutableList<ReactInstanceEventListener> = ArrayList()
+    private var isInitialized = false;
+    val reactInstanceEventLock = Any()
+
+    @OptIn(InternalCoroutinesApi::class)
     fun addReactInstanceEventListener(reactInstanceEventListener: ReactInstanceEventListener) {
-        reactInstanceEventListenerList.add(reactInstanceEventListener)
+        synchronized(reactInstanceEventLock) {
+            if(isInitialized) {
+                hostInitialActivity.runOnUiThread {
+                    reactInstanceEventListener.onReactContextInitialized(reactInstanceManager.currentReactContext)
+                }
+            }
+            else {
+                reactInstanceEventListenerList.add(reactInstanceEventListener)
+            }
+        }
     }
 
+    @OptIn(InternalCoroutinesApi::class)
     private fun onReactContextInitialized(reactContext: ReactContext) {
-        reactInstanceEventListenerList.forEach { it.onReactContextInitialized(reactContext)}
+        synchronized(reactInstanceEventLock) {
+            reactInstanceEventListenerList.forEach { hostInitialActivity.runOnUiThread { it.onReactContextInitialized(reactContext) } }
+            isInitialized = true;
+        }
     }
 
     override fun getUseDeveloperSupport(): Boolean {

@@ -3,7 +3,7 @@
 #include "ReactInstanceAndroidDeferred.h"
 #include <fbjni/fbjni.h>
 #include <dlfcn.h>
-#include "../../../../officeplat/src/main/cpp/OfficeAssetApi.h"
+#include "OfficeAssetApi.h"
 
 using namespace facebook;
 using namespace facebook::jni;

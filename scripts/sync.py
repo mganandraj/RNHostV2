@@ -9,22 +9,22 @@ class Direction:
     OMR_TO_RNH = 1
     RNH_TO_OMR = 2
 
-direction = Direction.OMR_TO_RNH
+direction = Direction.RNH_TO_OMR
 # direction = Direction.RNH_TO_OMR
 
 # List of entries organized as [OMR Path, RNH Path, [list of exclusions]]
 DIR_ENTRIES = [
-    ["reactnativehost\\androidjava\\src\\com\\microsoft\\office\\reacthost", "reacthost\\src\\main\\java\\com\\microsoft\\office\\reacthost", [""]],
+    ["reactnativehost\\androidjava\\src\\com\\microsoft\\office\\reacthost", "sdxruntime\\src\\main\\java\\com\\microsoft\\office\\reacthost", [""]],
     ["reactnative\\android\\host\\java\\src\\com\\microsoft\\office\\reactnative\\host", "rnxreacthost\\src\\main\\java\\com\\microsoft\\office\\reactnative\\host", [""]],
     ["reactnative\\android\\host\\cpp", "rnxreacthost\\src\\main\\cpp", ["souces", "version.expmap", "precomp.h"]],
     ["reactnative\\android\\reka\\java\\src\\com\\microsoft\\office\\reactnative\\reka", "reactreka\\src\\main\\java\\com\\microsoft\\office\\reactnative\\reka", [""]],
-    ["reactnative\\android\\reka\\cpp", "reactreka\\src\\main\\cpp", ["souces", "version.expmap", "msoFolly", "precomp.h"]],
+    ["reactnative\\android\\reka\\cpp", "reactreka\\src\\main\\cpp", ["souces", "version.expmap", "msoFolly", "precomp.h", "CMakeLists.txt", "sal.h"]],
 ]
 
 FILE_ENTRIES = [
-    ["reactnative\\androidhost\\cpp\\ReactInstanceAndroid.cpp", "reacthost\\src\\main\\cpp\\ReactInstanceAndroid.cpp"],
-    ["reactnativehost\\ReactInstanceAndroidDeferred.cpp", "reacthost\\src\\main\\cpp\\ReactInstanceAndroidDeferred.cpp"],
-    ["reactnativehost\\ReactInstanceAndroidDeferred.h", "reacthost\\src\\main\\cpp\\ReactInstanceAndroidDeferred.h"],
+    ["reactnative\\androidhost\\cpp\\ReactInstanceAndroid.cpp", "sdxruntime\\src\\main\\cpp\\ReactInstanceAndroid.cpp"],
+    ["reactnativehost\\ReactInstanceAndroidDeferred.cpp", "sdxruntime\\src\\main\\cpp\\ReactInstanceAndroidDeferred.cpp"],
+    ["reactnativehost\\ReactInstanceAndroidDeferred.h", "sdxruntime\\src\\main\\cpp\\ReactInstanceAndroidDeferred.h"],
 ]
 
 # List of RN binaries to copy

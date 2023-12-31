@@ -26,9 +26,11 @@ class Runtime;
 
 namespace react {
 using RuntimeExecutor = std::function<void(std::function<void(jsi::Runtime &runtime)> &&callback)>;
+using RuntimeInstaller = std::function<void(jsi::Runtime &runtime)>;
 }
 
 }
+
 
 namespace Mso::React {
 
@@ -68,6 +70,12 @@ enum class HttpModuleClass : bool
 	ReactNativeWindows = true	//Microsoft::React::HttpModule
 };
 
+struct RuntimeInstallerHolder {
+    facebook::react::RuntimeInstaller runtimeInstaller;
+};
+MSO_PROPERTY_TYPE_GUID(RuntimeInstallerHolder, "fbbec698-7bfe-4096-8598-5cadba43ce59");
+
+const Mso::JSHost::NamedProperty<RuntimeInstallerHolder> RuntimeInstallerProperty{"RuntimeInstaller"};
 
 using OnErrorCallback = Mso::Functor<void(const Mso::ErrorCode&)>;
 using OnLoggingCallback = Mso::Functor<void(LogLevel logLevel, const char* message)>;
@@ -208,6 +216,8 @@ struct ReactDevOptions
 //! getting hosted in React, properties here will be used to construct the SDX.
 struct ReactOptions
 {
+	facebook::react::RuntimeInstaller runtimeInstaller;
+
 	//! Identity of the SDX. Must uniquely describe the SDX across the installed product.
 	std::string Identity;
 
