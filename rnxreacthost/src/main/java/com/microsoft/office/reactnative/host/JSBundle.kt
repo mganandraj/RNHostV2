@@ -1,6 +1,7 @@
 package com.microsoft.office.reactnative.host
 
 import android.app.Application
+import androidx.annotation.Keep
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
@@ -18,14 +19,21 @@ interface JSBundleFetcher {
     fun fetch(bundle: JSBundle, checked: Boolean) : JSBundle;
 }
 
+@Keep
 data class JSBundleInfo (
+    @Keep
     val Id: String?, // If not null, JSBundleFetcher can use it to resolve and override the FileName.
+    @Keep
     val FileName: String?, // It can be a filesystem path or the name of an APK asset.
+    @Keep
     val Version: Long?
 )
 
+@Keep
 data class JSBundle (
+    @Keep
     val Content: ByteBuffer?, //This must be UTF-8 encoded bytes. Can be null in which case we rely on FileName/Id from Info.
+    @Keep
     val Info: JSBundleInfo?
 )
 

@@ -25,15 +25,11 @@ class ReactViewHost {
 
     //! Reloads the IReactViewInstance if it is attached.
     /* Mso::Future<void>*/
-    fun ReloadViewInstance() {
-        throw NotImplementedError()
-    }
+    external fun ReloadViewInstance()
 
     //! Reloads IReactViewInstance if it is attached with a new set of options.
     /* Mso::Future<void>*/
-    fun ReloadViewInstanceWithOptions(@Suppress("UNUSED_PARAMETER") options: ReactViewOptions?) {
-        throw NotImplementedError()
-    }
+    external fun ReloadViewInstanceWithOptions(options: ReactViewOptions?)
 
     //! Unloads the attached IReactViewInstance.
     /*Mso::Future<void>*/

@@ -27,9 +27,9 @@ using TCntPtr = CntPtr<T>;
 #include <fbjni/ByteBuffer.h>
 
 #include <dlfcn.h>
-#include "../../../../officeplat/src/main/cpp/OfficeAssetApi.h"
+#include "OfficeAssetApi.h"
 
-#include <rnx-host/JJsiRuntimeRef.h>
+#include <rnxreacthost/JJsiRuntimeRef.h>
 
 #include "IReactInstanceInternal.h"
 
@@ -891,11 +891,18 @@ struct JReactViewHost : jni::HybridClass<JReactViewHost> {
 	Mso::TCntPtr<Mso::React::IReactViewHost> viewHost_;
 
 	void AttachViewInstance(jni::alias_ref<JBaseRootView::jhybridobject> jView);
+
+    void ReloadViewInstance();
+    void ReloadViewInstanceWithOptions(jni::alias_ref<JReactViewOptions::jhybridobject> jOptions);
 };
 
 void JReactViewHost::registerNatives() {
 	registerHybrid(
-	    {makeNativeMethod("AttachViewInstance", JReactViewHost::AttachViewInstance)});
+	    {
+            makeNativeMethod("AttachViewInstance", JReactViewHost::AttachViewInstance),
+            makeNativeMethod("ReloadViewInstance", JReactViewHost::ReloadViewInstance),
+            makeNativeMethod("ReloadViewInstanceWithOptions", JReactViewHost::ReloadViewInstanceWithOptions)
+        });
 }
 
 void JReactViewHost::AttachViewInstance(
@@ -906,6 +913,15 @@ void JReactViewHost::AttachViewInstance(
 jni::local_ref<JReactViewHost::jhybridobject>
 JReactViewHost::create(Mso::TCntPtr<Mso::React::IReactViewHost> viewHost) {
 	return newObjectCxxArgs(std::move(viewHost));
+}
+
+void JReactViewHost::ReloadViewInstance() {
+    viewHost_->ReloadViewInstance();
+}
+
+void JReactViewHost::ReloadViewInstanceWithOptions(jni::alias_ref<JReactViewOptions::jhybridobject> jOptions) {
+    ReactViewOptions optionsCopy = jOptions->cthis()->options_;
+    viewHost_->ReloadViewInstanceWithOptions(std::move(optionsCopy));
 }
 
 struct JReactHost : jni::HybridClass<JReactHost> {
@@ -1033,9 +1049,9 @@ void ReactInstanceAndroid::onBundleLoaded(std::string && /*bundleName*/) noexcep
 }
 
 void ReactInstanceAndroid::onDoRuntimeInstall(jsi::Runtime& runtime) noexcept {
-    auto runtimeInstallerProp = Options().Properties.Get(Mso::React::RuntimeInstallerProperty);
+    auto runtimeInstallerProp = Options().Properties.Get(Mso::React::JsiRuntimeInstallerProperty);
     if(runtimeInstallerProp) {
-		RuntimeInstallerHolder runtimeInstallerHolder = runtimeInstallerProp.value();
+		JsiRuntimeInstallerHolder runtimeInstallerHolder = runtimeInstallerProp.value();
 		runtimeInstallerHolder.runtimeInstaller(runtime);
     }
 }

@@ -1,0 +1,5 @@
+LIBLET_PUBLICS = 1
+!include ..\sources.inc
+
+PUBLICAPI_HEADERS = \
+	JJsiRuntimeRef.h

@@ -1,0 +1,27 @@
+LIBLET_DYNLINK = 1
+!include ..\sources.inc
+
+SOURCES = \
+	..\JJSExecutorObserver.cpp \
+	..\JJSBundle.cpp \
+	..\JJsiRuntimeRef.cpp \
+	..\JRuntimeInstaller.cpp \
+	..\OnLoad.cpp \
+	..\WrapperJSExecutor.cpp \
+	..\WrapperJSExecutorFactory.cpp \
+	..\HermesExecutorOverride.cpp \
+
+HEADERS =  $(HEADERS) $(REACT_NATIVE_ANDROID_HEADERS)
+
+LOCAL_LDLIBS = \
+	$(STL_LIBS) \
+	$(OPENSOURCE_REACTNATIVETARGETDIR)\libfbjni.so \
+	$(OPENSOURCE_REACTNATIVETARGETDIR)\libreactnativejni.so \
+	$(OPENSOURCE_REACTNATIVETARGETDIR)\libhermes_executor.so \
+	$(OPENSOURCE_REACTNATIVETARGETDIR)\libhermes.so \
+
+# Use version script to control exported symbols
+# Version script guide here - \otools\android\build\tools\VersionExpmap\README.txt
+USE_VERSION_SCRIPT = 1
+
+7ZIP_COMPRESS_DSO = 1

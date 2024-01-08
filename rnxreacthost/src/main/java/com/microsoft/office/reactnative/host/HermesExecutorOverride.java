@@ -6,7 +6,7 @@ import com.facebook.jni.HybridData;
 import com.facebook.react.bridge.JavaScriptExecutor;
 import com.facebook.react.common.build.ReactBuildConfig;
 import com.facebook.soloader.SoLoader;
-import javax.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public class HermesExecutorOverride extends JavaScriptExecutor {
     private static String mode_;

@@ -91,14 +91,14 @@ HermesExecutorOverride::initHybridDefaultConfig(
             (jsi::Runtime &runtime){
 
         Logger androidLogger = [logHandlerWeak](const std::string &message, unsigned int level) {
-            auto logHandler = logHandlerWeak.lockLocal();
-            if(logHandler)
-                logHandler->OnLog(message, level);
+            auto logHandler_ = logHandlerWeak.lockLocal();
+            if(logHandler_)
+                logHandler_->OnLog(message, level);
         };
 
-        auto runtimeInstaller = runtimeInstallerWeak.lockLocal();
-        if(runtimeInstaller) {
-            runtimeInstaller->DoInstall(JJsiRuntimeRef::create(runtime));
+        auto runtimeInstaller_ = runtimeInstallerWeak.lockLocal();
+        if(runtimeInstaller_) {
+            runtimeInstaller_->DoInstall(JJsiRuntimeRef::create(runtime));
         }
 
         react::bindNativeLogger(runtime, androidLogger);
@@ -116,8 +116,8 @@ jni::local_ref<HermesExecutorOverride::jhybriddata> HermesExecutorOverride::init
         bool enableDebugger,
         std::string debuggerName,
         jlong heapSizeMB,
-        facebook::jni::alias_ref<JLogHandler> logHandler,
-        facebook::jni::alias_ref<JRuntimeInstaller> runtimeInstaller) {
+        facebook::jni::alias_ref<JLogHandler> /*logHandler*/,
+        facebook::jni::alias_ref<JRuntimeInstaller> /*runtimeInstaller*/) {
     JReactMarker::setLogPerfMarkerIfNeeded();
     auto runtimeConfig = makeRuntimeConfig(heapSizeMB);
     std::call_once(flag, []() {
@@ -133,7 +133,7 @@ jni::local_ref<HermesExecutorOverride::jhybriddata> HermesExecutorOverride::init
 }
 
 bool
-HermesExecutorOverride::canLoadFile(jni::alias_ref<jclass>, const std::string &path) {
+HermesExecutorOverride::canLoadFile(jni::alias_ref<jclass>, const std::string &/*path*/) {
     return true;
 }
 
