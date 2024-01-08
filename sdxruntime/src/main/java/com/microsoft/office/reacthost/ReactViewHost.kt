@@ -19,9 +19,10 @@ class ReactViewHost {
     }
 
     //! Returns IReactHost associated with this IReactViewHost.
-    fun ReactHost(): WeakReference<ReactHost>? {
-        return null
+    fun ReactHost(): WeakReference<ReactHost> {
+        return WeakReference(ReactHostImpl() as ReactHost)
     }
+    external fun ReactHostImpl(): java.lang.Object?
 
     //! Reloads the IReactViewInstance if it is attached.
     /* Mso::Future<void>*/
@@ -29,7 +30,7 @@ class ReactViewHost {
 
     //! Reloads IReactViewInstance if it is attached with a new set of options.
     /* Mso::Future<void>*/
-    external fun ReloadViewInstanceWithOptions(options: ReactViewOptions?)
+    external fun ReloadViewInstanceWithOptions(@Suppress("UNUSED_PARAMETER") options: ReactViewOptions?);
 
     //! Unloads the attached IReactViewInstance.
     /*Mso::Future<void>*/
@@ -43,7 +44,5 @@ class ReactViewHost {
 
     //! Detaches IReactViewInstance from the IReactViewHost.
     /*virtual */
-    public fun DetachViewInstance() {
-
-    }
+    external fun DetachViewInstance()
 }

@@ -70,12 +70,11 @@ enum class HttpModuleClass : bool
 	ReactNativeWindows = true	//Microsoft::React::HttpModule
 };
 
-struct RuntimeInstallerHolder {
+struct JsiRuntimeInstallerHolder {
     facebook::react::RuntimeInstaller runtimeInstaller;
 };
-MSO_PROPERTY_TYPE_GUID(RuntimeInstallerHolder, "fbbec698-7bfe-4096-8598-5cadba43ce59");
-
-const Mso::JSHost::NamedProperty<RuntimeInstallerHolder> RuntimeInstallerProperty{"RuntimeInstaller"};
+MSO_PROPERTY_TYPE_GUID(JsiRuntimeInstallerHolder, "fbbec698-7bfe-4096-8598-5cadba43ce59");
+const Mso::JSHost::NamedProperty<JsiRuntimeInstallerHolder> JsiRuntimeInstallerProperty{"JsiRuntimeInstaller"};
 
 using OnErrorCallback = Mso::Functor<void(const Mso::ErrorCode&)>;
 using OnLoggingCallback = Mso::Functor<void(LogLevel logLevel, const char* message)>;

@@ -9,19 +9,20 @@ class Direction:
     OMR_TO_RNH = 1
     RNH_TO_OMR = 2
 
-direction = Direction.RNH_TO_OMR
 # direction = Direction.RNH_TO_OMR
+direction = Direction.OMR_TO_RNH
 
 # List of entries organized as [OMR Path, RNH Path, [list of exclusions]]
 DIR_ENTRIES = [
     ["reactnativehost\\androidjava\\src\\com\\microsoft\\office\\reacthost", "sdxruntime\\src\\main\\java\\com\\microsoft\\office\\reacthost", [""]],
     ["reactnative\\android\\host\\java\\src\\com\\microsoft\\office\\reactnative\\host", "rnxreacthost\\src\\main\\java\\com\\microsoft\\office\\reactnative\\host", [""]],
-    ["reactnative\\android\\host\\cpp", "rnxreacthost\\src\\main\\cpp", ["souces", "version.expmap", "precomp.h"]],
+    ["reactnative\\android\\host\\cpp", "rnxreacthost\\src\\main\\cpp", ["dirs", "souces", "version.expmap", "precomp.h", "CMakeLists.txt", "public", "lib"]],
     ["reactnative\\android\\reka\\java\\src\\com\\microsoft\\office\\reactnative\\reka", "reactreka\\src\\main\\java\\com\\microsoft\\office\\reactnative\\reka", [""]],
-    ["reactnative\\android\\reka\\cpp", "reactreka\\src\\main\\cpp", ["souces", "version.expmap", "msoFolly", "precomp.h", "CMakeLists.txt", "sal.h"]],
+    ["reactnative\\android\\reka\\cpp", "reactreka\\src\\main\\cpp", ["dirs", "souces", "version.expmap", "msoFolly", "precomp.h", "CMakeLists.txt", "sal.h"]],
 ]
 
 FILE_ENTRIES = [
+    ["reactnative\\android\\host\\cpp\\public\\JJsiRuntimeRef.h", "rnxreacthost\\src\\main\\cpp\\rnxreacthost\JJsiRuntimeRef.h"],
     ["reactnative\\androidhost\\cpp\\ReactInstanceAndroid.cpp", "sdxruntime\\src\\main\\cpp\\ReactInstanceAndroid.cpp"],
     ["reactnativehost\\ReactInstanceAndroidDeferred.cpp", "sdxruntime\\src\\main\\cpp\\ReactInstanceAndroidDeferred.cpp"],
     ["reactnativehost\\ReactInstanceAndroidDeferred.h", "sdxruntime\\src\\main\\cpp\\ReactInstanceAndroidDeferred.h"],
@@ -62,13 +63,12 @@ def main():
             print("Invalid direction")
             return
 
-    if direction == Direction.OMR_TO_RNH:
-        # copy RN binaries
-        for binary in RN_BINARIES:
-            shutil.copy(os.path.join(RN_BINARY_SOURCE_DIR, binary), os.path.join(RN_BINARY_TARGET_DIR, binary))
+    # if direction == Direction.OMR_TO_RNH:
+    #     # copy RN binaries
+    #     for binary in RN_BINARIES:
+    #         shutil.copy(os.path.join(RN_BINARY_SOURCE_DIR, binary), os.path.join(RN_BINARY_TARGET_DIR, binary))
 
-
-    print("Hello World!")
+    print("Done!")
     pass
 
 if __name__ == "__main__":

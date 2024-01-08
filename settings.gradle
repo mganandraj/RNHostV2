@@ -13,7 +13,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven {
             // url "/Users/anandrag/Microsoft.Office.ReactNative.Android.${RN_VERSION}-ndk25/maven"
-            url "D:/nugetcache/microsoft.office.reactnative.android.0.72.14-office-ndk25/maven"
+            url "D:/nugetcache/microsoft.office.reactnative.android.0.72.15-office-ndk25/maven"
         }
     }
 }

@@ -37,7 +37,7 @@ open class BaseRootView : ReactRootView {
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
         mHybridData = initHybrid()
     }
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int, viewListener: ViewListener?) : super(context, attrs, defStyle) {
+    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int, viewListener: ViewListener) : super(context, attrs, defStyle) {
         mHybridData = initHybrid()
         mViewListener = viewListener
     }
@@ -101,7 +101,7 @@ class AutoRootView : BaseRootView {
     }
 
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int, reactOptions: ReactOptions, componentName: String, launchOptions: Bundle
-                , viewListener: ViewListener?) :
+                , viewListener: ViewListener) :
             super(context, attrs, defStyle, viewListener) {
         mComponentName = componentName
         mLaunchOptions = launchOptions
@@ -111,6 +111,26 @@ class AutoRootView : BaseRootView {
         viewOptions.InitialProps = serializeBundle(launchOptions)
         mReactViewHost = mReactHost!!.MakeViewHost(viewOptions)
     }
+}
 
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int, reactOptions: ReactOptions, componentName: String, launchOptions: Bundle) : this(context, attrs, defStyle, reactOptions, componentName, launchOptions, null) {}
+class AutoRootView2 : BaseRootView {
+    private constructor(context: Context?) : super(context) {}
+    private constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {}
+    private constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {}
+
+    var mReactViewHost: ReactViewHost? = null
+
+    override fun onAttachedToWindow() {
+        mReactViewHost!!.AttachViewInstance(this)
+        super.onAttachedToWindow()
+    }
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        mReactViewHost!!.DetachViewInstance()
+    }
+
+    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int, viewHost: ReactViewHost, viewListener: ViewListener) :
+            super(context, attrs, defStyle, viewListener) {
+       mReactViewHost = viewHost
+    }
 }

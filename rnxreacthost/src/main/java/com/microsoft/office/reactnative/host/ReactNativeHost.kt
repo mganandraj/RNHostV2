@@ -316,31 +316,32 @@ class ReactNativeHost private constructor (
         return builder.build()
     }
 
-    private val reactInstanceEventListenerList: MutableList<ReactInstanceEventListener> = ArrayList()
-    private var isInitialized = false;
-    val reactInstanceEventLock = Any()
+    private val mReactInstanceEventListenerList: MutableList<ReactInstanceEventListener> = ArrayList()
+    private var mIsInitialized = false;
+    val mReactInstanceEventLock = Any()
 
     @OptIn(InternalCoroutinesApi::class)
     fun addReactInstanceEventListener(reactInstanceEventListener: ReactInstanceEventListener) {
-        synchronized(reactInstanceEventLock) {
-            if(isInitialized) {
+        synchronized(mReactInstanceEventLock) {
+            if(mIsInitialized) {
                 hostInitialActivity.runOnUiThread {
                     reactInstanceEventListener.onReactContextInitialized(reactInstanceManager.currentReactContext)
                 }
             }
             else {
-                reactInstanceEventListenerList.add(reactInstanceEventListener)
+                mReactInstanceEventListenerList.add(reactInstanceEventListener)
             }
         }
     }
 
     @OptIn(InternalCoroutinesApi::class)
     private fun onReactContextInitialized(reactContext: ReactContext) {
-        synchronized(reactInstanceEventLock) {
-            reactInstanceEventListenerList.forEach { hostInitialActivity.runOnUiThread { it.onReactContextInitialized(reactContext) } }
-            isInitialized = true;
+        synchronized(mReactInstanceEventLock) {
+            mReactInstanceEventListenerList.forEach { hostInitialActivity.runOnUiThread { it.onReactContextInitialized(reactContext) } }
+            mIsInitialized = true;
         }
     }
+
 
     override fun getUseDeveloperSupport(): Boolean {
         return isDev

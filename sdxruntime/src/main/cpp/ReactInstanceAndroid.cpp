@@ -891,15 +891,18 @@ struct JReactViewHost : jni::HybridClass<JReactViewHost> {
 	Mso::TCntPtr<Mso::React::IReactViewHost> viewHost_;
 
 	void AttachViewInstance(jni::alias_ref<JBaseRootView::jhybridobject> jView);
-
+	void DetachViewInstance();
     void ReloadViewInstance();
     void ReloadViewInstanceWithOptions(jni::alias_ref<JReactViewOptions::jhybridobject> jOptions);
+	jobject ReactHost();
 };
 
 void JReactViewHost::registerNatives() {
 	registerHybrid(
 	    {
+			makeNativeMethod("ReactHostImpl", JReactViewHost::ReactHost),
             makeNativeMethod("AttachViewInstance", JReactViewHost::AttachViewInstance),
+			makeNativeMethod("DetachViewInstance", JReactViewHost::DetachViewInstance),
             makeNativeMethod("ReloadViewInstance", JReactViewHost::ReloadViewInstance),
             makeNativeMethod("ReloadViewInstanceWithOptions", JReactViewHost::ReloadViewInstanceWithOptions)
         });
@@ -908,6 +911,10 @@ void JReactViewHost::registerNatives() {
 void JReactViewHost::AttachViewInstance(
     jni::alias_ref<JBaseRootView::jhybridobject> jView) {
 	viewHost_->AttachViewInstance(jView->cthis()->ViewInstance());
+}
+
+void JReactViewHost::DetachViewInstance() {
+	viewHost_->DetachViewInstance();
 }
 
 jni::local_ref<JReactViewHost::jhybridobject>
@@ -1003,6 +1010,11 @@ JReactHost::create(Mso::TCntPtr<Mso::React::IReactHost> host) {
 	return newObjectCxxArgs(std::move(host));
 }
 
+jobject JReactViewHost::ReactHost() {
+	auto& reactHost = viewHost_->ReactHost();
+	return jni::getPlainJniReference(JReactHost::create(Mso::TCntPtr<Mso::React::IReactHost>(&reactHost)).release());
+}
+
 struct JReactHostStatics : jni::JavaClass<JReactHostStatics> {
 	static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/ReactHostStatics;";
 //
@@ -1012,15 +1024,15 @@ struct JReactHostStatics : jni::JavaClass<JReactHostStatics> {
 //	makeJReactHost(jni::alias_ref<jclass>,
 //	               jni::alias_ref<JReactOptions::jhybridobject> jOptions);
 };
-//
+
 //jni::alias_ref<JReactHost::jhybridobject>
 //JReactHostStatics::makeJReactHost(alias_ref<jclass>,
-//                                  jni::alias_ref<JReactOptions::jhybridobject> jOptions) {
+//                                 jni::alias_ref<JReactOptions::jhybridobject> jOptions) {
 //	auto options = jOptions->cthis()->Options();
-//	Mso::TCntPtr<IReactHost> reactHost = MakeReactHost(std::move(options)); /* TODO */
+//	Mso::TCntPtr<IReactHost> reactHost = MakeReactHost(std::move(options));  TODO
 //	return JReactHost::create(reactHost).release();
 //}
-//
+
 //void JReactHostStatics::registerNatives() {
 //	javaClassLocal()->registerNatives(
 //	    {
@@ -1234,7 +1246,7 @@ extern "C" jint JNI_OnLoad(JavaVM *vm, void *) {
         JReactViewOptions::registerNatives();
         JReactHost::registerNatives();
 //#ifdef USE_OPENSOUCE_MSO
-//        JReactHostStatics::registerNatives();
+//       JReactHostStatics::registerNatives();
 //#endif
         JReactInstance::registerNatives();
         JReactViewHost::registerNatives();

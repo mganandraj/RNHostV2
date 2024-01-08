@@ -33,11 +33,11 @@ void ORNHostKtNativeOptionsFragment::registerNatives() {
         LOGE("ORNHostKtNativeOptionsFragment::OnInstanceCreated");
     };
 
-    Mso::React::RuntimeInstallerHolder runtimeInstallerHolder;
+    Mso::React::JsiRuntimeInstallerHolder runtimeInstallerHolder;
     runtimeInstallerHolder.runtimeInstaller = [](facebook::jsi::Runtime &runtime){
         runtime.global().setProperty(runtime, "Home", "Marangattu" );
     };
-    options.Properties.Set(Mso::React::RuntimeInstallerProperty, runtimeInstallerHolder);
+    options.Properties.Set(Mso::React::JsiRuntimeInstallerProperty, runtimeInstallerHolder);
 
     options.JavaModuleNames.push_back("com.microsoft.office.reacthostapp.MyReactPackage");
     // On Android, FileJSBundle is mapped to AssetJSBundle

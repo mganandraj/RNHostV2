@@ -47,17 +47,17 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
         mReactOptions = reactOptions
     }
 
-    private val reactInstanceEventListenerList: MutableList<ReactInstanceEventListener> = ArrayList()
-    private var isInitialized = false;
-    val reactInstanceEventLock = Any()
+    private val mReactInstanceEventListenerList: MutableList<ReactInstanceEventListener> = ArrayList()
+    private var mIsInitialized = false;
+    val mReactInstanceEventLock = Any()
 
     @OptIn(InternalCoroutinesApi::class)
     fun enqueueTaskOnReactContextInitialized(task: ReactInstanceEventListener) {
-        kotlinx.coroutines.internal.synchronized(reactInstanceEventLock) {
-            if(isInitialized) {
+        kotlinx.coroutines.internal.synchronized(mReactInstanceEventLock) {
+            if(mIsInitialized) {
                 this.mReactNativeHost!!.addReactInstanceEventListener(task)
             } else {
-                reactInstanceEventListenerList.add(task)
+                mReactInstanceEventListenerList.add(task)
             }
         }
     }
@@ -65,10 +65,10 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
     @OptIn(InternalCoroutinesApi::class)
     @Suppress("UNUSED_PARAMETER")
     fun onReactContextInitialized(reactContext: ReactContext?) {
-        kotlinx.coroutines.internal.synchronized(reactInstanceEventLock) {
+        kotlinx.coroutines.internal.synchronized(mReactInstanceEventLock) {
             onInitialized(/*ReactContextHolder(reactContext!!)*/)
-            reactInstanceEventListenerList.forEach { initialActivity?.get()?.runOnUiThread{ it.onReactContextInitialized(reactContext) } }
-            isInitialized = true;
+            mReactInstanceEventListenerList.forEach { initialActivity?.get()?.runOnUiThread{ it.onReactContextInitialized(reactContext) } }
+            mIsInitialized = true;
         }
     }
 
@@ -142,7 +142,8 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                     override fun DoInstall(runtimeRef: JsiRuntimeRef?) {
                         onDoRuntimeInstall(runtimeRef!!);
                     }
-                })
+                }
+                )
 
             this.mReactNativeHost = builder.build()
             val weakThis = WeakReference(this)

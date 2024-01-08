@@ -8,7 +8,7 @@
 #pragma once
 
 #include <fbjni/fbjni.h>
-#include "JJsiRuntimeRef.h"
+#include <rnxreacthost/JJsiRuntimeRef.h>
 
 namespace facebook {
 namespace react {

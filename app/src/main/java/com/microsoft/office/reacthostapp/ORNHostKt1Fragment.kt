@@ -79,7 +79,7 @@ class ORNHostKt1Fragment : Fragment() {
 //        mReactViewHost = mReactHost!!.MakeViewHost(viewOptions)
 //        mReactViewHost!!.AttachViewInstance(mreactViewInstance)
 
-        binding.reactViewHost.addView(AutoRootView(this.activity, null,0, reactOptions, "AwesomeProject", Bundle()))
+        binding.reactViewHost.addView(AutoRootView(this.activity, null,0, reactOptions, "AwesomeProject", Bundle(), ViewListener()))
         binding.reactViewHost.setBackgroundColor(Color.RED)
 
         binding.buttonDashboard.setOnClickListener {
