@@ -52,8 +52,14 @@ class ReactOptions {
     // OnInitialized
     // OnDestroyed
 
-    // OnError
-    // OnLogging - The default log handler writes to logcat. It is non-trivial to override it.
+    var OnError: IFatalErrorHandler
+        external get
+        external set
+
+    var OnLogging: ILogHandler
+        external get
+        external set
+
     // OnJSException - The default platform behaviour is to handle through ExceptionManager native module
 
     // EnableBytecode

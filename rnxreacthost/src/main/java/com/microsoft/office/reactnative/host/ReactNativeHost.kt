@@ -6,17 +6,8 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.Keep
-import com.facebook.hermes.reactexecutor.HermesExecutorFactory
-import com.facebook.react.ReactInstanceEventListener
-import com.facebook.react.ReactInstanceManager
-import com.facebook.react.ReactInstanceManagerBuilder
-import com.facebook.react.ReactPackage
-import com.facebook.react.ReactRootView
-import com.facebook.react.bridge.JSBundleLoader
-import com.facebook.react.bridge.JSBundleLoaderDelegate
-import com.facebook.react.bridge.JSIModulePackage
-import com.facebook.react.bridge.JavaScriptExecutorFactory
-import com.facebook.react.bridge.ReactContext
+import com.facebook.react.*
+import com.facebook.react.bridge.*
 import com.facebook.react.common.LifecycleState
 import com.facebook.react.devsupport.interfaces.DevOptionHandler
 import com.facebook.react.modules.systeminfo.ReactNativeVersion
@@ -36,6 +27,7 @@ class ReactNativeHost private constructor (
     private val afterReactNativeInit: (() -> Unit)?,
     private val onJSRuntimeInitialized: (() -> Unit)?,
     private val onJSBundleLoaded: ((bundleName: String) -> Unit)?,
+    private val logHandler: LogHandler?,
     private val nativeModulePackages: MutableList<ReactPackage>,
     private val javaScriptExecutorFactoryOverride: JavaScriptExecutorFactory?,
     private val javaScriptRuntimeInstaller: RuntimeInstaller?,
@@ -59,6 +51,11 @@ class ReactNativeHost private constructor (
         }
     }
 
+    interface LogHandler {
+        fun onLog(message: String?, level: Int)
+        fun onError(message: String?)
+    }
+
     data class Builder(
         private var userBundle: JSBundle? = null, // Feature bundle
         private var preloadBundles: MutableList<JSBundle>? = null, // Bundles to be loaded prior to loading feature bundle
@@ -69,6 +66,7 @@ class ReactNativeHost private constructor (
         private var afterReactNativeInit: (() -> Unit)? = null,
         private var onJSRuntimeInitialized: (() -> Unit)? = null,
         private var onJSBundleLoaded: ((bundleName: String) -> Unit)? = null,
+        private var logHandler: LogHandler? = null,
         private var nativeModulePackages: MutableList<ReactPackage> = mutableListOf(),
         private var javaScriptExecutorFactory: JavaScriptExecutorFactory? = null,
         private var javaScriptRuntimeInstaller: RuntimeInstaller? = null,
@@ -90,6 +88,7 @@ class ReactNativeHost private constructor (
         fun afterReactNativeInit(_afterReactNativeInit: (() -> Unit)) = apply { this.afterReactNativeInit = _afterReactNativeInit; return this }
         fun onJSRuntimeInitialized(_onJSRuntimeInitialized: (() -> Unit)) = apply { this.onJSRuntimeInitialized = _onJSRuntimeInitialized; return this }
         fun onJSBundleLoaded(_onJSBundleLoaded: ((bundleName: String) -> Unit)) = apply { this.onJSBundleLoaded = _onJSBundleLoaded; return this }
+        fun logHandler(_logHandler: LogHandler) = apply { this.logHandler = _logHandler; return this }
         fun nativeModulePackages(_nativeModulePackages: MutableList<ReactPackage>) = apply { this.nativeModulePackages = _nativeModulePackages; return this }
         fun shouldEagerInit(_eagerInit: Boolean) = apply { this.eagerInit = _eagerInit; return this }
         fun javaScriptExecutorFactory(_javaScriptExecutorFactory: JavaScriptExecutorFactory) = apply { this.javaScriptExecutorFactory = _javaScriptExecutorFactory; return this }
@@ -115,6 +114,7 @@ class ReactNativeHost private constructor (
                 afterReactNativeInit,
                 onJSRuntimeInitialized,
                 onJSBundleLoaded,
+                logHandler,
                 nativeModulePackages,
                 javaScriptExecutorFactory,
                 javaScriptRuntimeInstaller,
@@ -252,10 +252,12 @@ class ReactNativeHost private constructor (
         mlogHandler = object : HermesExecutorOverride.LogHandler {
             override fun onLog(message: String, level: Int) {
                 Log.i("RNXHost", message)
+                logHandler?.onLog(message, level)
             }
 
             override fun onError(message: String) {
                 Log.e("RNXHost", message)
+                logHandler?.onError(message)
             }
         }
 

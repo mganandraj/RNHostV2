@@ -161,6 +161,8 @@ struct JJSBundle : jni::JavaClass<JJSBundle> {
 
 struct JInstanceCreatedCallback;
 struct JInstanceLoadedCallback;
+struct JLogHandler;
+struct JFatalErrorHandler;
 
 struct JReactOptions : jni::HybridClass<JReactOptions> {
 	static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/ReactOptions;";
@@ -185,6 +187,13 @@ struct JReactOptions : jni::HybridClass<JReactOptions> {
 	jni::alias_ref<JInstanceCreatedCallback> getInstanceCreatedCallback();
 	void setInstanceLoadedCallback(jni::alias_ref<JInstanceLoadedCallback>);
 	jni::alias_ref<JInstanceLoadedCallback> getInstanceLoadedCallback();
+
+	void setLogHandler(jni::alias_ref<JLogHandler>);
+	jni::alias_ref<JLogHandler> getLogHandler();
+
+	void setFatalErrorHandler(jni::alias_ref<JFatalErrorHandler>);
+	jni::alias_ref<JFatalErrorHandler> getFatalErrorHandler();
+
 	jni::alias_ref<JReactDevOptions::jhybridobject> createDeveloperSettingsPeer();
 
 private:
@@ -197,6 +206,7 @@ struct JErrorCode : jni::HybridClass<JErrorCode> {
 	static void registerNatives();
 	static jni::local_ref<jhybridobject> create(Mso::ErrorCode &&);
 	std::string toString();
+    Mso::ErrorCode& getMsoErrorCode();
 	JErrorCode(Mso::ErrorCode &&errorCode)
 	    : errorCode_(std::move(errorCode)) {
 	}
@@ -212,6 +222,10 @@ local_ref<JErrorCode::jhybriddata> JErrorCode::initHybrid(alias_ref<jhybridobjec
 
 std::string JErrorCode::toString() {
 	return errorCode_.ToString();
+}
+
+Mso::ErrorCode& JErrorCode::getMsoErrorCode() {
+    return errorCode_;
 }
 
 jni::local_ref<JErrorCode::jhybridobject> JErrorCode::create(Mso::ErrorCode &&errorCode) {
@@ -248,6 +262,9 @@ struct JReactInstance : jni::HybridClass<JReactInstance> {
 	static facebook::jsi::Runtime *GetJsiRuntime(jni::alias_ref<JReactInstance::javaobject> instance);
 	static std::shared_ptr<facebook::react::CallInvoker> getJSCallInvokerHolder(jni::alias_ref<JReactInstance::javaobject> instance);
 
+    static void onLog(jni::alias_ref<JReactInstance::javaobject> instance, jni::alias_ref<JString>, int logLevel);
+    static void onFatalError(jni::alias_ref<JReactInstance::javaobject> instance, jni::alias_ref<JErrorCode::javaobject> errorCode);
+
 private:
 	Mso::WeakPtr<ReactInstanceAndroid> m_wNativeInstance;
 };
@@ -283,6 +300,29 @@ struct JInstanceLoadedCallback : jni::JavaClass<JInstanceLoadedCallback> {
 	                jni::alias_ref<JReactInstance::jhybridobject>,
 	                jni::alias_ref<JErrorCode::jhybridobject>);
 };
+
+struct JLogHandler : jni::JavaClass<JLogHandler> {
+	static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/ILogHandler;";
+	static void run(jni::alias_ref<JLogHandler> callback, jni::alias_ref<jni::JString>,
+					int);
+};
+
+struct JFatalErrorHandler : jni::JavaClass<JFatalErrorHandler> {
+	static constexpr auto kJavaDescriptor = "Lcom/microsoft/office/reacthost/IFatalErrorHandler;";
+	static void run(jni::alias_ref<JFatalErrorHandler> callback, jni::alias_ref<JErrorCode::javaobject>);
+};
+
+void JLogHandler::run(jni::alias_ref<JLogHandler> callback,
+                      jni::alias_ref<jni::JString> message, int logLevel) {
+    static auto clazz = javaClassStatic();
+    auto method = clazz->getMethod<void(jni::alias_ref<JString>,int)>("run");
+    method(callback, message, logLevel);
+}
+
+void JFatalErrorHandler::run(jni::alias_ref<JFatalErrorHandler> callback,
+                             jni::alias_ref<JErrorCode::javaobject>) {
+    std::abort();
+}
 
 void JInstanceCreatedCallback::run(jni::alias_ref<JInstanceCreatedCallback> callback,
                                    jni::alias_ref<JReactInstance::jhybridobject> instance) {
@@ -511,6 +551,26 @@ jni::alias_ref<JInstanceLoadedCallback> JReactOptions::getInstanceLoadedCallback
 	return nullptr;
 }
 
+void JReactOptions::setLogHandler(jni::alias_ref<JLogHandler> callback) {
+	options_.OnLogging = [callback = make_global(callback)](LogLevel logLevel, const char* message) {
+		JLogHandler::run(callback, jni::make_jstring(message), static_cast<int>(logLevel));
+	};
+}
+
+jni::alias_ref<JLogHandler> JReactOptions::getLogHandler() {
+    return nullptr;
+}
+
+void JReactOptions::setFatalErrorHandler(jni::alias_ref<JFatalErrorHandler> callback) {
+    options_.OnError = [callback = make_global(callback)](const Mso::ErrorCode&) {
+        // JFatalErrorHandler::run(jni::make_jstring(message));
+    };
+}
+
+jni::alias_ref<JFatalErrorHandler> JReactOptions::getFatalErrorHandler() {
+    return nullptr;
+}
+
 const ReactOptions &JReactOptions::Options() const noexcept {
 	return options_;
 }
@@ -599,7 +659,15 @@ void JReactOptions::registerNatives() {
 	                makeNativeMethod("setInstanceLoadedCallback",
 	                                 JReactOptions::setInstanceLoadedCallback),
 	                makeNativeMethod("createDeveloperSettingsPeer",
-	                                 JReactOptions::createDeveloperSettingsPeer)});
+	                                 JReactOptions::createDeveloperSettingsPeer),
+					makeNativeMethod("getOnLogging",
+									 JReactOptions::getLogHandler),
+					makeNativeMethod("setOnLogging",
+									 JReactOptions::setLogHandler),
+					makeNativeMethod("getOnError",
+									 JReactOptions::getFatalErrorHandler),
+					makeNativeMethod("setOnError",
+									 JReactOptions::setFatalErrorHandler)});
 }
 
 jni::local_ref<JReactInstance::jhybriddata>
@@ -649,6 +717,8 @@ void JReactInstance::registerNatives() {
 	    makeNativeMethod("onBundleLoaded", JReactInstance::onBundleLoaded),
 		makeNativeMethod("onDoRuntimeInstall", JReactInstance::onDoRuntimeInstall),
 	    makeNativeMethod("createRekaBridgeOptions", JReactInstance::createRekaBridgeOptions),
+        makeNativeMethod("onLogImpl", JReactInstance::onLog),
+        makeNativeMethod("onFatalErrorImpl", JReactInstance::onFatalError),
 	});
 }
 
@@ -707,6 +777,19 @@ std::shared_ptr<facebook::react::CallInvoker> JReactInstance::getJSCallInvokerHo
 
 	return callInvoker;
 	// return jsCallInvokerHolder->cthis()->getCallInvoker();
+}
+
+void JReactInstance::onLog(jni::alias_ref<JReactInstance::javaobject> jInstance, jni::alias_ref<JString> jMessage, int logLevel) {
+    auto instance = jInstance->cthis()->m_wNativeInstance.GetStrongPtr();
+    if(instance)
+        instance->Options().OnLogging(static_cast<LogLevel>(logLevel), jMessage->toStdString().c_str());
+}
+
+void JReactInstance::onFatalError(jni::alias_ref<JReactInstance::javaobject> jInstance, jni::alias_ref<JErrorCode::javaobject> errorCode) {
+    auto instance = jInstance->cthis()->m_wNativeInstance.GetStrongPtr();
+    if(instance)
+        instance->Options().OnError(errorCode->cthis()->getMsoErrorCode());
+
 }
 
 struct JReactViewOptions : jni::HybridClass<JReactViewOptions> {

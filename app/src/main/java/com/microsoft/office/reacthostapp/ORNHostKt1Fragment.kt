@@ -72,6 +72,12 @@ class ORNHostKt1Fragment : Fragment() {
         // reactOptions.AddRegisteredJSBundle("ui.android.bundle")
         reactOptions.AddRegisteredJSBundle("index.android.bundle")
 
+        reactOptions.OnLogging = object: ILogHandler {
+            override fun run(message: String, level: Int) {
+                Log.i("ORNHostKt1Fragment", message)
+            }
+        }
+
 
 //        mreactViewInstance = AutoRootView(this.activity, reactOptions, "AwesomeProject", Bundle())
 //        var viewOptions: ReactViewOptions = ReactViewOptions()

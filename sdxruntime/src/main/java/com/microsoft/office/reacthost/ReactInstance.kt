@@ -11,6 +11,7 @@ import com.facebook.react.turbomodule.core.CallInvokerHolderImpl
 import com.facebook.soloader.SoLoader
 import com.microsoft.office.plat.annotation.KeepClassAndMembers
 import com.microsoft.office.reacthost.ReactHostStatics.initialActivity
+import com.microsoft.office.reactnative.host.HermesExecutorOverride.LogHandler
 import com.microsoft.office.reactnative.host.JsiRuntimeRef
 import com.microsoft.office.reactnative.host.RuntimeInstaller
 import com.microsoft.office.reactnative.host.OfficeBundleFetcher
@@ -41,6 +42,8 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
     private external fun onBundleLoaded(bundleName: String)
     private external fun createRekaBridgeOptions() : RekaBridgeOptions
     private external fun onDoRuntimeInstall(runtimeRef: JsiRuntimeRef)
+    private external fun onLogImpl(message: String, logLevel: Int)
+    private external fun onFatalErrorImpl(errorCode: ErrorCode)
 
     init {
         mHybridData = initHybrid()
@@ -142,8 +145,18 @@ class ReactInstance internal constructor(reactOptions: ReactOptions) {
                     override fun DoInstall(runtimeRef: JsiRuntimeRef?) {
                         onDoRuntimeInstall(runtimeRef!!);
                     }
-                }
-                )
+                })
+                .logHandler(object : ReactNativeHost.LogHandler {
+                    override fun onLog(message: String?, level: Int) {
+                        Log.i("ReactInstance", "Here")
+                        onLogImpl(message!!, level)
+                    }
+
+                    override fun onError(message: String?) {
+                        Log.i("ReactInstance", "Here")
+                        onFatalErrorImpl(ErrorCode())
+                    }
+                })
 
             this.mReactNativeHost = builder.build()
             val weakThis = WeakReference(this)
